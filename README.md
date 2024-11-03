@@ -1,36 +1,40 @@
-# Note Application
+# Full Stack Chef
 
-This is a minimal example demonstrating usage of the
-password-protected user part of the API used in lab 5.
+## Software Specification
+The program allows users to input the ingredients they currently have, 
+receive recipe suggestions, create weekly meal plans, and generate
+grocery lists. It supports dietary needs, including both preferences 
+(e.g., vegan, keto) and restrictions (e.g., gluten-free, dairy-free), 
+and provides basic nutritional information for each recipe. 
+Additionally, users can leave reviews and ratings for recipes they 
+try and view top-rated recipes based on community feedback.
 
-You can find more information about the API endpoints in
-[the documentation](https://www.postman.com/cloudy-astronaut-813156/csc207-grade-apis-demo/documentation/fg3zkjm/5-password-protected-user).
+## User Stories
+Team User Story: I want to enter the ingredients I have in my kitchen and receive recipe suggestions that fit my dietary preferences, so I can quickly decide what to cook without wasting time.
+(Core feature: Ingredient-based recipe search)
 
-If your team is considering an application for which it would be convenient to
-store data in something like a database, you may find that the API calls demonstrated
-here will be useful in your project, as this will allow you to store
-an arbitrary JSON object associated with a username and password.
+Jasmine’s Story: I want to create a meal plan for the week, so I can better manage my time and ensure I eat balanced meals.
+(Core feature: Weekly meal planning)
 
-In this application, a single note has a name (the "username" in terms of the API) and the note
-can be read by anyone who knows the name — but only edited by someone who
-knows the password for it.
+Shaojie’s Story (Jonathan): I want to save my favorite recipes, so I can quickly access them later and add them to future meal plans. I also want the ability to categorize my saved recipes (meal type, dietary needs, or cuisine).
+(Core feature: Saving and managing favorite recipes)
 
-You can see the documentation in the various files for more information.
+Moussa’s Story: I want to customize and set my dietary needs in my profile, so the app automatically shows me recipes and meal plans that match both my preferences and restrictions.
+(Core feature: Dietary needs customization and filtering)
 
-## Testing
+Tadd’s Story: I want the app to generate a grocery list based on my meal plan, so I don’t have to manually write down ingredients.
+(Core feature: Automated grocery list generation)
 
-The repo also includes an example of a use case interactor test, as well as
-an example of an end-to-end test which automates button clicks and inspects
-the contents of the actual views. This is something we discussed in the lectures
-about testing in CA but had not provided a code example of before. Note, one
-could also inspect the contents of the ViewModel objects instead when testing
-CA to make a similar test which would be less dependent on the details of the
-specific UI implementation.
+Jessie’s Story: I want to leave reviews and ratings for the recipes I try, and I want to see top-rated recipes to help me choose the best ones.
+(Core feature: User reviews and top-rated recipe filtering)
 
-## Project Starter Code
+Additional Story: I want the app to alert me if any recipes contain ingredients I’m allergic to, and automatically suggest safe alternatives, so I can enjoy meals without worry about triggering my allergies.
+(Additional feature: Allergy detection with alternative ingredient suggestions)
+*(Optional)
 
-Your team may choose to use this repo as starter code for your project. You could
-also use the lab 5 code — or start from an empty repo if your team prefers.
-
-If you choose to use one of the repositories we have provided, you can either make
-a fork of it or copy the subset of code you want into a completely new repository.
+## Proposed APIs
+- Spoonacular Recipe API
+https://spoonacular.com/food-api
+- Edamam API
+  https://developer.edamam.com/edamam-recipe-api (Recipe search)
+  https://developer.edamam.com/edamam-nutrition-api (Nutrition analysis)
