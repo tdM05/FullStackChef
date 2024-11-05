@@ -19,8 +19,8 @@ public class RecipePresenter implements RecipieOutputBoundary {
 
 
     public void prepareFailView(String error) {
-        /** implement */
-
+        // No need to add code here. We'll assume that logout can't fail.
+        // Thought question: is this a reasonable assumption?
     }
 
 }
