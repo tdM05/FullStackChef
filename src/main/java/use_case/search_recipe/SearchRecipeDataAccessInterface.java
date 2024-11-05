@@ -16,12 +16,4 @@ public interface SearchRecipeDataAccessInterface {
      * @throws DataAccessException if the recipes cannot be retrieved for any reason
      */
     List<Recipe> searchRecipe(String input) throws DataAccessException;
-
-    /**
-     * Retrieves a recipe by its ID.
-     * @param id the ID of the recipe to retrieve
-     * @return the recipe with the given ID
-     * @throws DataAccessException if the recipe cannot be retrieved for any reason
-     */
-    Recipe getRecipeById(int id) throws DataAccessException;
 }
