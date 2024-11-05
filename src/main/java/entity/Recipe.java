@@ -11,4 +11,5 @@ public interface Recipe {
      * @return the ingredients needed for this recipe.
      */
     List<Ingredient> getIngredients();
+    NutritionalInfo getNutritionalInfo();
 }
