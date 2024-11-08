@@ -5,32 +5,53 @@ import java.util.List;
 /**
  * The representation of a recipe in our program.
  */
-public class Recipe {
-    private int id;
-    private String title;
-    private String image;
-    private String imageType;
+public interface Recipe {
+    /**
+     * Returns the ingredients needed for this recipe.
+     *
+     * @return a list of ingredients needed for this recipe.
+     */
+    List<Ingredient> getIngredients();
 
-    public Recipe(int id, String title, String image, String imageType) {
-        this.id = id;
-        this.title = title;
-        this.image = image;
-        this.imageType = imageType;
-    }
+    /**
+     * Returns the nutritional information for this recipe.
+     *
+     * @return the nutritional information for this recipe.
+     */
+    NutritionalInfo getNutritionalInfo();
 
-    // Getters for each field
-    public int getId() {
-        return id;
-    }
+    /**
+     * Returns the ID of this recipe.
+     *
+     * @return the ID of this recipe.
+     */
+    int getId();
 
-    public String getTitle() {
-        return title;
-    }
-    public String getImage() {
-        return image;
-    }
-    public String getImageType() {
-        return imageType;
-    }
+    /**
+     * Returns the title of this recipe.
+     *
+     * @return the title of this recipe.
+     */
+    String getTitle();
 
+    /**
+     * Returns the image URL of this recipe.
+     *
+     * @return the image URL of this recipe.
+     */
+    String getImage();
+
+    /**
+     * Returns the image type of this recipe.
+     *
+     * @return the image type of this recipe.
+     */
+    String getImageType();
+
+    /**
+     * Returns the instructions of this recipe.
+     *
+     * @return the instructions of this recipe.
+     */
+    List<Instruction> getInstructions();
 }

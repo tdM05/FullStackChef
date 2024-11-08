@@ -18,9 +18,14 @@ public interface Ingredient {
     float getAmount();
 
     /**
-     * Returns the nutritional information of this ingredient.
-     * @return the nutritional information of this ingredient
+     * Returns the unit of this ingredient.
+     * @return the unit of this ingredient
      */
-    NutritionalInfo getNutritionalInfo();
+    String getUnit();
 
+    /**
+     * Returns the ID of this ingredient.
+     * @return the ID of this ingredient
+     */
+    int getID();
 }
