@@ -17,7 +17,7 @@ public class RecipeDataAccessObjectTest {
      * @throws IOException if an I/O or JSON parsing error occurs.
      */
     @Test
-    public void getRecipesByIngredient1() throws IOException {
+    public void getRecipes1() throws IOException {
         // First create a data access object
         RecipeDataAccessObject dao = new RecipeDataAccessObject();
 
@@ -28,7 +28,7 @@ public class RecipeDataAccessObjectTest {
         final List<String> ingredients = new ArrayList<>(Arrays.asList(i1));
         // Note that if you specify too many elements in the list, you may get an empty response since
         // there are no recipes with all the ingredients specified.
-        List<Recipe> recipes = dao.getRecipesByIngredient(ingredients, 5);
+        List<Recipe> recipes = dao.getRecipes(ingredients, 5);
         assertNotEquals(recipes.size(), 0);
         // put a breakpoint on the assert line so that you can see what the response is (which is stored in recipes).
     }
@@ -38,7 +38,7 @@ public class RecipeDataAccessObjectTest {
      * @throws IOException if an I/O or JSON parsing error occurs.
      */
     @Test
-    public void getRecipesByIngredient2() throws IOException {
+    public void getRecipes2() throws IOException {
         // First create a data access object
         RecipeDataAccessObject dao = new RecipeDataAccessObject();
 
@@ -48,7 +48,7 @@ public class RecipeDataAccessObjectTest {
 
         // Convert this ingredient to a list
         final List<String> ingredients = new ArrayList<>(Arrays.asList(i1, i2));
-        List<Recipe> recipes = dao.getRecipesByIngredient(ingredients, 5);
+        List<Recipe> recipes = dao.getRecipes(ingredients, 5);
         assertNotEquals(recipes.size(), 0);
         // put a breakpoint on the assert line so that you can see what the response is (which is stored in recipes).
     }
@@ -57,7 +57,7 @@ public class RecipeDataAccessObjectTest {
      * @throws IOException if an I/O or JSON parsing error occurs.
      */
     @Test
-    public void getRecipesByIngredientNull() throws IOException {
+    public void getRecipesNull() throws IOException {
         // First create a data access object
         RecipeDataAccessObject dao = new RecipeDataAccessObject();
 
@@ -68,7 +68,7 @@ public class RecipeDataAccessObjectTest {
         final List<String> ingredients = new ArrayList<>(Arrays.asList(i1));
         // Note that if you specify too many elements in the list, you may get a null response since
         // there are no recipes with all the ingredients specified.
-        List<Recipe> recipes = dao.getRecipesByIngredient(ingredients, 5);
+        List<Recipe> recipes = dao.getRecipes(ingredients, 5);
         assertEquals(recipes.size(), 0);
         // put a breakpoint on the assert line so that you can see what the response is (which is stored in recipes).
     }

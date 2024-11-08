@@ -32,7 +32,7 @@ public class RecipeDataAccessObject implements SearchRecipeDataAccessInterface {
     private final List<Recipe> recipes = new ArrayList<>();
 
     @Override
-    public List<Recipe> getRecipesByIngredient(List<String> ingredientsString, int number) throws IOException, JSONException {
+    public List<Recipe> getRecipes(List<String> ingredientsString, int number) throws IOException, JSONException {
         final OkHttpClient client = new OkHttpClient();
         final String ingredientsToString = String.join(",+", ingredientsString);
         final String url = String.format("%s?apiKey=%s&includeIngredients=%s&number=%s",

@@ -26,6 +26,8 @@ public interface SearchRecipeDataAccessInterface {
      * @throws IOException   if an I/O or JSON parsing error occurs.
      * @throws JSONException if a JSON parsing error occurs.
      */
-    List<Recipe> getRecipesByIngredient(List<String> ingredientsString, int number)
+    List<Recipe> getRecipes(List<String> ingredientsString, int number)
             throws IOException, JSONException;
+    // TODO overload getRecipes with a method that takes in dietary restrictions and the dataaccessobject should
+    // reuse its code in a helper where the list of filters is simply empty.
 }
