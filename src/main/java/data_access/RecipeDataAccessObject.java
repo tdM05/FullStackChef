@@ -15,12 +15,13 @@ import org.json.JSONObject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import use_case.search_recipe.SearchRecipeDataAccessInterface;
 
 /**
  * The DAO for recipe data.
  */
-public class RecipeDataAccessObject {
-    private static final String API_KEY = "5d420ff167d2431c9f3999a891fe75eb";
+public class RecipeDataAccessObject implements SearchRecipeDataAccessInterface {
+    private static final String API_KEY = "6c12c2fcd75b40569836eb71339e80be";
     private static final String BASE_URL = "https://api.spoonacular.com/recipes/complexSearch";
 
     private static final String RESULTS = "results";
@@ -30,21 +31,8 @@ public class RecipeDataAccessObject {
     private static final String IMAGE_TYPE = "imageType";
     private final List<Recipe> recipes = new ArrayList<>();
 
-    /**
-     * Returns a list of recipes based on the query.
-     *
-     * @param ingredientsString is a list of ingredients.
-     *                    Notice that ingredients should not be a list of Ingredients because this is the
-     *                    data access object, meaning Ingredient objects should get depend on this to get nutritional
-     *                    info. This should not depend on ingredients. In other words, Ingredients should not be
-     *                    the one handing fetching nutritional info through the api. This is the job
-     *                    of this class.
-     * @param number is the number of recipes to return.
-     * @throws IOException if an I/O or JSON parsing error occurs.
-     * @throws JSONException if a JSON parsing error occurs.
-     * @return a list of recipes based on the query.
-     */
-    public List<Recipe> getRecipes(List<String> ingredientsString, int number) throws IOException, JSONException {
+    @Override
+    public List<Recipe> getRecipesByIngredient(List<String> ingredientsString, int number) throws IOException, JSONException {
         final OkHttpClient client = new OkHttpClient();
         final String ingredientsToString = String.join(",+", ingredientsString);
         final String url = String.format("%s?apiKey=%s&includeIngredients=%s&number=%s",
@@ -91,8 +79,13 @@ public class RecipeDataAccessObject {
                 }
                 return recipes;
             }
+            else if (response.body() != null) {
+                final JSONObject errorResponse = new JSONObject(response.body().string());
+                final String errorMessage = errorResponse.getString("message");
+                throw new IOException("API request failed: " + errorMessage);
+            }
             else {
-                System.out.println("API request failed");
+                throw new IOException("API request failed with status code: " + response.code());
             }
         }
         catch (IOException ex) {
@@ -101,7 +94,6 @@ public class RecipeDataAccessObject {
         catch (JSONException ex) {
             throw new JSONException(ex);
         }
-        return recipes;
     }
 
     /**
