@@ -1,5 +1,8 @@
 package interface_adapter.search_recipe;
 
+import entity.Recipe;
+import java.util.List;
+import java.util.stream.Collectors;
 import interface_adapter.ViewManagerModel;
 import use_case.search_recipe.SearchRecipeOutputBoundary;
 import use_case.search_recipe.SearchRecipeOutputData;
@@ -20,14 +23,14 @@ public class SearchRecipePresenter implements SearchRecipeOutputBoundary {
     /**
      * Prepares the success view for the SearchRecipe related Use Cases.
      *
-     * @param outputData the output data
+     * @param outputDataList the output data
      */
     @Override
     public void prepareSuccessView(List<SearchRecipeOutputData> outputDataList) {
         // On success, update the view model with the search results.
         List<Recipe> allRecipes = outputDataList.stream()
-                                                .flatMap(outputData -> outputData.getRecipeName().stream())
-                                                .collect(Collectors.toList());
+                .flatMap(outputData -> outputData.getRecipeName().stream())
+                .collect(Collectors.toList());
         searchRecipeViewModel.setRecipes(allRecipes);
         searchRecipeViewModel.firePropertyChanged("recipes");
 
