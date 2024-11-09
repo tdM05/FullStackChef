@@ -18,7 +18,7 @@ public class DisplayRecipeController {
      * Executes the DisplayRecipe Use Case.
      * @param recipeId the unique identifier of the recipe to display
      */
-    public void execute(String RecipeId) {
+    public void execute(int recipeId) {
         // 1. Instantiate the `DisplayRecipeInputData`, which should contain the recipe ID.
         final DisplayRecipeInputData inputData = new DisplayRecipeInputData(recipeId);
         // 2. Tell the Interactor to execute.

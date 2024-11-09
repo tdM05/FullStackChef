@@ -6,14 +6,14 @@ package use_case.display_recipe;
  */
 public class DisplayRecipeInputData {
 
-    private final String recipeId;
+    private final int recipeId;
 
     /**
      * Creates DisplayRecipeInputData with the specified recipe ID.
      *
      * @param recipeId The unique identifier of the recipe to display.
      */
-    public DisplayRecipeInputData(String recipeId) {
+    public DisplayRecipeInputData(int recipeId) {
         this.recipeId = recipeId;
     }
 
@@ -22,7 +22,7 @@ public class DisplayRecipeInputData {
      *
      * @return The recipe ID.
      */
-    public String getRecipeId() {
+    public int getRecipeId() {
         return recipeId;
     }
 }

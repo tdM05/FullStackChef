@@ -30,19 +30,19 @@ public class DisplayRecipeOutputData {
     }
 
     // Getters
-    public String getRecipeId() {
-        return id;
+    public int getRecipeId() {
+        return recipeId;
     }
 
     public String getName() {
         return name;
     }
 
-    public List<String> getIngredients() {
+    public List<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public List<String> getInstructions() {
+    public List<Instruction> getInstructions() {
         return instructions;
     }
 
