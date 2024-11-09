@@ -1,8 +1,5 @@
 package interface_adapter.search_recipe;
 
-import interface_adapter.note.NoteViewModel;
-import use_case.note.NoteOutputBoundary;
-
 import interface_adapter.ViewManagerModel;
 import use_case.search_recipe.SearchRecipeOutputBoundary;
 import use_case.search_recipe.SearchRecipeOutputData;
