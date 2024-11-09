@@ -1,19 +1,19 @@
 package interface_adapter.display_recipe;
 
-import use_case.display_recipe.RecipeOutputBoundary;
-import use_case.display_recipe.RecipeOutputData;
+import use_case.display_recipe.DisplayRecipeOutputBoundary;
+import use_case.display_recipe.DisplayRecipeOutputData;
 
 /**
  * The Presenter for the Display_recipe Use Case.
  */
 
-public class DisplayRecipePresenter implements RecipeOutputBoundary {
+public class DisplayRecipePresenter implements DisplayRecipeOutputBoundary {
     /** priv */
     public DisplayRecipePresenter() {
         /** implement */
     }
 
-    public void prepareSuccessView(RecipeOutputData response) {
+    public void prepareSuccessView(DisplayRecipeOutputData response) {
         /** implement */
     }
 
