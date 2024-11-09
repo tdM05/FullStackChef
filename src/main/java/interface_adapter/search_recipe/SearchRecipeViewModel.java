@@ -1,8 +1,9 @@
 package interface_adapter.search_recipe;
 
-import interface_adapter.ViewModel;
-import entity.Recipe;
 import java.util.List;
+
+import interface_adapter.ViewModel;
+import use_case.search_recipe.SearchRecipeOutputData;
 
 /**
  * ViewModel for the Search Recipe Use Case.
@@ -16,11 +17,11 @@ public class SearchRecipeViewModel extends ViewModel<SearchRecipeState> {
         setState(new SearchRecipeState());
     }
 
-    public List<Recipe> getRecipes() {
+    public List<SearchRecipeOutputData> getRecipes() {
         return getState().getRecipe();
     }
 
-    public void setRecipes(List<Recipe> recipes) {
+    public void setRecipes(List<SearchRecipeOutputData> recipes) {
         getState().setRecipe(recipes);
         firePropertyChanged("recipes");
     }
