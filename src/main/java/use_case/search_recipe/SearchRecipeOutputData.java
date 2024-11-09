@@ -10,14 +10,14 @@ public interface SearchRecipeOutputData {
      *
      * @return the recipe name
      */
-    String recipeName();
+    String getRecipeName();
 
     /**
      * Gets the URL of the recipe image.
      *
      * @return the image URL
      */
-    String imageUrl();
+    String getImageUrl();
 
     /**
      * Gets the ID of the recipe.

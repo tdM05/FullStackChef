@@ -17,12 +17,12 @@ public class CommonSearchRecipeOutputData implements SearchRecipeOutputData {
     }
 
     @Override
-    public String recipeName() {
+    public String getRecipeName() {
         return recipeName;
     }
 
     @Override
-    public String imageUrl() {
+    public String getImageUrl() {
         return imageUrl;
     }
 
