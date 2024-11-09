@@ -18,5 +18,5 @@ public interface DisplayRecipeDataAccessInterface {
      * @throws IOException   if an I/O error occurs during the API request
      * @throws JSONException if JSON parsing fails
      */
-    Recipe getRecipeById(String id) throws IOException, JSONException;
+    Recipe getRecipeById(int id) throws IOException, JSONException;
 }

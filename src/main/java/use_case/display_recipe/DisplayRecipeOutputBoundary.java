@@ -1,21 +1,21 @@
 package use_case.display_recipe;
 
 /**
- * The output boundary for the Display Recipe Use Case.
+ * The Output Boundary for the Display Recipe Use Case.
+ * Defines the methods to present the results to the user interface.
  */
 public interface DisplayRecipeOutputBoundary {
+    /**
+     * Prepares the success view with the provided DisplayRecipeOutputData.
+     *
+     * @param outputData the output data containing recipe details
+     */
+    void prepareSuccessView(DisplayRecipeOutputData outputData);
 
     /**
-     * Prepares the success view for the Display Recipe Use Case.
+     * Prepares the failure view with the provided error message.
      *
-     * @param response the output data containing recipe details
+     * @param errorMessage the error message explaining the failure
      */
-    void prepareSuccessView(DisplayRecipeOutputData response);
-
-    /**
-     * Prepares the failure view for the Display Recipe Use Case.
-     *
-     * @param error the explanation of the failure
-     */
-    void prepareFailView(String error);
+    void prepareFailView(String errorMessage);
 }
