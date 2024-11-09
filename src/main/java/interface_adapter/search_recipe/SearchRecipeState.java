@@ -1,22 +1,18 @@
 package interface_adapter.search_recipe;
 
-import java.util.List;
-
-import use_case.search_recipe.SearchRecipeOutputData;
-
 /**
  * The State for a recipe search.
- * Updated such that recipe search is simply a List of Recipe
+ * <p>For this example, a recipe search is simply a string.</p>
  */
 public class SearchRecipeState {
-    private List<SearchRecipeOutputData> recipeSearch;
+    private String recipeSearch = "";
     private String error;
 
-    public List<SearchRecipeOutputData> getRecipe() {
+    public String getRecipe() {
         return recipeSearch;
     }
 
-    public void setRecipe(List<SearchRecipeOutputData> recipe) {
+    public void setRecipe(String recipe) {
         this.recipeSearch = recipe;
     }
 
