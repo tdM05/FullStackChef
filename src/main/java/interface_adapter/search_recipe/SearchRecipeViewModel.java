@@ -6,30 +6,31 @@ import java.util.List;
 
 /**
  * ViewModel for the Search Recipe Use Case.
+ * Encapsulate the state management within the SearchRecipeViewModel
+ * such that the view interacts with the ViewModel rather than directly with the State
  */
-public class SearchRecipeViewModel extends ViewModel<List<Recipe>> {
-
-    private String error;
+public class SearchRecipeViewModel extends ViewModel<SearchRecipeState> {
 
     public SearchRecipeViewModel() {
         super("search recipe");
+        setState(new SearchRecipeState());
     }
 
     public List<Recipe> getRecipes() {
-        return getState();
+        return getState().getRecipe();
     }
 
     public void setRecipes(List<Recipe> recipes) {
-        setState(recipes);
+        getState().setRecipe(recipes);
         firePropertyChanged("recipes");
     }
 
     public String getError() {
-        return error;
+        return getState().getError();
     }
 
     public void setError(String error) {
-        this.error = error;
+        getState().setError(error);
         firePropertyChanged("error");
     }
 }
