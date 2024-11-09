@@ -7,9 +7,9 @@ import use_case.display_recipe.RecipieOutputData;
  * The Presenter for the Display_recipe Use Case.
  */
 
-public class RecipePresenter implements RecipieOutputBoundary {
+public class DisplayRecipePresenter implements RecipieOutputBoundary {
     /** priv */
-    public RecipePresenter() {
+    public DisplayRecipePresenter() {
         /** implement */
     }
 
