@@ -54,4 +54,5 @@ public interface Recipe {
      * @return the instructions of this recipe.
      */
     List<Instruction> getInstructions();
+    boolean isFavorite();
 }
