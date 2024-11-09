@@ -25,7 +25,7 @@ public interface Recipe {
      *
      * @return the ID of this recipe.
      */
-    int getId();
+    int getRecipeId();
 
     /**
      * Returns the title of this recipe.

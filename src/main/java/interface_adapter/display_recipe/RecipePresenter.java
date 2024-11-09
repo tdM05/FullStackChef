@@ -1,13 +1,13 @@
 package interface_adapter.display_recipe;
 
 import interface_adapter.ViewManagerModel;
-import use_case.display_recipe.RecipeOutputBoundary;
-import use_case.display_recipe.RecipeOutputData;
+import use_case.display_recipe.DisplayRecipeOutputBoundary;
+import use_case.display_recipe.DisplayRecipeOutputData;
 
 /**
  * The Presenter for the Display_recipe Use Case.
  */
-public class RecipePresenter implements RecipeOutputBoundary {
+public class RecipePresenter implements DisplayRecipeOutputBoundary {
 
     private final ViewManagerModel viewManagerModel;
     private final RecipeViewModel recipeViewModel;
@@ -23,7 +23,7 @@ public class RecipePresenter implements RecipeOutputBoundary {
      * @param response the output data containing recipe details
      */
     @Override
-    public void prepareSuccessView(RecipeOutputData response) {
+    public void prepareSuccessView(DisplayRecipeOutputData response) {
         // Update the RecipeViewModel with the recipe data
         recipeViewModel.setRecipe(response.getRecipe());
         recipeViewModel.firePropertyChanged("recipe");

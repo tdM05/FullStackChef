@@ -9,10 +9,10 @@ import java.io.IOException;
  * The Interactor for the Display Recipe Use Case.
  * Handles the business logic for displaying a recipe.
  */
-public class RecipeInteractor implements RecipeInputBoundary {
+public class DisplayRecipeInteractor {
 
-    private final RecipeOutputBoundary presenter;
-    private final RecipeDataAccessInterface dataAccess;
+    private final DisplayRecipeOutputBoundary presenter;
+    private final DisplayRecipeDataAccessInterface dataAccess;
 
     /**
      * Constructs a RecipeInteractor with the specified presenter and data access interface.
@@ -20,7 +20,7 @@ public class RecipeInteractor implements RecipeInputBoundary {
      * @param presenter  the output boundary to present results
      * @param dataAccess the data access interface for recipe data
      */
-    public RecipeInteractor(RecipeOutputBoundary presenter, RecipeDataAccessInterface dataAccess) {
+    public DisplayRecipeInteractor(DisplayRecipeOutputBoundary presenter, DisplayRecipeDataAccessInterface dataAccess) {
         this.presenter = presenter;
         this.dataAccess = dataAccess;
     }
@@ -31,13 +31,13 @@ public class RecipeInteractor implements RecipeInputBoundary {
      * @param inputData the input data containing the recipe ID
      */
     @Override
-    public void displayRecipe(RecipeInputData inputData) {
+    public void displayRecipe(DisplayRecipeInputData inputData) {
         try {
             // Retrieve the recipe using the data access interface
-            Recipe recipe = dataAccess.getRecipeById(inputData.getId());
+            Recipe recipe = dataAccess.getRecipeById(inputData.getRecipeId());
 
             // Map the Recipe entity to RecipeOutputData
-            RecipeOutputData outputData = mapRecipeToOutputData(recipe);
+            DisplayRecipeOutputData outputData = mapRecipeToOutputData(recipe);
 
             // Invoke the presenter to prepare the success view
             presenter.prepareSuccessView(outputData);
@@ -53,9 +53,9 @@ public class RecipeInteractor implements RecipeInputBoundary {
      * @param recipe the Recipe entity
      * @return the corresponding RecipeOutputData
      */
-    private RecipeOutputData mapRecipeToOutputData(Recipe recipe) {
-        return new RecipeOutputData(
-                recipe.getId(),
+    private DisplayRecipeOutputData mapRecipeToOutputData(Recipe recipe) {
+        return new DisplayRecipeOutputData(
+                recipe.getRecipeId(),
                 recipe.getTitle(),
                 recipe.getImage(),
                 recipe.getImageType(),

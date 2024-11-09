@@ -1,25 +1,26 @@
 package use_case.display_recipe;
 
-import entity.Recipe;
+import entity.Ingredient;
+import entity.Instruction;
+import entity.NutritionalInfo;
+
 import java.util.List;
 
 /**
  * The Output Data for the Display Recipe Use Case.
  * Contains all necessary information to display a recipe.
  */
-public class RecipeOutputData {
-    private final String id;
+public class DisplayRecipeOutputData {
+    private final int recipeId;
     private final String name;
-    private final List<String> ingredients;
-    private final List<String> instructions;
+    private final List<Ingredient> ingredients;
+    private final List<Instruction> instructions;
     private final List<String> equipment;
     private final NutritionalInfoOutput nutritionalInfo;
     private final boolean isFavorite;
 
-    public RecipeOutputData(String id, String name, List<String> ingredients,
-                            List<String> instructions, List<String> equipment,
-                            NutritionalInfoOutput nutritionalInfo, boolean isFavorite) {
-        this.id = id;
+    public DisplayRecipeOutputData(int recipeId, String title, String image, String imageType, List<Ingredient> ingredients, NutritionalInfo nutritionalInfo, List<Instruction> instructions, boolean favorite, String id, String name, List<String> ingredients1, List<String> instructions1, List<String> equipment, NutritionalInfoOutput nutritionalInfo1, boolean isFavorite) {
+        this.recipeId = recipeId;
         this.name = name;
         this.ingredients = ingredients;
         this.instructions = instructions;
@@ -29,7 +30,7 @@ public class RecipeOutputData {
     }
 
     // Getters
-    public String getId() {
+    public String getRecipeId() {
         return id;
     }
 

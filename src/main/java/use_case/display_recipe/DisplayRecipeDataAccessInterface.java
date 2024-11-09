@@ -8,7 +8,7 @@ import org.json.JSONException;
  * The Data Access Interface for the Display Recipe Use Case.
  * Defines the methods required to access Recipe data for display purposes.
  */
-public interface RecipeDataAccessInterface {
+public interface DisplayRecipeDataAccessInterface {
 
     /**
      * Retrieves detailed information of a Recipe by its unique identifier.
