@@ -25,7 +25,7 @@ public interface Recipe {
      *
      * @return the ID of this recipe.
      */
-    int getId();
+    int getRecipeId();
 
     /**
      * Returns the title of this recipe.
@@ -54,4 +54,5 @@ public interface Recipe {
      * @return the instructions of this recipe.
      */
     List<Instruction> getInstructions();
+    boolean isFavorite();
 }

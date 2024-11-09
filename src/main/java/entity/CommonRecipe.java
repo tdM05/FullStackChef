@@ -13,6 +13,7 @@ public class CommonRecipe implements Recipe {
     private List<Ingredient> ingredients;
     private NutritionalInfo nutritionalInfo;
     private List<Instruction> instructions;
+    private boolean isFavorite;
 
     public CommonRecipe(int id, String title, String image, String imageType,
                         List<Ingredient> ingredients, NutritionalInfo nutritionalInfo,
@@ -24,6 +25,7 @@ public class CommonRecipe implements Recipe {
         this.ingredients = ingredients;
         this.nutritionalInfo = nutritionalInfo;
         this.instructions = instructions;
+        this.isFavorite = isFavorite;
     }
 
     @Override
@@ -65,5 +67,10 @@ public class CommonRecipe implements Recipe {
     @Override
     public List<Instruction> getInstructions() {
         return instructions;
+    }
+
+    @Override
+    public boolean isFavorite() {
+        return isFavorite;
     }
 }
