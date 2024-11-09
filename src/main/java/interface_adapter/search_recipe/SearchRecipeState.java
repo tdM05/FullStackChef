@@ -1,18 +1,21 @@
 package interface_adapter.search_recipe;
 
+import entity.Recipe;
+import java.util.List;
+
 /**
  * The State for a recipe search.
- * <p>For this example, a recipe search is simply a string.</p>
+ * Updated such that a recipe search is a List of Recipe.
  */
 public class SearchRecipeState {
-    private String recipeSearch = "";
+    private List<Recipe> recipeSearch = "";
     private String error;
 
-    public String getRecipe() {
+    public List<Recipe> getRecipes() {
         return recipeSearch;
     }
 
-    public void setRecipe(String recipe) {
+    public void setRecipe(List<Recipe> recipes) {
         this.recipeSearch = recipe;
     }
 
