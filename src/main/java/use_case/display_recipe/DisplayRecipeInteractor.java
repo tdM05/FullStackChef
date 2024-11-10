@@ -9,13 +9,13 @@ import java.io.IOException;
  * The Interactor for the Display Recipe Use Case.
  * Handles the business logic for displaying a recipe.
  */
-public class DisplayRecipeInteractor {
+public class DisplayRecipeInteractor implements DisplayRecipeInputBoundary {
 
     private final DisplayRecipeOutputBoundary presenter;
     private final DisplayRecipeDataAccessInterface dataAccess;
 
     /**
-     * Constructs a RecipeInteractor with the specified presenter and data access interface.
+     * Constructs a DisplayRecipeInteractor with the specified presenter and data access interface.
      *
      * @param presenter  the output boundary to present results
      * @param dataAccess the data access interface for recipe data
@@ -26,17 +26,17 @@ public class DisplayRecipeInteractor {
     }
 
     /**
-     * Handles the request to display a recipe.
+     * Executes the request to display a recipe.
      *
      * @param inputData the input data containing the recipe ID
      */
     @Override
-    public void displayRecipe(DisplayRecipeInputData inputData) {
+    public void execute(DisplayRecipeInputData inputData) {
         try {
             // Retrieve the recipe using the data access interface
             Recipe recipe = dataAccess.getRecipeById(inputData.getRecipeId());
 
-            // Map the Recipe entity to RecipeOutputData
+            // Map the Recipe entity to DisplayRecipeOutputData
             DisplayRecipeOutputData outputData = mapRecipeToOutputData(recipe);
 
             // Invoke the presenter to prepare the success view
@@ -48,10 +48,10 @@ public class DisplayRecipeInteractor {
     }
 
     /**
-     * Maps a Recipe entity to RecipeOutputData.
+     * Maps a Recipe entity to DisplayRecipeOutputData.
      *
      * @param recipe the Recipe entity
-     * @return the corresponding RecipeOutputData
+     * @return the corresponding DisplayRecipeOutputData
      */
     private DisplayRecipeOutputData mapRecipeToOutputData(Recipe recipe) {
         return new DisplayRecipeOutputData(

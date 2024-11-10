@@ -36,7 +36,7 @@ public class SearchRecipeInteractor implements SearchRecipeInputBoundary {
         // We will get the list of recipes from the data access object
         final List<String> recipeList = splitString(searchString);
         try {
-            final List<Recipe> recipes = recipeDataAccessObject.getRecipes(recipeList, 5);
+            final List<Recipe> recipes = recipeDataAccessObject.getRecipes(recipeList, 6);
             // Then we convert this into output data
             final List<SearchRecipeOutputData> outputData = recipeToCommonRecipeOutputData(recipes);
             recipePresenter.prepareSuccessView(outputData);

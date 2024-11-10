@@ -14,14 +14,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import use_case.search_recipe.SearchRecipeDataAccessInterface;
-import use_case.display_recipe.RecipeDataAccessInterface;
+import use_case.display_recipe.DisplayRecipeDataAccessInterface;
 
 /**
  * The DAO for recipe data.
- * Implements both SearchRecipeDataAccessInterface and RecipeDataAccessInterface.
+ * Implements both SearchRecipeDataAccessInterface and DisplayRecipeDataAccessInterface.
  */
-public class RecipeDataAccessObject implements SearchRecipeDataAccessInterface, RecipeDataAccessInterface {
-    private static final String API_KEY = "6c12c2fcd75b40569836eb71339e80be";
+public class RecipeDataAccessObject implements SearchRecipeDataAccessInterface, DisplayRecipeDataAccessInterface {
+    private static final String API_KEY = "d3bafca8788e40c486fb638c16b08a32";
     private static final String BASE_SEARCH_URL = "https://api.spoonacular.com/recipes/complexSearch";
     private static final String BASE_DETAILS_URL = "https://api.spoonacular.com/recipes/%d/information?&apiKey=%s&includeNutrition=true";
 
@@ -63,7 +63,7 @@ public class RecipeDataAccessObject implements SearchRecipeDataAccessInterface, 
     @Override
     public List<Recipe> getRecipes(List<String> ingredientsList, int number) throws IOException, JSONException {
         final String ingredientsToString = String.join(",+", ingredientsList);
-        final String url = String.format("%s?apiKey=%s&includeIngredients=%s&number=%s",
+        final String url = String.format("%s?apiKey=%s&includeIngredients=%s&number=%d",
                 BASE_SEARCH_URL, API_KEY, ingredientsToString, number);
 
         final Request request = new Request.Builder()
@@ -88,22 +88,10 @@ public class RecipeDataAccessObject implements SearchRecipeDataAccessInterface, 
                     final String imageType = recipeJson.optString(IMAGE_TYPE, "jpg"); // Default to "jpg" if not present
 
                     // Fetch detailed information for each recipe
-                    final JSONObject recipeDetails = getRecipeDetails(recipeID);
+                    final Recipe recipe = fetchAndParseRecipe(recipeID, title, image, imageType);
 
-                    final JSONArray ingredientsJson = recipeDetails.getJSONArray("extendedIngredients");
-                    final JSONObject nutritionJson = recipeDetails.getJSONObject("nutrition");
-                    final JSONArray instructionsJson = recipeDetails.optJSONArray("analyzedInstructions");
-
-                    // Parse JSON data to entities
-                    final List<Ingredient> ingredientObjects = JSONParser.parseIngredients(ingredientsJson);
-                    final NutritionalInfo nutritionalInfo = JSONParser.parseNutritionalInfo(nutritionJson);
-                    final List<Instruction> instructions = instructionsJson != null
-                            ? JSONParser.parseInstructions(instructionsJson, ingredientObjects)
-                            : new ArrayList<>();
-
-                    // Create Recipe object and add to the list
-                    recipes.add(new CommonRecipe(String.valueOf(recipeID), title, image, imageType, ingredientObjects,
-                            nutritionalInfo, instructions));
+                    // Add to the list
+                    recipes.add(recipe);
                 }
                 return recipes;
             } else if (response.body() != null) {
@@ -113,7 +101,60 @@ public class RecipeDataAccessObject implements SearchRecipeDataAccessInterface, 
             } else {
                 throw new IOException("API request failed with status code: " + response.code());
             }
+        } catch (IOException | JSONException ex) {
+            throw new IOException("Error during API request: " + ex.getMessage(), ex);
         }
+    }
+
+    /**
+     * Retrieves detailed information of a Recipe by its unique identifier.
+     *
+     * @param id the unique identifier of the recipe
+     * @return the Recipe entity corresponding to the given id
+     * @throws IOException   if an I/O error occurs during the API request
+     * @throws JSONException if JSON parsing fails
+     */
+    @Override
+    public Recipe getRecipeById(int id) throws IOException, JSONException {
+        Recipe recipe = fetchAndParseRecipe(id, null, null, null);
+        return recipe;
+    }
+
+    /**
+     * Fetches recipe details and parses them into a Recipe entity.
+     *
+     * @param recipeID   the ID of the recipe
+     * @param title      the title of the recipe (optional, used in search)
+     * @param image      the image URL of the recipe (optional, used in search)
+     * @param imageType  the image type of the recipe (optional, used in search)
+     * @return the parsed Recipe entity
+     * @throws IOException   if an I/O error occurs during the API request
+     * @throws JSONException if JSON parsing fails
+     */
+    private Recipe fetchAndParseRecipe(int recipeID, String title, String image, String imageType) throws IOException, JSONException {
+        final JSONObject recipeDetails = getRecipeDetails(recipeID);
+
+        // If title, image, and imageType are provided (from search), use them; otherwise, extract from details
+        final String finalTitle = (title != null) ? title : recipeDetails.getString("title");
+        final String finalImage = (image != null) ? image : recipeDetails.getString("image");
+        final String finalImageType = (imageType != null) ? imageType : recipeDetails.optString("imageType", "jpg");
+
+        final JSONArray ingredientsJson = recipeDetails.getJSONArray("extendedIngredients");
+        final JSONObject nutritionJson = recipeDetails.getJSONObject("nutrition");
+        final JSONArray instructionsJson = recipeDetails.optJSONArray("analyzedInstructions");
+
+        // Parse JSON data to entities
+        final List<Ingredient> ingredientObjects = JSONParser.parseIngredients(ingredientsJson);
+        final NutritionalInfo nutritionalInfo = JSONParser.parseNutritionalInfo(nutritionJson);
+        final List<Instruction> instructions = instructionsJson != null
+                ? JSONParser.parseInstructions(instructionsJson, ingredientObjects)
+                : new ArrayList<>();
+
+        // Assuming 'isFavorite' is managed locally or via another service
+        boolean isFavorite = false; // Placeholder
+
+        return new CommonRecipe(recipeID, finalTitle, finalImage, finalImageType, ingredientObjects,
+                nutritionalInfo, instructions, isFavorite);
     }
 
     /**
@@ -141,40 +182,8 @@ public class RecipeDataAccessObject implements SearchRecipeDataAccessInterface, 
             } else {
                 throw new IOException("Failed to fetch recipe details with status code: " + response.code());
             }
+        } catch (IOException | JSONException ex) {
+            throw new IOException("Error fetching recipe details: " + ex.getMessage(), ex);
         }
-    }
-
-    /**
-     * Retrieves detailed information of a Recipe by its unique identifier.
-     *
-     * @param id the unique identifier of the recipe
-     * @return the Recipe entity corresponding to the given id
-     * @throws IOException   if an I/O error occurs during the API request
-     * @throws JSONException if JSON parsing fails
-     */
-    @Override
-    public Recipe getRecipeById(String id) throws IOException, JSONException {
-        int recipeID = Integer.parseInt(id);
-        JSONObject recipeDetails = getRecipeDetails(recipeID);
-
-        final String title = recipeDetails.getString("title");
-        final String image = recipeDetails.getString("image");
-        final String imageType = recipeDetails.optString("imageType", "jpg");
-
-        final JSONArray ingredientsJson = recipeDetails.getJSONArray("extendedIngredients");
-        final JSONObject nutritionJson = recipeDetails.getJSONObject("nutrition");
-        final JSONArray instructionsJson = recipeDetails.optJSONArray("analyzedInstructions");
-
-        final List<Ingredient> ingredientObjects = JSONParser.parseIngredients(ingredientsJson);
-        final NutritionalInfo nutritionalInfo = JSONParser.parseNutritionalInfo(nutritionJson);
-        final List<Instruction> instructions = instructionsJson != null
-                ? JSONParser.parseInstructions(instructionsJson, ingredientObjects)
-                : new ArrayList<>();
-
-        // Assuming 'isFavorite' is managed locally or via another service
-        boolean isFavorite = false; // Placeholder
-
-        return new CommonRecipe(id, title, image, imageType, ingredientObjects,
-                nutritionalInfo, instructions, isFavorite);
     }
 }
