@@ -6,19 +6,31 @@ import java.util.List;
  * The representation of a recipe in our program.
  */
 public class CommonRecipe implements Recipe {
-    private int id;
-    private String title;
-    private String image;
-    private String imageType;
-    private List<Ingredient> ingredients;
-    private NutritionalInfo nutritionalInfo;
-    private List<Instruction> instructions;
-    private boolean isFavorite;
+    private final int recipeId;
+    private final String title;
+    private final String image;
+    private final String imageType;
+    private final List<Ingredient> ingredients;
+    private final NutritionalInfo nutritionalInfo;
+    private final List<Instruction> instructions;
+    private final boolean isFavorite;
 
-    public CommonRecipe(int id, String title, String image, String imageType,
+    /**
+     * Constructs a CommonRecipe with the specified details.
+     *
+     * @param recipeId         the unique identifier of the recipe
+     * @param title            the title of the recipe
+     * @param image            the image URL of the recipe
+     * @param imageType        the image type of the recipe (e.g., jpg, png)
+     * @param ingredients      the list of ingredients needed for the recipe
+     * @param nutritionalInfo  the nutritional information of the recipe
+     * @param instructions     the instructions to prepare the recipe
+     * @param isFavorite       indicates whether the recipe is marked as favorite
+     */
+    public CommonRecipe(int recipeId, String title, String image, String imageType,
                         List<Ingredient> ingredients, NutritionalInfo nutritionalInfo,
-                        List<Instruction> instructions) {
-        this.id = id;
+                        List<Instruction> instructions, boolean isFavorite) {
+        this.recipeId = recipeId;
         this.title = title;
         this.image = image;
         this.imageType = imageType;
@@ -33,20 +45,14 @@ public class CommonRecipe implements Recipe {
         return ingredients;
     }
 
-    /**
-     * THIS METHOD IS NOT NEEDED FOR NOW SINCE WE ARE IMPLEMENTING THE TEAM USE CASE
-     * Returns the nutritional information for this recipe.
-     *
-     * @return the nutritional information for this recipe.
-     */
     @Override
     public NutritionalInfo getNutritionalInfo() {
         return nutritionalInfo;
     }
 
-    // Getters for each field
-    public int getId() {
-        return id;
+    @Override
+    public int getRecipeId() {
+        return recipeId;
     }
 
     @Override

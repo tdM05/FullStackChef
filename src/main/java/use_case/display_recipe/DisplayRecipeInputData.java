@@ -1,28 +1,27 @@
 package use_case.display_recipe;
 
 /**
- * Input data for the DisplayRecipe Use Case.
- * Encapsulates the ID of the recipe to be displayed.
+ * The Input Data for the Display Recipe Use Case.
+ * Contains the necessary information to request a recipe.
  */
 public class DisplayRecipeInputData {
-
-    private final String recipeId;
+    private final int recipeId;
 
     /**
-     * Creates DisplayRecipeInputData with the specified recipe ID.
+     * Constructs a new DisplayRecipeInputData with the specified recipe ID.
      *
-     * @param recipeId The unique identifier of the recipe to display.
+     * @param recipeId the unique identifier of the recipe
      */
-    public DisplayRecipeInputData(String recipeId) {
+    public DisplayRecipeInputData(int recipeId) {
         this.recipeId = recipeId;
     }
 
     /**
-     * Gets the recipe ID associated with this input data.
+     * Returns the unique identifier of the recipe.
      *
-     * @return The recipe ID.
+     * @return the recipe ID
      */
-    public String getRecipeId() {
+    public int getRecipeId() {
         return recipeId;
     }
 }
