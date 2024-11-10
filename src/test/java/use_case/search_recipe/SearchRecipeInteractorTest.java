@@ -32,7 +32,7 @@ public class SearchRecipeInteractorTest {
                 // This is the pre-determined recipe that the interactor will return
                 List<Recipe> res = new ArrayList<>();
                 res.add(new CommonRecipe(1, "recipeName", "imageUrl", "imageType",
-                        new ArrayList<>(), null, new ArrayList<>()));
+                        new ArrayList<>(), null, new ArrayList<>(), false));
                 return res;
             }
         };
@@ -55,7 +55,7 @@ public class SearchRecipeInteractorTest {
         SearchRecipeInputData inputData = new SearchRecipeInputData() {
             @Override
             public String searchQuery() {
-                // Notice that they don't have to be perfectly comma seperated so long as there are commas.
+                // Notice that they don't have to be perfectly comma separated so long as there are commas.
                 return "chicken,  garlic,spinach";
             }
         };
