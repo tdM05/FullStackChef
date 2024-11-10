@@ -16,8 +16,8 @@ import view.SearchRecipeView;
  * Builder for the Search Recipe Application.
  */
 public class SearchRecipeAppBuilder {
-    public static final int HEIGHT = 1200;
-    public static final int WIDTH = 800;
+    public static final int HEIGHT = 800;
+    public static final int WIDTH = 1200;
     private SearchRecipeDataAccessInterface searchrecipeDAO;
     private SearchRecipeViewModel searchrecipeViewModel = new SearchRecipeViewModel();
     private SearchRecipeView searchrecipeView;
@@ -76,6 +76,9 @@ public class SearchRecipeAppBuilder {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setTitle("Recipe Search Application");
         frame.setSize(WIDTH, HEIGHT);
+
+        frame.setLocationRelativeTo(null);
+        frame.setResizable(false);
 
         frame.add(searchrecipeView);
 

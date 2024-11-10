@@ -21,7 +21,7 @@ import use_case.search_recipe.SearchRecipeDataAccessInterface;
  * The DAO for recipe data.
  */
 public class RecipeDataAccessObject implements SearchRecipeDataAccessInterface {
-    private static final String API_KEY = "6c12c2fcd75b40569836eb71339e80be";
+    private static final String API_KEY = "d3bafca8788e40c486fb638c16b08a32";
     private static final String BASE_URL = "https://api.spoonacular.com/recipes/complexSearch";
 
     private static final String RESULTS = "results";

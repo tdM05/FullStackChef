@@ -8,7 +8,6 @@ import use_case.search_recipe.SearchRecipeDataAccessInterface;
  */
 public class SearchRecipeApplication {
 
-
     public static void main(String[] args) {
 
         final SearchRecipeDataAccessInterface searchRecipeDAO = new RecipeDataAccessObject();
