@@ -1,5 +1,6 @@
 package interface_adapter.display_recipe;
 
+import interface_adapter.ViewManagerModel;
 import use_case.display_recipe.DisplayRecipeOutputBoundary;
 import use_case.display_recipe.DisplayRecipeOutputData;
 
@@ -30,18 +31,18 @@ public class DisplayRecipePresenter implements DisplayRecipeOutputBoundary {
      */
     @Override
     public void prepareSuccessView(DisplayRecipeOutputData outputData) {
-        // Update the DisplayRecipeViewModel with the recipe details
-        displayRecipeViewModel.setRecipeId(outputData.getRecipeId());
-        displayRecipeViewModel.setTitle(outputData.getTitle());
-        displayRecipeViewModel.setImage(outputData.getImage());
-        displayRecipeViewModel.setImageType(outputData.getImageType());
-        displayRecipeViewModel.setIngredients(outputData.getIngredients());
-        displayRecipeViewModel.setNutritionalInfo(outputData.getNutritionalInfo());
-        displayRecipeViewModel.setInstructions(outputData.getInstructions());
-        displayRecipeViewModel.setFavorite(outputData.isFavorite());
+        // Create a new DisplayRecipeState and populate it with data from outputData
+        final DisplayRecipeState displayRecipeState = new DisplayRecipeState();
 
-        // Instruct the ViewManager to switch to the RecipeDetailView
-        viewManager.switchTo("RecipeDetailView");
+        displayRecipeState.setRecipeName(outputData.getTitle());
+        displayRecipeState.setIngredients(outputData.getIngredients().toString());
+        displayRecipeState.setInstructions(outputData.getInstructions().toString());
+
+        // Update the DisplayRecipeViewModel with the new state
+        displayRecipeViewModel.setState(displayRecipeState);
+
+        // Update viewManager with the new view name
+        viewManager.setState(displayRecipeViewModel.getViewName());
     }
 
     /**
@@ -51,10 +52,8 @@ public class DisplayRecipePresenter implements DisplayRecipeOutputBoundary {
      */
     @Override
     public void prepareFailView(String errorMessage) {
-        // Update the DisplayRecipeViewModel with the error message
-        displayRecipeViewModel.setErrorMessage(errorMessage);
-
-        // Instruct the ViewManager to switch to the ErrorView
-        viewManager.switchTo("ErrorView");
+        final DisplayRecipeState displayRecipeState = displayRecipeViewModel.getState();
+        displayRecipeState.setDisplayError(errorMessage);
+        displayRecipeViewModel.firePropertyChanged();
     }
 }
