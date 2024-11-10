@@ -21,11 +21,11 @@ public interface Recipe {
     NutritionalInfo getNutritionalInfo();
 
     /**
-     * Returns the ID of this recipe.
+     * Returns the unique identifier of this recipe.
      *
-     * @return the ID of this recipe.
+     * @return the unique identifier of this recipe.
      */
-    int getId();
+    int getRecipeId();
 
     /**
      * Returns the title of this recipe.
@@ -42,16 +42,23 @@ public interface Recipe {
     String getImage();
 
     /**
-     * Returns the image type of this recipe.
+     * Returns the image type of this recipe (e.g., jpg, png).
      *
      * @return the image type of this recipe.
      */
     String getImageType();
 
     /**
-     * Returns the instructions of this recipe.
+     * Returns the instructions for preparing this recipe.
      *
-     * @return the instructions of this recipe.
+     * @return the instructions for preparing this recipe.
      */
     List<Instruction> getInstructions();
+
+    /**
+     * Indicates whether this recipe is marked as a favorite.
+     *
+     * @return true if the recipe is a favorite, false otherwise.
+     */
+    boolean isFavorite();
 }

@@ -50,7 +50,7 @@ public class SearchRecipeInteractor implements SearchRecipeInputBoundary {
     private List<SearchRecipeOutputData> recipeToCommonRecipeOutputData(List<Recipe> recipes) {
         final List<SearchRecipeOutputData> outputData = new ArrayList<>();
         for (Recipe recipe : recipes) {
-            outputData.add(new CommonSearchRecipeOutputData(recipe.getTitle(), recipe.getImage(), recipe.getId()));
+            outputData.add(new CommonSearchRecipeOutputData(recipe.getTitle(), recipe.getImage(), recipe.getRecipeId()));
         }
         return outputData;
     }
