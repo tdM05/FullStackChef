@@ -3,6 +3,10 @@ package interface_adapter.display_recipe;
 import interface_adapter.ViewManagerModel;
 import use_case.display_recipe.DisplayRecipeOutputBoundary;
 import use_case.display_recipe.DisplayRecipeOutputData;
+import entity.Ingredient;
+import entity.Instruction;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The Presenter for the Display Recipe Use Case.
@@ -16,7 +20,7 @@ public class DisplayRecipePresenter implements DisplayRecipeOutputBoundary {
     /**
      * Constructs a DisplayRecipePresenter with the specified ViewManagerModel and DisplayRecipeViewModel.
      *
-     * @param viewManager          the view manager model to handle view switching
+     * @param viewManager            the view manager model to handle view switching
      * @param displayRecipeViewModel the view model to update with recipe data
      */
     public DisplayRecipePresenter(ViewManagerModel viewManager, DisplayRecipeViewModel displayRecipeViewModel) {
@@ -32,14 +36,27 @@ public class DisplayRecipePresenter implements DisplayRecipeOutputBoundary {
     @Override
     public void prepareSuccessView(DisplayRecipeOutputData outputData) {
         // Create a new DisplayRecipeState and populate it with data from outputData
-        final DisplayRecipeState displayRecipeState = new DisplayRecipeState();
+        DisplayRecipeState displayRecipeState = new DisplayRecipeState();
 
-        displayRecipeState.setRecipeName(outputData.getTitle());
-        displayRecipeState.setIngredients(outputData.getIngredients().toString());
-        displayRecipeState.setInstructions(outputData.getInstructions().toString());
+        displayRecipeState.setTitle(outputData.getTitle());
+
+        // Convert List<Ingredient> to List<String> for display
+        List<String> ingredientStrings = outputData.getIngredients().stream()
+                .map(Ingredient::toString)  // Assuming Ingredient has a meaningful toString() method
+                .collect(Collectors.toList());
+        displayRecipeState.setIngredients(ingredientStrings);
+
+        // Convert List<Instruction> to List<String> for display
+        List<String> instructionStrings = outputData.getInstructions().stream()
+                .map(Instruction::toString)  // Assuming Instruction has a meaningful toString() method
+                .collect(Collectors.toList());
+        displayRecipeState.setInstructions(instructionStrings);
+
+        displayRecipeState.setImageUrl(outputData.getImage());
 
         // Update the DisplayRecipeViewModel with the new state
         displayRecipeViewModel.setState(displayRecipeState);
+        displayRecipeViewModel.firePropertyChanged("state");  // Notify listeners
 
         // Update viewManager with the new view name
         viewManager.setState(displayRecipeViewModel.getViewName());
@@ -50,10 +67,18 @@ public class DisplayRecipePresenter implements DisplayRecipeOutputBoundary {
      *
      * @param errorMessage the error message explaining the failure
      */
+//    @Override
+//    public void prepareFailView(String errorMessage) {
+//        final DisplayRecipeState displayRecipeState = displayRecipeViewModel.getState();
+//        displayRecipeState.setDisplayError(errorMessage);
+//        displayRecipeViewModel.firePropertyChanged();
+//    }
+//}
     @Override
     public void prepareFailView(String errorMessage) {
-        final DisplayRecipeState displayRecipeState = displayRecipeViewModel.getState();
-        displayRecipeState.setDisplayError(errorMessage);
-        displayRecipeViewModel.firePropertyChanged();
+        DisplayRecipeState errorState = new DisplayRecipeState();
+        errorState.setDisplayError(errorMessage);
+        displayRecipeViewModel.setState(errorState);
+        displayRecipeViewModel.firePropertyChanged("state");  // Notify listeners of the error state
     }
 }
