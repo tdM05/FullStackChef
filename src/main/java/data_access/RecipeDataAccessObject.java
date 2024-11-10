@@ -30,7 +30,7 @@ public class RecipeDataAccessObject implements SearchRecipeDataAccessInterface, 
     private static final String TITLE = "title";
     private static final String IMAGE = "image";
     private static final String IMAGE_TYPE = "imageType";
-    private final List<Recipe> recipes = new ArrayList<>();
+    private static final List<Recipe> RECIPES = new ArrayList<>();
 
     private final OkHttpClient client;
 
@@ -77,7 +77,7 @@ public class RecipeDataAccessObject implements SearchRecipeDataAccessInterface, 
                 final JSONArray results = jsonResponse.getJSONArray(RESULTS);
 
                 // Clear previous search results
-                recipes.clear();
+                RECIPES.clear();
 
                 // Loop through each recipe and add it to the list
                 for (int i = 0; i < results.length(); i++) {
@@ -91,9 +91,9 @@ public class RecipeDataAccessObject implements SearchRecipeDataAccessInterface, 
                     final Recipe recipe = fetchAndParseRecipe(recipeID, title, image, imageType);
 
                     // Add to the list
-                    recipes.add(recipe);
+                    RECIPES.add(recipe);
                 }
-                return recipes;
+                return RECIPES;
             } else if (response.body() != null) {
                 final JSONObject errorResponse = new JSONObject(response.body().string());
                 final String errorMessage = errorResponse.optString("message", "Unknown error occurred.");
