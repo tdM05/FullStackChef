@@ -1,7 +1,15 @@
 package view;
 
+import data_access.RecipeDataAccessObject;
+import interface_adapter.ViewManagerModel;
+import interface_adapter.display_recipe.DisplayRecipeController;
+import interface_adapter.display_recipe.DisplayRecipePresenter;
+import interface_adapter.display_recipe.DisplayRecipeViewModel;
 import interface_adapter.search_recipe.SearchRecipeViewModel;
 import interface_adapter.search_recipe.SearchRecipeController;
+import use_case.display_recipe.DisplayRecipeDataAccessInterface;
+import use_case.display_recipe.DisplayRecipeInputBoundary;
+import use_case.display_recipe.DisplayRecipeInteractor;
 import use_case.search_recipe.SearchRecipeOutputData;
 
 import javax.imageio.ImageIO;
@@ -352,6 +360,21 @@ public class SearchRecipeView extends JPanel {
         nameLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
         card.add(nameLabel, BorderLayout.SOUTH);
 
+        final ViewManagerModel viewManagerModel = new ViewManagerModel();
+        DisplayRecipePresenter displayRecipePresenter = new DisplayRecipePresenter(viewManagerModel,
+                new DisplayRecipeViewModel());
+        DisplayRecipeDataAccessInterface displayRecipeDataAccessInterface = new RecipeDataAccessObject();
+        DisplayRecipeInputBoundary displayRecipeUseCaseInteractor = new DisplayRecipeInteractor(
+                displayRecipePresenter, displayRecipeDataAccessInterface);
+
+        final DisplayRecipeController displayRecipeController = new DisplayRecipeController(displayRecipeUseCaseInteractor);
+        // Add a button to view recipe details
+        JButton viewDetailsButton = new JButton("View Details");
+        viewDetailsButton.addActionListener(e -> {
+            // Call the DisplayRecipeController with the RecipeId
+            displayRecipeController.execute(recipe.id());
+        });
+        card.add(viewDetailsButton, BorderLayout.NORTH);
         return card;
     }
 
