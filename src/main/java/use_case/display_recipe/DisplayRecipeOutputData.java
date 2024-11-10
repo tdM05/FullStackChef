@@ -23,14 +23,14 @@ public class DisplayRecipeOutputData {
     /**
      * Constructs a DisplayRecipeOutputData with the specified details.
      *
-     * @param recipeId         the unique identifier of the recipe
-     * @param title            the title of the recipe
-     * @param image            the image URL of the recipe
-     * @param imageType        the image type of the recipe (e.g., jpg, png)
-     * @param ingredients      the list of ingredients needed for the recipe
-     * @param nutritionalInfo  the nutritional information of the recipe
-     * @param instructions     the instructions to prepare the recipe
-     * @param isFavorite       indicates whether the recipe is marked as favorite
+     * @param recipeId        the unique identifier of the recipe
+     * @param title           the title of the recipe
+     * @param image           the image URL of the recipe
+     * @param imageType       the image type of the recipe (e.g., jpg, png)
+     * @param ingredients     the list of ingredients needed for the recipe
+     * @param nutritionalInfo the nutritional information of the recipe
+     * @param instructions    the instructions to prepare the recipe
+     * @param isFavorite      indicates whether the recipe is marked as favorite
      */
     public DisplayRecipeOutputData(int recipeId, String title, String image, String imageType,
                                    List<Ingredient> ingredients, NutritionalInfo nutritionalInfo,
