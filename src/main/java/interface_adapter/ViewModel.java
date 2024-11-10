@@ -31,8 +31,11 @@ public class ViewModel<T> {
     }
 
     public void setState(T state) {
+        T oldState = this.state;
         this.state = state;
+        this.support.firePropertyChange("state", oldState, this.state);
     }
+
 
     /**
      * Fires a property changed event for the state of this ViewModel.

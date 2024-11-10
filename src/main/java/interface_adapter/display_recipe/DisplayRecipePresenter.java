@@ -31,18 +31,21 @@ public class DisplayRecipePresenter implements DisplayRecipeOutputBoundary {
      */
     @Override
     public void prepareSuccessView(DisplayRecipeOutputData outputData) {
+        System.out.println("Presenter: Preparing success view");
         // Create a new DisplayRecipeState and populate it with data from outputData
         final DisplayRecipeState displayRecipeState = new DisplayRecipeState();
-
         displayRecipeState.setRecipeName(outputData.getTitle());
         displayRecipeState.setIngredients(outputData.getIngredients().toString());
         displayRecipeState.setInstructions(outputData.getInstructions().toString());
 
         // Update the DisplayRecipeViewModel with the new state
         displayRecipeViewModel.setState(displayRecipeState);
+        displayRecipeViewModel.firePropertyChanged();
+        System.out.println("Presenter: ViewModel updated");
 
         // Update viewManager with the new view name
         viewManager.setState(displayRecipeViewModel.getViewName());
+        System.out.println("Presenter: ViewManager state set to " + displayRecipeViewModel.getViewName());
     }
 
     /**
@@ -52,8 +55,11 @@ public class DisplayRecipePresenter implements DisplayRecipeOutputBoundary {
      */
     @Override
     public void prepareFailView(String errorMessage) {
-        final DisplayRecipeState displayRecipeState = displayRecipeViewModel.getState();
+        // Create a new state instance with the error message
+        DisplayRecipeState displayRecipeState = new DisplayRecipeState();
         displayRecipeState.setDisplayError(errorMessage);
-        displayRecipeViewModel.firePropertyChanged();
+
+        // Update the view model with the new state
+        displayRecipeViewModel.setState(displayRecipeState);
     }
 }

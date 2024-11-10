@@ -33,16 +33,15 @@ public class DisplayRecipeInteractor implements DisplayRecipeInputBoundary {
     @Override
     public void execute(DisplayRecipeInputData inputData) {
         try {
-            // Retrieve the recipe using the data access interface
+            System.out.println("Interactor: Retrieving recipe with ID " + inputData.getRecipeId());
             Recipe recipe = dataAccess.getRecipeById(inputData.getRecipeId());
+            System.out.println("Interactor: Recipe retrieved successfully");
 
-            // Map the Recipe entity to DisplayRecipeOutputData
             DisplayRecipeOutputData outputData = mapRecipeToOutputData(recipe);
-
-            // Invoke the presenter to prepare the success view
             presenter.prepareSuccessView(outputData);
+            System.out.println("Interactor: Presenter invoked for success view");
         } catch (IOException | JSONException ex) {
-            // In case of any exceptions, prepare the failure view with an error message
+            System.out.println("Interactor: Exception occurred - " + ex.getMessage());
             presenter.prepareFailView("Failed to retrieve recipe: " + ex.getMessage());
         }
     }
