@@ -368,13 +368,16 @@ public class SearchRecipeView extends JPanel {
                 displayRecipePresenter, displayRecipeDataAccessInterface);
 
         final DisplayRecipeController displayRecipeController = new DisplayRecipeController(displayRecipeUseCaseInteractor);
-        // Add a button to view recipe details
-        JButton viewDetailsButton = new JButton("View Details");
-        viewDetailsButton.addActionListener(e -> {
-            // Call the DisplayRecipeController with the RecipeId
-            displayRecipeController.execute(recipe.id());
+
+        card.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        card.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                displayRecipeController.execute(recipe.id());
+            }
         });
-        card.add(viewDetailsButton, BorderLayout.NORTH);
+
         return card;
     }
 
@@ -412,7 +415,6 @@ public class SearchRecipeView extends JPanel {
                 if (icon != null) {
                     imageLabel.setIcon(icon);
                 }
-                // No need to handle the else case as we assume images always load
             } catch (Exception e) {
                 e.printStackTrace();
             }
