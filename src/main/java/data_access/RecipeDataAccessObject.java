@@ -21,7 +21,7 @@ import use_case.display_recipe.DisplayRecipeDataAccessInterface;
  * Implements both SearchRecipeDataAccessInterface and DisplayRecipeDataAccessInterface.
  */
 public class RecipeDataAccessObject implements SearchRecipeDataAccessInterface, DisplayRecipeDataAccessInterface {
-    private static final String API_KEY = "6c12c2fcd75b40569836eb71339e80be";
+    private static final String API_KEY = "d3bafca8788e40c486fb638c16b08a32";
     private static final String BASE_SEARCH_URL = "https://api.spoonacular.com/recipes/complexSearch";
     private static final String BASE_DETAILS_URL = "https://api.spoonacular.com/recipes/%d/information?&apiKey=%s&includeNutrition=true";
 
