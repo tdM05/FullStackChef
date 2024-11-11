@@ -2,7 +2,6 @@ package view;
 
 import interface_adapter.display_recipe.DisplayRecipeController;
 import interface_adapter.display_recipe.DisplayRecipeViewModel;
-import interface_adapter.display_recipe.DisplayRecipeState;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,17 +11,17 @@ import java.net.URL;
 
 public class DisplayRecipeView extends JPanel implements PropertyChangeListener {
 
-    private DisplayRecipeController controller;  // Reference to the controller
+    private DisplayRecipeController controller;
     private final JLabel recipeTitleLabel = new JLabel();
     private final JLabel recipeImageLabel = new JLabel();
     private final JTextArea ingredientsArea = new JTextArea(10, 30);
     private final JTextArea instructionsArea = new JTextArea(10, 30);
     private final JLabel errorLabel = new JLabel();
+    private Runnable backButtonListener;
 
     public DisplayRecipeView(DisplayRecipeViewModel viewModel) {
         viewModel.addPropertyChangeListener(this);
 
-        // Configure layout and styles
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         recipeTitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         recipeImageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -30,7 +29,6 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
         instructionsArea.setEditable(false);
         errorLabel.setForeground(Color.RED);
 
-        // Add components to the view
         add(recipeTitleLabel);
         add(recipeImageLabel);
         add(new JLabel("Ingredients:"));
@@ -38,70 +36,63 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
         add(new JLabel("Instructions:"));
         add(new JScrollPane(instructionsArea));
         add(errorLabel);
+
+        JButton backButton = new JButton("Back");
+        backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        add(backButton);
+
+        backButton.addActionListener(e -> {
+            if (backButtonListener != null) {
+                backButtonListener.run();
+            }
+        });
     }
 
-    /**
-     * Sets the controller for this view.
-     * @param controller the DisplayRecipeController to set
-     */
+    public void addBackButtonListener(Runnable listener) {
+        this.backButtonListener = listener;
+    }
+
     public void setRecipeController(DisplayRecipeController controller) {
         this.controller = controller;
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        // Ensure we're reacting to a DisplayRecipeState update
-        if (evt.getNewValue() instanceof DisplayRecipeState) {
-            DisplayRecipeState state = (DisplayRecipeState) evt.getNewValue();
-            updateView(state);
+        if ("state".equals(evt.getPropertyName())) {
+            updateView((DisplayRecipeViewModel) evt.getSource());
         }
     }
 
-    private void updateView(DisplayRecipeState state) {
-        // Update title
-        recipeTitleLabel.setText(state.getTitle());
+    private void updateView(DisplayRecipeViewModel viewModel) {
+        // Display title
+        recipeTitleLabel.setText(viewModel.getTitle());
 
-        // Update image
-        try {
-            if (state.getImageUrl() != null && !state.getImageUrl().isEmpty()) {
-                URL imageUrl = new URL(state.getImageUrl());
-                recipeImageLabel.setIcon(new ImageIcon(imageUrl));
-            } else {
-                recipeImageLabel.setIcon(null);  // Clear image if not available
+        // Load and display image from URL
+        if (viewModel.getImageUrl() != null && !viewModel.getImageUrl().isEmpty()) {
+            try {
+                URL imageUrl = new URL(viewModel.getImageUrl());
+                ImageIcon imageIcon = new ImageIcon(imageUrl);
+                recipeImageLabel.setIcon(imageIcon);
+            } catch (Exception e) {
+                recipeImageLabel.setIcon(null);  // Clear image if loading fails
+                System.err.println("Error loading image: " + e.getMessage());
             }
-        } catch (Exception e) {
-            recipeImageLabel.setIcon(null);  // Clear image if loading fails
+        } else {
+            recipeImageLabel.setIcon(null);  // Clear image if URL is empty
         }
 
-        // Update ingredients
-        StringBuilder ingredientsText = new StringBuilder();
-        if (state.getIngredients() != null) {
-            for (String ingredient : state.getIngredients()) {
-                ingredientsText.append(ingredient).append("\n");
-            }
-        }
-        ingredientsArea.setText(ingredientsText.toString());
+        // Display ingredients and instructions as before
+        ingredientsArea.setText(String.join("\n", viewModel.getIngredients()));
+        instructionsArea.setText(String.join("\n", viewModel.getInstructions()));
 
-        // Update instructions
-        StringBuilder instructionsText = new StringBuilder();
-        if (state.getInstructions() != null) {
-            for (String instruction : state.getInstructions()) {
-                instructionsText.append(instruction).append("\n");
-            }
-        }
-        instructionsArea.setText(instructionsText.toString());
-
-        // Display any error messages
-        errorLabel.setText(state.getDisplayError() != null ? state.getDisplayError() : "");
+        // Display error if present
+        errorLabel.setText(viewModel.getErrorMessage() != null ? viewModel.getErrorMessage() : "");
     }
 
-    /**
-     * An example method that interacts with the controller.
-     * This could be called from an action, such as a button click.
-     */
-    private void loadRecipeDetails(int recipeId) {
+
+    public void loadRecipeDetails(int recipeId) {
         if (controller != null) {
-            controller.execute(recipeId);  // Use the controller to load recipe details
+            controller.execute(recipeId);
         }
     }
 }

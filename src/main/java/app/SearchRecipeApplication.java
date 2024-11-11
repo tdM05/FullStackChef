@@ -6,9 +6,6 @@ import use_case.display_recipe.DisplayRecipeDataAccessInterface;
 import javax.swing.JFrame;
 import java.awt.CardLayout;
 
-/**
- * Builder for the Search Recipe Application.
- */
 public class SearchRecipeApplication {
 
     public static void main(String[] args) {
@@ -30,8 +27,8 @@ public class SearchRecipeApplication {
 
         final SearchRecipeAppBuilder searchBuilder = new SearchRecipeAppBuilder();
         searchBuilder.addSearchRecipeDAO(searchRecipeDAO)
-               .addSearchRecipeView()
-               .addSearchRecipeUseCase().build().setVisible(true);
+                .addSearchRecipeView()
+                .addSearchRecipeUseCase();
 
         final DisplayRecipeAppBuilder displayBuilder = new DisplayRecipeAppBuilder();
         displayBuilder.addDisplayRecipeDAO(displayRecipeDAO)
@@ -44,6 +41,15 @@ public class SearchRecipeApplication {
 
         // Set the initial view to the search view
         cardLayout.show(frame.getContentPane(), "searchView");
+
+        // Event listener to switch to Display view when a recipe is clicked
+        searchBuilder.getSearchRecipeView().addRecipeClickListener(recipeId -> {
+            displayBuilder.getDisplayRecipeView().loadRecipeDetails(recipeId);
+            cardLayout.show(frame.getContentPane(), "displayView");
+        });
+
+        // Optionally add a back button in DisplayRecipeView to go back to SearchRecipeView
+        displayBuilder.getDisplayRecipeView().addBackButtonListener(() -> cardLayout.show(frame.getContentPane(), "searchView"));
 
         // Show the frame
         frame.setVisible(true);

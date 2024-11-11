@@ -40,7 +40,6 @@ public class DisplayRecipeAppBuilder {
      * controller.
      *
      * @return this builder
-     * @throws RuntimeException if this method is called before addDisplayRecipeView
      */
     public DisplayRecipeAppBuilder addDisplayRecipeUseCase() {
         final DisplayRecipeOutputBoundary recipeOutputBoundary = new DisplayRecipePresenter(viewManagerModel, displayRecipeViewModel);
@@ -67,7 +66,7 @@ public class DisplayRecipeAppBuilder {
     }
 
     /**
-     * Builds the application.
+     * Builds the Display Recipe view into a JFrame.
      *
      * @return the JFrame for the application
      */
@@ -83,5 +82,9 @@ public class DisplayRecipeAppBuilder {
         frame.add(displayRecipeView);
 
         return frame;
+    }
+
+    public DisplayRecipeView getDisplayRecipeView() {
+        return displayRecipeView;
     }
 }

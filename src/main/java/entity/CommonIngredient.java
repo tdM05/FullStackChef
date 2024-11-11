@@ -35,4 +35,10 @@ public class CommonIngredient implements Ingredient {
     public String getUnit() {
         return unit;
     }
+
+    @Override
+    public String toString() {
+        return getName() + " - " + getAmount() + " " + getUnit();
+    }
+
 }
