@@ -20,7 +20,7 @@ public class SearchRecipeAppBuilder {
     public static final int WIDTH = 1200;
     private SearchRecipeDataAccessInterface searchrecipeDAO;
     private SearchRecipeViewModel searchrecipeViewModel = new SearchRecipeViewModel();
-    private SearchRecipeView searchrecipeView;
+    private SearchRecipeView searchRecipeView;
     private SearchRecipeInteractor searchrecipeInteractor;
     private ViewManagerModel viewManagerModel;
 
@@ -47,10 +47,10 @@ public class SearchRecipeAppBuilder {
         searchrecipeInteractor = new SearchRecipeInteractor(searchrecipeDAO, recipeOutputBoundary);
 
         final SearchRecipeController controller = new SearchRecipeController(searchrecipeInteractor);
-        if (searchrecipeView == null) {
+        if (searchRecipeView == null) {
             throw new RuntimeException("addRecipeView must be called before addRecipeUseCase");
         }
-        searchrecipeView.setRecipeController(controller);
+        searchRecipeView.setRecipeController(controller);
         return this;
     }
 
@@ -62,7 +62,7 @@ public class SearchRecipeAppBuilder {
     public SearchRecipeAppBuilder addSearchRecipeView() {
         viewManagerModel = new ViewManagerModel();
         searchrecipeViewModel = new SearchRecipeViewModel();
-        searchrecipeView = new SearchRecipeView(searchrecipeViewModel);
+        searchRecipeView = new SearchRecipeView(searchrecipeViewModel);
         return this;
     }
 
@@ -80,8 +80,12 @@ public class SearchRecipeAppBuilder {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
 
-        frame.add(searchrecipeView);
+        frame.add(searchRecipeView);
 
         return frame;
+    }
+
+    public SearchRecipeView getSearchRecipeView() {
+        return searchRecipeView;
     }
 }

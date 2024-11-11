@@ -23,6 +23,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URL;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * The View for the Search Recipe Use Case.
@@ -39,6 +40,7 @@ public class SearchRecipeView extends JPanel {
 
     // Adjust the roundness
     private final int cornerRadius = 50;
+    private Consumer<Integer> recipeClickListener;
 
     /**
      * Constructor for the SearchRecipeView.
@@ -284,6 +286,10 @@ public class SearchRecipeView extends JPanel {
         displayRecipes(recipes);
     }
 
+    public void addRecipeClickListener(Consumer<Integer> listener) {
+        this.recipeClickListener = listener;
+    }
+
     private void displayRecipes(List<SearchRecipeOutputData> recipes) {
         // Remove all existing components from the center panel
         centerPanel.removeAll();
@@ -374,7 +380,10 @@ public class SearchRecipeView extends JPanel {
         card.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                displayRecipeController.execute(recipe.id());
+                System.out.println("Recipe card clicked. Recipe ID: " + recipe.id());
+                if (recipeClickListener != null) {
+                    recipeClickListener.accept(recipe.id()); // Trigger the listener with the recipe ID
+                }
             }
         });
 
