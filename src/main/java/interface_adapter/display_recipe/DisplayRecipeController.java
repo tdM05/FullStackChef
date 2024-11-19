@@ -4,7 +4,7 @@ import use_case.display_recipe.DisplayRecipeInputBoundary;
 import use_case.display_recipe.DisplayRecipeInputData;
 
 /**
- * The controller for the DisplayRecipe Use Case.
+ * The Controller for the DisplayRecipe Use Case.
  */
 public class DisplayRecipeController {
 
