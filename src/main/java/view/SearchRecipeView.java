@@ -161,7 +161,7 @@ public class SearchRecipeView extends JPanel {
 
         // Set search bar properties
         searchBar.setPreferredSize(new Dimension(800, 60));
-        searchBar.setFont(new Font("SansSerif", Font.ITALIC, 24)); // Italic font for placeholder
+        searchBar.setFont(new Font("SansSerif", Font.ITALIC, 24));
         searchBar.setForeground(Color.GRAY);
         searchBar.setBackground(Color.WHITE);
         searchBar.setOpaque(false);
@@ -203,30 +203,87 @@ public class SearchRecipeView extends JPanel {
     // Custom Profile class
     class Profile extends JPanel {
         private Color circleColor = Color.GRAY;
+        private JPopupMenu profileDropDown;
 
         public Profile() {
-
-            setPreferredSize(new Dimension(50, 50));
+            setPreferredSize(new Dimension(55, 55));
             setOpaque(false);
             setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-            // Add mouse listener for hover effect
-            addMouseListener(new MouseAdapter() {
+            // Initialize the popup menu
+            profileDropDown = new JPopupMenu();
+            profileDropDown.setBackground(Color.DARK_GRAY);
+            profileDropDown.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
+            JMenuItem profileButton = new JMenuItem("Profile");
+            JMenuItem favoriteButton = new JMenuItem("Favorite");
+            JMenuItem mealPlanButton = new JMenuItem("Meal Plan");
+            JMenuItem groceryListButton = new JMenuItem("Grocery List");
+            JMenuItem dietButton = new JMenuItem("Diet");
+            JMenuItem logoutButton = new JMenuItem("Logout");
+
+            customizeButton(profileButton);
+            customizeButton(favoriteButton);
+            customizeButton(mealPlanButton);
+            customizeButton(groceryListButton);
+            customizeButton(dietButton);
+            customizeButton(logoutButton);
+
+            profileDropDown.add(profileButton);
+            profileDropDown.add(favoriteButton);
+            profileDropDown.add(mealPlanButton);
+            profileDropDown.add(groceryListButton);
+            profileDropDown.add(dietButton);
+            profileDropDown.addSeparator();
+            profileDropDown.add(logoutButton);
+
+            // Add hover effect for the dropdown
+            addMouseListener(new MouseAdapter() {
                 @Override
-                // Change color on hover
                 public void mouseEntered(MouseEvent e) {
-                    circleColor = Color.BLACK;
+                    circleColor = Color.DARK_GRAY;
                     repaint();
+                    // Show the popup menu below the circle
+                    profileDropDown.show(Profile.this, -70, getHeight());
                 }
 
-                // Reset color when not hovered
                 @Override
                 public void mouseExited(MouseEvent e) {
-                    circleColor = Color.GRAY;
-                    repaint();
+                    // Check if mouse exits both the Profile and dropdown
+                    Point mouseLocation = e.getLocationOnScreen();
+                    SwingUtilities.convertPointFromScreen(mouseLocation, profileDropDown);
+                    if (!profileDropDown.getBounds().contains(mouseLocation)) {
+                        circleColor = Color.GRAY;
+                        profileDropDown.setVisible(false);
+                        repaint();
+                    }
                 }
             });
+
+            profileDropDown.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    // Check if mouse is still near the menu bounds
+                    Point mouseLocation = e.getLocationOnScreen();
+                    SwingUtilities.convertPointFromScreen(mouseLocation, profileDropDown);
+
+                    Rectangle extendedBounds = new Rectangle(-10, -10,
+                            profileDropDown.getWidth() + 20,
+                            profileDropDown.getHeight() + 20);
+
+                    if (!extendedBounds.contains(mouseLocation)) {
+                        profileDropDown.setVisible(false);
+                    }
+                }
+            });
+        }
+
+        private void customizeButton(JMenuItem item) {
+            item.setBackground(Color.DARK_GRAY);
+            item.setForeground(Color.WHITE);
+            item.setFont(new Font("SansSerif", Font.BOLD, 12));
+            item.setOpaque(true);
+            item.setPreferredSize(new Dimension(120,40));
         }
 
         @Override
