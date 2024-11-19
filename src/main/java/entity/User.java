@@ -1,8 +1,5 @@
 package entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * The representation of a password-protected user for our program.
  */
