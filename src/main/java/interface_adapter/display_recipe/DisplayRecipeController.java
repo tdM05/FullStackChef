@@ -19,7 +19,7 @@ public class DisplayRecipeController {
      * @param RecipeId the unique identifier of the recipe to display
      */
     public void execute(int RecipeId) {
-        System.out.println(RecipeId);
+        System.out.println("DisplayRecipeController received recipeId: " + RecipeId);
         // 1. Instantiate the `DisplayRecipeInputData`, which should contain the recipe ID.
         final DisplayRecipeInputData inputData = new DisplayRecipeInputData(RecipeId);
         // 2. Tell the Interactor to execute.

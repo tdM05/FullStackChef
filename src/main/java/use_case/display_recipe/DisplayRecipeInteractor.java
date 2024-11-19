@@ -32,6 +32,7 @@ public class DisplayRecipeInteractor implements DisplayRecipeInputBoundary {
      */
     @Override
     public void execute(DisplayRecipeInputData inputData) {
+        System.out.println("DisplayRecipeInteractor executing with recipeId: " + inputData.getRecipeId());
         try {
             // Retrieve the recipe using the data access interface
             Recipe recipe = dataAccess.getRecipeById(inputData.getRecipeId());

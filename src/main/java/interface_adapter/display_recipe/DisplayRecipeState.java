@@ -1,44 +1,75 @@
 package interface_adapter.display_recipe;
 
+import java.util.List;
+
 /**
- * The state for the DisplayRecipe ViewModel.
+ * The state for displaying a recipe.
+ * Holds only the essential fields needed for the recipe display view.
  */
 public class DisplayRecipeState {
-    private String recipeName = "";
-    private String ingredients = "";
-    private String instructions = "";
+    private String title;
+    private String imageUrl;
+    private List<String> ingredients;
+    private List<String> instructions;
     private String displayError;
 
-    public String getRecipeName() {
-        return recipeName;
+    // Getters and Setters
+    public String getTitle() {
+        return title;
     }
 
-    public String getIngredients() {
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public List<String> getIngredients() {
         return ingredients;
     }
 
-    public String getInstructions() {
+    public void setIngredients(List<String> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public List<String> getInstructions() {
         return instructions;
+    }
+
+    public void setInstructions(List<String> instructions) {
+        this.instructions = instructions;
     }
 
     public String getDisplayError() {
         return displayError;
     }
 
-    public void setRecipeName(String recipeName) {
-        this.recipeName = recipeName;
-    }
-
-    public void setIngredients(String ingredients) {
-        this.ingredients = ingredients;
-    }
-
-    public void setInstructions(String instructions) {
-        this.instructions = instructions;
-    }
-
     public void setDisplayError(String displayError) {
         this.displayError = displayError;
     }
-}
 
+    /**
+     * Checks if the state represents an error state.
+     * @return true if there is an error message, false otherwise.
+     */
+    public boolean isError() {
+        return displayError != null && !displayError.isEmpty();
+    }
+
+    /**
+     * Resets the state to clear all fields.
+     */
+    public void reset() {
+        this.title = null;
+        this.imageUrl = null;
+        this.ingredients = null;
+        this.instructions = null;
+        this.displayError = null;
+    }
+}
