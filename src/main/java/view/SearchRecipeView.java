@@ -44,26 +44,27 @@ public class SearchRecipeView extends JPanel {
 
     //
     private JMenuItem profileButton;
+
+    private ViewManagerModel viewManagerModel;
     /**
      * Constructor for the SearchRecipeView.
      * @param viewModel the ViewModel for the Search Recipe Use Case
+     * @param viewManagerModel the ViewManagerModel
      */
-    public SearchRecipeView(SearchRecipeViewModel viewModel) {
+    public SearchRecipeView(SearchRecipeViewModel viewModel,
+                            ViewManagerModel viewManagerModel) {
         this.viewModel = viewModel;
         setLayout(new BorderLayout());
-
+        this.viewManagerModel = viewManagerModel;
         loadScreen();
         registerPropertyChangeListeners();
     }
 
-    public Profile getProfile() {
-        return profile;
-    }
 
     private void loadScreen() {
 
         // Create the profile component
-        profile = new Profile();
+        profile = new Profile(this.viewManagerModel);
 
         // Create the search bar with rounded corners and shadow
         searchBar = createSearchBar();

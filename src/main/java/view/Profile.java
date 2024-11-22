@@ -1,5 +1,7 @@
 package view;
 
+import interface_adapter.ViewManagerModel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,8 +14,9 @@ public class Profile extends JPanel {
     private Color circleColor = Color.GRAY;
     private JPopupMenu profileDropDown;
     private JMenuItem groceryListButton;
+    private ViewManagerModel viewManagerModel;
 
-    public Profile() {
+    public Profile(ViewManagerModel viewManagerModel) {
         setPreferredSize(new Dimension(55, 55));
         setOpaque(false);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -32,7 +35,8 @@ public class Profile extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Grocery List button clicked");
-
+                viewManagerModel.setState("groceryListView");
+                viewManagerModel.firePropertyChanged();
             }
         });
         JMenuItem dietButton = new JMenuItem("Diet");

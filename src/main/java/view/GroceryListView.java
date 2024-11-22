@@ -1,5 +1,6 @@
 package view;
 
+import interface_adapter.ViewManagerModel;
 import interface_adapter.grocery_list.GroceryListController;
 import interface_adapter.grocery_list.GroceryListState;
 import interface_adapter.grocery_list.GroceryListViewModel;
@@ -17,6 +18,7 @@ import java.util.List;
 public class GroceryListView extends JPanel implements PropertyChangeListener {
     private final String viewName = "grocery list";
     private final GroceryListViewModel groceryListViewModel;
+    private final ViewManagerModel viewManagerModel;
 
     private final JButton returnButton;
     private final List<JLabel> groceryList;
@@ -27,12 +29,15 @@ public class GroceryListView extends JPanel implements PropertyChangeListener {
 
     /**
      * Creates a new GroceryListView.
-     *
+     * @param viewManagerModel The view manager model.
      * @param groceryListViewModel The view model for the grocery list.
      */
-    public GroceryListView(GroceryListViewModel groceryListViewModel) {
+    public GroceryListView(GroceryListViewModel groceryListViewModel,
+                           ViewManagerModel viewManagerModel) {
         this.groceryListViewModel = groceryListViewModel;
         this.groceryListViewModel.addPropertyChangeListener(this);
+        this.viewManagerModel = viewManagerModel;
+        this.viewManagerModel.addPropertyChangeListener(this);
         this.returnButton = new JButton("Return");
         returnButton.addActionListener(evt -> {
             System.out.println("Return button pressed");
@@ -50,8 +55,15 @@ public class GroceryListView extends JPanel implements PropertyChangeListener {
     }
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        final GroceryListState state = (GroceryListState) evt.getNewValue();
-        refreshPage(state);
+        if (evt.getNewValue() instanceof GroceryListState) {
+            final GroceryListState state = (GroceryListState) evt.getNewValue();
+            refreshPage(state);
+        }
+        if (evt.getNewValue() instanceof String) {
+            if (evt.getNewValue().equals("groceryListView")) {
+                updateGroceryList();
+            }
+        }
     }
 
     private void refreshPage(GroceryListState state) {

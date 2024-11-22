@@ -2,10 +2,12 @@ package app;
 
 import data_access.RecipeDataAccessObject;
 import data_access.grocery_list.GroceryListDataAccessObject;
+import interface_adapter.ViewManagerModel;
 import use_case.grocery_list.GroceryListDataAccessInterface;
 import use_case.search_recipe.SearchRecipeDataAccessInterface;
 import use_case.display_recipe.DisplayRecipeDataAccessInterface;
 import view.Profile;
+import view.ViewManager;
 
 import javax.swing.JFrame;
 import java.awt.CardLayout;
@@ -30,9 +32,15 @@ public class SearchRecipeApplication {
         CardLayout cardLayout = new CardLayout();
         frame.setLayout(cardLayout);
 
+
+        // Set up view manager
+        ViewManagerModel viewManagerModel= new ViewManagerModel();
+        final ViewManager viewManager = new ViewManager(frame.getContentPane(), cardLayout, viewManagerModel);
+
+
         final SearchRecipeAppBuilder searchBuilder = new SearchRecipeAppBuilder();
         searchBuilder.addSearchRecipeDAO(searchRecipeDAO)
-                .addSearchRecipeView()
+                .addSearchRecipeView(viewManagerModel)
                 .addSearchRecipeUseCase();
 
         final DisplayRecipeAppBuilder displayBuilder = new DisplayRecipeAppBuilder();
@@ -43,7 +51,7 @@ public class SearchRecipeApplication {
         // We need to add things in this order
         final GroceryListAppBuilder groceryListBuilder = new GroceryListAppBuilder();
         groceryListBuilder.addGroceryListDAO(new GroceryListDataAccessObject())
-                .addGroceryListView()
+                .addGroceryListView(viewManagerModel)
                 .addGroceryListUseCase();
 
         // Add both views to the frame's CardLayout
@@ -61,12 +69,16 @@ public class SearchRecipeApplication {
             cardLayout.show(frame.getContentPane(), "displayView");
         });
 
+
         // Event listener to switch to GroceryList view when GroceryList button is clicked
-        final Profile profile = searchBuilder.getSearchRecipeView().getProfile();
-        profile.getGroceryListButton().addActionListener(evt -> {
-            cardLayout.show(frame.getContentPane(), "groceryListView");
-            groceryListBuilder.getGroceryListView().updateGroceryList();
-        });
+//        final Profile profile = searchBuilder.getSearchRecipeView().getProfile();
+//        profile.getGroceryListButton().addActionListener(evt -> {
+//            // this should update the viewmanagermodel.
+//
+//
+//            cardLayout.show(frame.getContentPane(), "groceryListView");
+//            groceryListBuilder.getGroceryListView().updateGroceryList();
+//        });
 
 
         // Optionally add a back button in DisplayRecipeView to go back to SearchRecipeView

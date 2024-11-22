@@ -13,10 +13,10 @@ import java.beans.PropertyChangeListener;
  */
 public class ViewManager implements PropertyChangeListener {
     private final CardLayout cardLayout;
-    private final JPanel views;
+    private final Container views;
     private final ViewManagerModel viewManagerModel;
 
-    public ViewManager(JPanel views, CardLayout cardLayout, ViewManagerModel viewManagerModel) {
+    public ViewManager(Container views, CardLayout cardLayout, ViewManagerModel viewManagerModel) {
         this.views = views;
         this.cardLayout = cardLayout;
         this.viewManagerModel = viewManagerModel;

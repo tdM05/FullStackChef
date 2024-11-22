@@ -38,10 +38,10 @@ public class GroceryListAppBuilder {
      * Adds the Grocery List view to the app.
      * @return this
      */
-    public GroceryListAppBuilder addGroceryListView() {
+    public GroceryListAppBuilder addGroceryListView(ViewManagerModel currentViewManagerModel) {
         viewManagerModel = new ViewManagerModel();
         groceryListViewModel = new GroceryListViewModel();
-        groceryListView = new GroceryListView(groceryListViewModel);
+        groceryListView = new GroceryListView(groceryListViewModel, currentViewManagerModel);
         return this;
     }
 
