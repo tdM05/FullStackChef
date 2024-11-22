@@ -12,6 +12,7 @@ import use_case.grocery_list.GroceryListOutputBoundary;
 import view.GroceryListView;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Builder for the Grocery List app.

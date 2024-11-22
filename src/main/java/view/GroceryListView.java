@@ -5,6 +5,7 @@ import interface_adapter.grocery_list.GroceryListState;
 import interface_adapter.grocery_list.GroceryListViewModel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -22,15 +23,31 @@ public class GroceryListView extends JPanel implements PropertyChangeListener {
 
     private GroceryListController controller;
 
+    private Runnable backButtonListener;
+
+    /**
+     * Creates a new GroceryListView.
+     *
+     * @param groceryListViewModel The view model for the grocery list.
+     */
     public GroceryListView(GroceryListViewModel groceryListViewModel) {
         this.groceryListViewModel = groceryListViewModel;
         this.groceryListViewModel.addPropertyChangeListener(this);
         this.returnButton = new JButton("Return");
+        returnButton.addActionListener(evt -> {
+            System.out.println("Return button pressed");
+            backButtonListener.run();
+        }
+        );
+
         this.groceryList = new ArrayList<>();
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS)); // Set layout to BoxLayout with vertical alignment
         this.add(returnButton);
     }
 
+    public void addBackButtonListener(Runnable listener) {
+        this.backButtonListener = listener;
+    }
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         final GroceryListState state = (GroceryListState) evt.getNewValue();

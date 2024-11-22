@@ -15,25 +15,25 @@ import javax.swing.*;
 
 public class GroceryListEndToEnd {
     public static void main(String[] args) {
-        // add the view to the frame
-        GroceryListViewModel groceryListViewModel = new GroceryListViewModel();
-        JPanel groceryListView = new GroceryListView(groceryListViewModel);
-        JFrame frame = new JFrame("test");
-        frame.setContentPane(groceryListView);
-        frame.setSize(800, 600);
-        frame.setVisible(true);
-
-        // add the use case
-        final ViewManagerModel viewManagerModel = new ViewManagerModel();
-        final GroceryListOutputBoundary outputBoundary = new GroceryListPresenter(groceryListViewModel, viewManagerModel);
-
-        GroceryListDataAccessInterface dataAccess = new GroceryListDataAccessObject();
-        GroceryListOutputBoundary presenter = new GroceryListPresenter(groceryListViewModel, viewManagerModel);
-        final GroceryListInputBoundary inputBoundary = new GroceryListInteractor(dataAccess, presenter);
-
-        // add the controller
-        GroceryListController controller = new GroceryListController(inputBoundary);
-        // execute use case
-        controller.execute();
+//        // add the view to the frame
+//        GroceryListViewModel groceryListViewModel = new GroceryListViewModel();
+//        JPanel groceryListView = new GroceryListView(groceryListViewModel);
+//        JFrame frame = new JFrame("test");
+//        frame.setContentPane(groceryListView);
+//        frame.setSize(800, 600);
+//        frame.setVisible(true);
+//
+//        // add the use case
+//        final ViewManagerModel viewManagerModel = new ViewManagerModel();
+//        final GroceryListOutputBoundary outputBoundary = new GroceryListPresenter(groceryListViewModel, viewManagerModel);
+//
+//        GroceryListDataAccessInterface dataAccess = new GroceryListDataAccessObject();
+//        GroceryListOutputBoundary presenter = new GroceryListPresenter(groceryListViewModel, viewManagerModel);
+//        final GroceryListInputBoundary inputBoundary = new GroceryListInteractor(dataAccess, presenter);
+//
+//        // add the controller
+//        GroceryListController controller = new GroceryListController(inputBoundary);
+//        // execute use case
+//        controller.execute();
     }
 }

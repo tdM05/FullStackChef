@@ -71,7 +71,7 @@ public class SearchRecipeApplication {
 
         // Optionally add a back button in DisplayRecipeView to go back to SearchRecipeView
         displayBuilder.getDisplayRecipeView().addBackButtonListener(() -> cardLayout.show(frame.getContentPane(), "searchView"));
-
+        groceryListBuilder.getGroceryListView().addBackButtonListener(() -> cardLayout.show(frame.getContentPane(), "searchView"));
         // Show the frame
         frame.setVisible(true);
     }
