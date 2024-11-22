@@ -1,5 +1,8 @@
 package view;
 
+import data_access.Constants;
+import interface_adapter.ViewManagerModel;
+import interface_adapter.ViewManagerState;
 import interface_adapter.display_recipe.DisplayRecipeController;
 import interface_adapter.display_recipe.DisplayRecipeViewModel;
 
@@ -17,11 +20,14 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
     private final JTextArea ingredientsArea = new JTextArea(10, 30);
     private final JTextArea instructionsArea = new JTextArea(10, 30);
     private final JLabel errorLabel = new JLabel();
-    private Runnable backButtonListener;
+    private ViewManagerModel viewManagerModel;
 
-    public DisplayRecipeView(DisplayRecipeViewModel viewModel) {
+    public DisplayRecipeView(DisplayRecipeViewModel viewModel,
+                             ViewManagerModel viewManagerModel) {
+        this.viewManagerModel = viewManagerModel;
+        viewManagerModel.addPropertyChangeListener(this);
+
         viewModel.addPropertyChangeListener(this);
-
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         recipeTitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         recipeImageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -37,20 +43,18 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
         add(new JScrollPane(instructionsArea));
         add(errorLabel);
 
-        JButton backButton = new JButton("Back");
+        final JButton backButton = new JButton("Back");
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(backButton);
 
         backButton.addActionListener(e -> {
-            if (backButtonListener != null) {
-                backButtonListener.run();
-            }
+            // This causes the view to switch to the main page
+            ViewManagerState state = new ViewManagerState(Constants.SEARCH_VIEW, null);
+            viewManagerModel.setState(state);
+            viewManagerModel.firePropertyChanged();
         });
     }
 
-    public void addBackButtonListener(Runnable listener) {
-        this.backButtonListener = listener;
-    }
 
     public void setRecipeController(DisplayRecipeController controller) {
         this.controller = controller;
@@ -58,9 +62,18 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if ("state".equals(evt.getPropertyName())) {
+        if (evt.getSource() instanceof DisplayRecipeViewModel) {
             updateView((DisplayRecipeViewModel) evt.getSource());
         }
+        if (evt.getNewValue() instanceof ViewManagerState) {
+            final ViewManagerState state = (ViewManagerState) evt.getNewValue();
+            if (state.getViewName().equals(Constants.DISPLAY_RECIPE_VIEW)) {
+                // context must be an integer
+                final int ctx = (int) state.getContext();
+                loadRecipeDetails(ctx);
+            }
+        }
+
     }
 
     private void updateView(DisplayRecipeViewModel viewModel) {
