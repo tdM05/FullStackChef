@@ -5,42 +5,30 @@ import java.util.List;
 /**
  * The representation of a favorite recipe in our program.
  */
-
-public class Favorite {
-    private final int recipeId;
-    private final String title;
-    private final String image;
-    private final List<String> collection;
+public interface Favorite {
 
     /**
-     * Constructs a Favorite with the specified details.
-     *
-     * @param recipeId         the unique identifier of the recipe
-     * @param title            the title of the recipe
-     * @param image            the image URL of the recipe
-     * @param collection       the collection of the recipe
+     * Get the list of favorite recipe IDs.
+     * @return the list of favorite recipe IDs
      */
-    public Favorite(int recipeId, String title, String image, List<String> collection) {
-        this.recipeId = recipeId;
-        this.title = title;
-        this.image = image;
-        this.collection = collection;
-    }
+    List<Integer> getFavoriteRecipe();
 
-    public int getRecipeId() {
-        return recipeId;
-    }
+    /**
+     * Add a recipe to the list of favorite recipes.
+     * @param recipeId the ID of the recipe to add
+     */
+    void addFavoriteRecipe(int recipeId);
 
-    public String getTitle() {
-        return title;
-    }
+    /**
+     * Remove a recipe from the list of favorite recipes.
+     * @param recipeId the ID of the recipe to remove
+     */
+    void removeFavoriteRecipe(int recipeId);
 
-    public String getImage() {
-        return image;
-    }
-
-    public List<String> getCollection() {
-        return collection;
-    }
-
+    /**
+     * Check if a recipe is in the list of favorite recipes.
+     * @param recipeId the ID of the recipe to check
+     * @return true if the recipe is in the list, false otherwise
+     */
+    boolean isFavorite(int recipeId);
 }
