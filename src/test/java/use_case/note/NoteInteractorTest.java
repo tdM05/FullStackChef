@@ -1,6 +1,6 @@
 package use_case.note;
 
-import entity.User;
+import entity.CommonUser;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -14,13 +14,13 @@ public class NoteInteractorTest {
 
 
             @Override
-            public String saveNote(User user, String note) {
+            public String saveNote(CommonUser user, String note) {
                 return "";
             }
 
 
             @Override
-            public String loadNote(User user) {
+            public String loadNote(CommonUser user) {
                 return "test";
             }
         };

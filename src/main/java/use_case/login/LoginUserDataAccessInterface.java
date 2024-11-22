@@ -1,6 +1,6 @@
 package use_case.login;
 
-import entity.User;
+import entity.CommonUser;
 
 /**
  * DAO for the Login Use Case.
@@ -14,17 +14,17 @@ public interface LoginUserDataAccessInterface {
     boolean existsByName(String username);
 
     /**
-     * Saves the user.
-     * @param user the user to save
+     * Saves the commonUser.
+     * @param commonUser the commonUser to save
      */
-    void save(User user);
+    void save(CommonUser commonUser);
 
     /**
      * Returns the user with the given username.
      * @param username the username to look up
      * @return the user with the given username
      */
-    User get(String username);
+    CommonUser get(String username);
 
     /**
      * Returns the username of the curren user of the application.

@@ -1,6 +1,6 @@
 package use_case.change_password;
 
-import entity.User;
+import entity.CommonUser;
 
 /**
  * The Change Password Interactor.
@@ -17,24 +17,24 @@ public class ChangePasswordInteractor implements ChangePasswordInputBoundary {
 
     @Override
     public void execute(ChangePasswordInputData changePasswordInputData){
-        // Retrieve existing user
-        User user = userDataAccessObject.getUserByUsername(changePasswordInputData.getUsername());
+        // Retrieve existing commonUser
+        CommonUser commonUser = userDataAccessObject.getUserByUsername(changePasswordInputData.getUsername());
 
         // Check if the new password is the same as the original password, prepare fail view
-        if (user.getPassword().equals(changePasswordInputData.getPassword())){
+        if (commonUser.getPassword().equals(changePasswordInputData.getPassword())){
             userPresenter.prepareFailView("The new password cannot be the same as original password");
             return;
         }
 
-        // Update the user's password
-        user.setPassword(changePasswordInputData.getPassword());
+        // Update the commonUser's password
+        commonUser.setPassword(changePasswordInputData.getPassword());
 
-        // Save the updated user
-        userDataAccessObject.changePassword(user);
+        // Save the updated commonUser
+        userDataAccessObject.changePassword(commonUser);
 
         // Prepare the output data and success view
         final ChangePasswordOutputData changePasswordOutputData =
-                new ChangePasswordOutputData(user.getName(), false);
+                new ChangePasswordOutputData(commonUser.getName(), false);
         userPresenter.prepareSuccessView(changePasswordOutputData);
     }
 }

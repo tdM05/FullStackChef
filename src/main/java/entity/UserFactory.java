@@ -5,10 +5,10 @@ package entity;
  */
 public interface UserFactory {
     /**
-     * Creates a new User.
+     * Creates a new CommonUser.
      * @param username the name of the new user
      * @param password the password of the new user
      * @return the new user
      */
-    User create(String username, String password);
+    CommonUser create(String username, String password);
 }

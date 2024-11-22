@@ -1,6 +1,6 @@
 package use_case.login;
 
-import entity.User;
+import entity.CommonUser;
 
 /**
  * The Login Interactor.
@@ -30,10 +30,10 @@ public class LoginInteractor implements LoginInputBoundary {
                 loginPresenter.prepareFailView("Incorrect password");
             }
             else {
-                final User user = userDataAccessObject.get(loginInputData.getUsername());
-                userDataAccessObject.setCurrentUsername(user.getName());
+                final CommonUser commonUser = userDataAccessObject.get(loginInputData.getUsername());
+                userDataAccessObject.setCurrentUsername(commonUser.getName());
 
-                final LoginOutputData loginOutputData = new LoginOutputData(user.getName(), false);
+                final LoginOutputData loginOutputData = new LoginOutputData(commonUser.getName(), false);
                 loginPresenter.prepareSuccessView(loginOutputData);
             }
         }
