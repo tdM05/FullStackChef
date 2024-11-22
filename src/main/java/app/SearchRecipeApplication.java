@@ -15,6 +15,7 @@ import java.awt.CardLayout;
 
 public class SearchRecipeApplication {
 
+    @SuppressWarnings({"checkstyle:UnusedLocalVariable", "checkstyle:SuppressWarnings"})
     public static void main(String[] args) {
 
         final SearchRecipeDataAccessInterface searchRecipeDAO = new RecipeDataAccessObject();
@@ -35,7 +36,9 @@ public class SearchRecipeApplication {
 
 
         // Set up view manager
-        ViewManagerModel viewManagerModel= new ViewManagerModel();
+        final ViewManagerModel viewManagerModel= new ViewManagerModel();
+        // DO NOT DELETE THIS LINE
+        @SuppressWarnings("unused")
         final ViewManager viewManager = new ViewManager(frame.getContentPane(), cardLayout, viewManagerModel);
 
 
@@ -63,14 +66,6 @@ public class SearchRecipeApplication {
         // Set the initial view to the search view
         cardLayout.show(frame.getContentPane(), Constants.SEARCH_VIEW);
 
-        // Event listener to switch to Display view when a recipe is clicked
-//        searchBuilder.getSearchRecipeView().addRecipeClickListener(recipeId -> {
-//            displayBuilder.getDisplayRecipeView().loadRecipeDetails(recipeId);
-//            cardLayout.show(frame.getContentPane(), "displayView");
-//        });
-
-        // Optionally add a back button in DisplayRecipeView to go back to SearchRecipeView
-//        displayBuilder.getDisplayRecipeView().addBackButtonListener(() -> cardLayout.show(frame.getContentPane(), "searchView"));// Show the frame
         frame.setVisible(true);
     }
 }
