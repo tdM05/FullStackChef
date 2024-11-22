@@ -1,6 +1,8 @@
 package view;
 
+import data_access.Constants;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.ViewManagerState;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +37,8 @@ public class Profile extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Grocery List button clicked");
-                viewManagerModel.setState("groceryListView");
+                ViewManagerState state = new ViewManagerState(Constants.GROCERY_LIST_VIEW, null);
+                viewManagerModel.setState(state);
                 viewManagerModel.firePropertyChanged();
             }
         });

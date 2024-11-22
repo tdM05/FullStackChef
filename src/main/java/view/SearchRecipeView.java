@@ -1,7 +1,9 @@
 package view;
 
+import data_access.Constants;
 import data_access.RecipeDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.ViewManagerState;
 import interface_adapter.display_recipe.DisplayRecipeController;
 import interface_adapter.display_recipe.DisplayRecipePresenter;
 import interface_adapter.display_recipe.DisplayRecipeViewModel;
@@ -328,9 +330,14 @@ public class SearchRecipeView extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 System.out.println("Recipe card clicked. Recipe ID: " + recipe.id());
-                if (recipeClickListener != null) {
-                    recipeClickListener.accept(recipe.id()); // Trigger the listener with the recipe ID
-                }
+
+                final ViewManagerState state = new ViewManagerState(
+                        Constants.DISPLAY_RECIPE_VIEW,
+                        recipe.id());
+                viewManagerModel.setState(state);
+                viewManagerModel.setContext(recipe.id());
+                viewManagerModel.firePropertyChanged();
+
             }
         });
 

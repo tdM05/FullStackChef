@@ -31,8 +31,8 @@ public class SearchRecipePresenter implements SearchRecipeOutputBoundary {
         searchRecipeViewModel.firePropertyChanged("recipes");
 
         // Optionally, switch the view to show the search results.
-        viewManagerModel.setState("SearchResultsView");
-        viewManagerModel.firePropertyChanged();
+//        viewManagerModel.setState("SearchResultsView");
+//        viewManagerModel.firePropertyChanged();
     }
 
     /**

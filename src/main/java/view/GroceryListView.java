@@ -1,6 +1,8 @@
 package view;
 
+import data_access.Constants;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.ViewManagerState;
 import interface_adapter.grocery_list.GroceryListController;
 import interface_adapter.grocery_list.GroceryListState;
 import interface_adapter.grocery_list.GroceryListViewModel;
@@ -25,7 +27,6 @@ public class GroceryListView extends JPanel implements PropertyChangeListener {
 
     private GroceryListController controller;
 
-    private Runnable backButtonListener;
 
     /**
      * Creates a new GroceryListView.
@@ -41,7 +42,9 @@ public class GroceryListView extends JPanel implements PropertyChangeListener {
         this.returnButton = new JButton("Return");
         returnButton.addActionListener(evt -> {
             System.out.println("Return button pressed");
-            backButtonListener.run();
+            final ViewManagerState state = new ViewManagerState(Constants.SEARCH_VIEW, null);
+            viewManagerModel.setState(state);
+            viewManagerModel.firePropertyChanged();
         }
         );
 
@@ -50,17 +53,15 @@ public class GroceryListView extends JPanel implements PropertyChangeListener {
         this.add(returnButton);
     }
 
-    public void addBackButtonListener(Runnable listener) {
-        this.backButtonListener = listener;
-    }
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getNewValue() instanceof GroceryListState) {
             final GroceryListState state = (GroceryListState) evt.getNewValue();
             refreshPage(state);
         }
-        if (evt.getNewValue() instanceof String) {
-            if (evt.getNewValue().equals("groceryListView")) {
+        if (evt.getNewValue() instanceof ViewManagerState) {
+            final ViewManagerState state = (ViewManagerState) evt.getNewValue();
+            if (state.getViewName().equals(Constants.GROCERY_LIST_VIEW)) {
                 updateGroceryList();
             }
         }

@@ -23,8 +23,8 @@ public class GroceryListPresenter implements GroceryListOutputBoundary {
         state.setList(response.getGroceryList());
         groceryListViewModel.firePropertyChanged();
 
-        viewManagerModel.setState(groceryListViewModel.getViewName());
-        viewManagerModel.firePropertyChanged();
+//        viewManagerModel.setState(groceryListViewModel.getViewName());
+//        viewManagerModel.firePropertyChanged();
     }
 
     @Override

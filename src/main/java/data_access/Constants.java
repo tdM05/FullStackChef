@@ -13,5 +13,10 @@ public class Constants {
     // UI
     public static final int HEIGHT = 800;
     public static final int WIDTH = 1200;
+
+    // page management
+    public static final String SEARCH_VIEW = "searchView";
+    public static final String DISPLAY_RECIPE_VIEW = "displayRecipeView";
+    public static final String GROCERY_LIST_VIEW = "groceryListView";
 }
 

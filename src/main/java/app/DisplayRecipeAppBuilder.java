@@ -11,6 +11,7 @@ import use_case.display_recipe.DisplayRecipeDataAccessInterface;
 import use_case.display_recipe.DisplayRecipeInteractor;
 import use_case.display_recipe.DisplayRecipeOutputBoundary;
 import view.DisplayRecipeView;
+import view.ViewManager;
 
 /**
  * Builder for the Display Recipe Application.
@@ -55,13 +56,13 @@ public class DisplayRecipeAppBuilder {
 
     /**
      * Creates the DisplayRecipeView and underlying DisplayRecipeViewModel.
-     *
+     * @param currentViewManagerModel the ViewManagerModel to use
      * @return this builder
      */
-    public DisplayRecipeAppBuilder addDisplayRecipeView() {
-        viewManagerModel = new ViewManagerModel();
+    public DisplayRecipeAppBuilder addDisplayRecipeView(ViewManagerModel currentViewManagerModel) {
+        viewManagerModel = currentViewManagerModel;
         displayRecipeViewModel = new DisplayRecipeViewModel();
-        displayRecipeView = new DisplayRecipeView(displayRecipeViewModel);
+        displayRecipeView = new DisplayRecipeView(displayRecipeViewModel, viewManagerModel);
         return this;
     }
 
