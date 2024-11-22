@@ -5,10 +5,8 @@ import interface_adapter.grocery_list.GroceryListState;
 import interface_adapter.grocery_list.GroceryListViewModel;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +20,8 @@ public class GroceryListView extends JPanel implements PropertyChangeListener {
     private final JButton returnButton;
     private final List<JLabel> groceryList;
 
+    private GroceryListController controller;
+
     public GroceryListView(GroceryListViewModel groceryListViewModel) {
         this.groceryListViewModel = groceryListViewModel;
         this.groceryListViewModel.addPropertyChangeListener(this);
@@ -34,10 +34,10 @@ public class GroceryListView extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         final GroceryListState state = (GroceryListState) evt.getNewValue();
-        updateGroceryList(state);
+        refreshPage(state);
     }
 
-    private void updateGroceryList(GroceryListState state) {
+    private void refreshPage(GroceryListState state) {
         this.removeAll();
         this.add(returnButton);
         this.groceryList.clear();
@@ -50,5 +50,13 @@ public class GroceryListView extends JPanel implements PropertyChangeListener {
 
         this.revalidate();
         this.repaint();
+    }
+
+    public void setController(GroceryListController controller) {
+        this.controller = controller;
+    }
+
+    public void updateGroceryList() {
+        controller.execute();
     }
 }
