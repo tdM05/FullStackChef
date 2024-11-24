@@ -2,6 +2,7 @@ package entity;
 
 /**
  * A regular user in the system.
+ * Implement User interface.
  */
 public class RegularUser implements User {
     private String name;
