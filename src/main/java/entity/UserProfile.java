@@ -1,47 +1,41 @@
 package entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * The representation of a user profile in our program.
  */
-public class UserProfile {
+public class UserProfile implements User {
     private final User user;
-    private final List<Recipe> favoriteMeals;
-    private final List<DietaryRestriction> dietaryRestrictions;
+    private String displayName;
 
-    public UserProfile(User user) {
+    public UserProfile(User user, String displayName) {
         this.user = user;
-        this.favoriteMeals = new ArrayList<>();
-        this.dietaryRestrictions = new ArrayList<>();
+        this.displayName = displayName;
     }
 
     public User getUser() {
         return user;
     }
 
-    public List<Recipe> getFavoriteMeals() {
-        return favoriteMeals;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void addFavoriteMeals(Recipe recipe) {
-        favoriteMeals.add(recipe);
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
-    public void removeFavoriteMeals(Recipe recipe) {
-        favoriteMeals.remove(recipe);
+    @Override
+    public String getName() {
+        return user.getName();
     }
 
-    public List<DietaryRestriction> getDietaryRestrictions() {
-        return dietaryRestrictions;
+    @Override
+    public String getPassword() {
+        return user.getPassword();
     }
 
-    public void addDietaryRestriction(DietaryRestriction restriction) {
-        dietaryRestrictions.add(restriction);
-    }
-
-    public void removeDietaryRestriction(DietaryRestriction restriction) {
-        dietaryRestrictions.remove(restriction);
+    @Override
+    public void setPassword(String password) {
+        user.setPassword(password);
     }
 }

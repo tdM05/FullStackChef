@@ -23,9 +23,9 @@ public class LoginPresenter implements LoginOutputBoundary {
     }
 
     @Override
-    public void prepareSuccessView(LoginOutputData response){
+    public void prepareSuccessView(LoginOutputData response) {
         // On success, switch to logged in view
-        final LoggedInState loggedInState = new loggedInViewModel.getState();
+        final LoggedInState loggedInState = new getState();
         loggedInState.setUsername(response.getUsername());
         this.loggedInViewModel.setState(loggedInState);
         this.loggedInViewModel.firePropertyChanged();
@@ -39,5 +39,8 @@ public class LoginPresenter implements LoginOutputBoundary {
         final LoginState loginState = loginViewModel.getState();
         loginState.setLoginError(error);
         loginViewModel.firePropertyChanged();
+    }
+
+    private class getState extends LoggedInState {
     }
 }

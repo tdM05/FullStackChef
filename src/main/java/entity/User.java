@@ -3,25 +3,38 @@ package entity;
 /**
  * The representation of a password-protected user for our program.
  */
-public class User {
+public interface User {
+    /**
+     * Returns the username of the user.
+     *
+     * @return string of the username.
+     */
+    String getName();
 
-    private final String name;
-    private String password;
+    /**
+     * Returns the password of associated user.
+     *
+     * @return the user's password.
+     */
+    String getPassword();
 
-    public User(String name, String password) {
-        this.name = name;
-        this.password = password;
-    }
+    /**
+     * Sets password with input string.
+     *
+     */
+    void setPassword(String password);
 
-    public String getName() {
-        return name;
-    }
+    /**
+     * Returns the display name of the user.
+     *
+     * @return string of the display name.
+     */
+    String getDisplayName();
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    /**
+     * Sets the display name of the user.
+     *
+     * @param displayName
+     */
+    void setDisplayName(String displayName);
 }

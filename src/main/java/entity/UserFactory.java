@@ -11,4 +11,10 @@ public interface UserFactory {
      * @return the new user
      */
     User create(String username, String password);
+
+    /**
+     * Creates a guest user.
+     * @return the guest user
+     */
+    User createGuest();
 }
