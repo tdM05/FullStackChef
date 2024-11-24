@@ -6,7 +6,7 @@ package entity;
 public class User {
 
     private final String name;
-    private final String password;
+    private String password;
 
     public User(String name, String password) {
         this.name = name;
@@ -21,4 +21,7 @@ public class User {
         return password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

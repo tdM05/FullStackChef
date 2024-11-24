@@ -14,6 +14,8 @@ public class ViewModel<T> {
 
     private final String viewName;
 
+    private Object context;
+
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     private T state;
@@ -31,11 +33,16 @@ public class ViewModel<T> {
     }
 
     public void setState(T state) {
-        T oldState = this.state;
         this.state = state;
-        this.support.firePropertyChange("state", oldState, this.state);
     }
 
+    public Object getContext() {
+        return this.context;
+    }
+
+    public void setContext(Object context) {
+        this.context = context;
+    }
 
     /**
      * Fires a property changed event for the state of this ViewModel.

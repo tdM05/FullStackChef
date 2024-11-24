@@ -21,7 +21,7 @@ import use_case.display_recipe.DisplayRecipeDataAccessInterface;
  * Implements both SearchRecipeDataAccessInterface and DisplayRecipeDataAccessInterface.
  */
 public class RecipeDataAccessObject implements SearchRecipeDataAccessInterface, DisplayRecipeDataAccessInterface {
-    private static final String API_KEY = "60a6599269fc4a1e9bdfe92aaf1b3984";
+    private static final String API_KEY = Constants.API_KEY;
     private static final String BASE_SEARCH_URL = "https://api.spoonacular.com/recipes/complexSearch";
     private static final String BASE_DETAILS_URL = "https://api.spoonacular.com/recipes/%d/information?&apiKey=%s&includeNutrition=true";
 
@@ -114,16 +114,11 @@ public class RecipeDataAccessObject implements SearchRecipeDataAccessInterface, 
      * @throws IOException   if an I/O error occurs during the API request
      * @throws JSONException if JSON parsing fails
      */
-
-   @Override
-public Recipe getRecipeById(int id) throws IOException, JSONException {
-    for (Recipe recipe : RECIPES) {
-        if (recipe.getRecipeId() == id) {
-            return recipe;
-        }
+    @Override
+    public Recipe getRecipeById(int id) throws IOException, JSONException {
+        Recipe recipe = fetchAndParseRecipe(id, null, null, null);
+        return recipe;
     }
-    return fetchAndParseRecipe(id, null, null, null);
-}
 
     /**
      * Fetches recipe details and parses them into a Recipe entity.
