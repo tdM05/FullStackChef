@@ -26,6 +26,16 @@ public class CommonIngredient implements Ingredient {
     }
 
     @Override
+    public void setAmount(float amount) {
+        this.amount = amount;
+    }
+
+    @Override
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    @Override
     public String getName() {
         return name;
     }
