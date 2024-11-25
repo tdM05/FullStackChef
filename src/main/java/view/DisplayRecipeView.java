@@ -8,6 +8,8 @@ import interface_adapter.display_recipe.DisplayRecipeViewModel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URL;
@@ -21,6 +23,8 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
     private final JTextArea instructionsArea = new JTextArea(10, 30);
     private final JLabel errorLabel = new JLabel();
     private ViewManagerModel viewManagerModel;
+
+    private FavoriteButton favoriteButton;
 
     public DisplayRecipeView(DisplayRecipeViewModel viewModel,
                              ViewManagerModel viewManagerModel) {
@@ -43,6 +47,24 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
         add(new JScrollPane(instructionsArea));
         add(errorLabel);
 
+        favoriteButton= new FavoriteButton();
+        favoriteButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        add(favoriteButton);
+
+        // Add an ActionListener to respond to state changes
+        favoriteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (favoriteButton.isSelected()) {
+                    System.out.println("Recipe favorited");
+                    // Add code to handle favoriting the recipe
+                } else {
+                    System.out.println("Recipe unfavorited");
+                    // Add code to handle unfavoriting the recipe
+                }
+            }
+        });
+
         final JButton backButton = new JButton("Back");
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(backButton);
@@ -55,6 +77,31 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
         });
     }
 
+    private JButton createFavoriteButton() {
+        JButton button = new JButton();
+        button.setPreferredSize(new Dimension(50, 50));
+
+        // Load the heart icon image
+        try {
+            // Replace "heart.png" with the path to your heart image
+            ImageIcon heartIcon = new ImageIcon(getClass().getResource("/resources/heart.png"));
+            // Optionally, scale the icon to fit the button
+            Image image = heartIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+            heartIcon = new ImageIcon(image);
+            button.setIcon(heartIcon);
+        } catch (Exception e) {
+            System.err.println("Error loading heart icon: " + e.getMessage());
+        }
+
+        // Remove button border and background for a cleaner look
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
+
+        // The button doesn't do anything yet
+
+        return button;
+    }
 
     public void setRecipeController(DisplayRecipeController controller) {
         this.controller = controller;
