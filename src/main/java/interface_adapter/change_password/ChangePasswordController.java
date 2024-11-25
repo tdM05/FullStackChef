@@ -3,23 +3,15 @@ package interface_adapter.change_password;
 import use_case.change_password.ChangePasswordInputBoundary;
 import use_case.change_password.ChangePasswordInputData;
 
-/**
- * Controller for the Change Password Use Case.
- */
 public class ChangePasswordController {
-    private final ChangePasswordInputBoundary userChangePasswordUseCaseInteractor;
+    private final ChangePasswordInputBoundary interactor;
 
-    public ChangePasswordController(ChangePasswordInputBoundary userChangePasswordUseCaseInteractor){
-        this.userChangePasswordUseCaseInteractor = userChangePasswordUseCaseInteractor;
+    public ChangePasswordController(ChangePasswordInputBoundary interactor) {
+        this.interactor = interactor;
     }
 
-    /**
-     * Executes the Change Password Use Case.
-     * @param password the new password
-     * @param username the user whose password to change
-     */
-    public void execute(String username, String password){
-        final ChangePasswordInputData changePasswordInputData = new ChangePasswordInputData(username, password);
-        userChangePasswordUseCaseInteractor.execute(changePasswordInputData);
+    public void execute(String username, String newPassword, String repeatPassword) {
+        ChangePasswordInputData inputData = new ChangePasswordInputData(username, newPassword, repeatPassword);
+        interactor.execute(inputData);
     }
 }

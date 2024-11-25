@@ -9,32 +9,34 @@ public class ChangePasswordInteractor implements ChangePasswordInputBoundary {
     private final ChangePasswordUserDataAccessInterface userDataAccessObject;
     private final ChangePasswordOutputBoundary userPresenter;
 
-    public ChangePasswordInteractor (ChangePasswordUserDataAccessInterface changePasswordUserDataAccessInterface,
-                                     ChangePasswordOutputBoundary changePasswordOutputBoundary){
-        this.userDataAccessObject = changePasswordUserDataAccessInterface;
-        this.userPresenter = changePasswordOutputBoundary;
+    public ChangePasswordInteractor(ChangePasswordUserDataAccessInterface userDataAccessObject,
+                                    ChangePasswordOutputBoundary userPresenter) {
+        this.userDataAccessObject = userDataAccessObject;
+        this.userPresenter = userPresenter;
     }
 
     @Override
-    public void execute(ChangePasswordInputData changePasswordInputData){
-        // Retrieve existing user
-        User user = userDataAccessObject.getUserByUsername(changePasswordInputData.getUsername());
+    public void execute(ChangePasswordInputData inputData) {
+        User user = userDataAccessObject.getUserByUsername(inputData.getUsername());
 
-        // Check if the new password is the same as the original password, prepare fail view
-        if (user.getPassword().equals(changePasswordInputData.getPassword())){
-            userPresenter.prepareFailView("The new password cannot be the same as original password");
+        // Check if new password matches repeated password
+        if (!inputData.getNewPassword().equals(inputData.getRepeatPassword())) {
+            userPresenter.prepareFailView("Passwords do not match.");
+            return;
+        }
+
+        // Check if the new password is the same as the old password
+        if (user.getPassword().equals(inputData.getNewPassword())) {
+            userPresenter.prepareFailView("The new password cannot be the same as the old password.");
             return;
         }
 
         // Update the user's password
-        user.setPassword(changePasswordInputData.getPassword());
-
-        // Save the updated user
+        user.setPassword(inputData.getNewPassword());
         userDataAccessObject.changePassword(user);
 
-        // Prepare the output data and success view
-        final ChangePasswordOutputData changePasswordOutputData =
-                new ChangePasswordOutputData(user.getName(), false);
-        userPresenter.prepareSuccessView(changePasswordOutputData);
+        // Prepare success view
+        ChangePasswordOutputData outputData = new ChangePasswordOutputData(user.getName(), false);
+        userPresenter.prepareSuccessView(outputData);
     }
 }

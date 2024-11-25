@@ -3,45 +3,45 @@ package view;
 import interface_adapter.UserProfileViewModel;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class ChangeDisplayNameView extends JPanel {
-    private JLabel usernameLabel;
-    private JTextField displayNameField;
-    private JButton saveButton;
-    private JButton cancelButton;
+    private final JTextField displayNameField = new JTextField(20);
+    private Runnable saveListener;
+    private Runnable cancelListener;
 
     public ChangeDisplayNameView(UserProfileViewModel userProfileViewModel) {
-        usernameLabel = new JLabel("Username: " + userProfileViewModel.getState().getName());
-        displayNameField = new JTextField(20);
-        saveButton = new JButton("Save");
-        cancelButton = new JButton("Cancel");
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                userProfileViewModel.getState().setDisplayName(displayNameField.getText());
-                userProfileViewModel.firePropertyChanged();
-                navigateToProfileView();
-            }
-        });
-
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                navigateToProfileView();
-            }
-        });
-
+        JLabel usernameLabel = new JLabel("Username: " + userProfileViewModel.getState().getName());
         add(usernameLabel);
+
         add(new JLabel("New Display Name:"));
         add(displayNameField);
-        add(saveButton);
-        add(cancelButton);
+
+        JButton saveButton = new JButton("Save");
+        JButton cancelButton = new JButton("Cancel");
+
+        saveButton.addActionListener(e -> {
+            userProfileViewModel.getState().setDisplayName(displayNameField.getText());
+            userProfileViewModel.firePropertyChanged();
+            if (saveListener != null) saveListener.run();
+        });
+
+        cancelButton.addActionListener(e -> {
+            if (cancelListener != null) cancelListener.run();
+        });
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(saveButton);
+        buttonPanel.add(cancelButton);
+        add(buttonPanel);
     }
 
-    private void navigateToProfileView() {
-        // Navigate to ProfileView
+    public void addSaveListener(Runnable listener) {
+        this.saveListener = listener;
+    }
+
+    public void addCancelListener(Runnable listener) {
+        this.cancelListener = listener;
     }
 }

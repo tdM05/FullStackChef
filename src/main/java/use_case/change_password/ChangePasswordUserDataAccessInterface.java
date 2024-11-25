@@ -1,6 +1,7 @@
 package use_case.change_password;
 
 import entity.User;
+import use_case.DataAccessException;
 
 /**
  * The interface of the DAO for the Change Password Use Case.
