@@ -7,32 +7,15 @@ import java.util.List;
  */
 
 public class CommonFavorite implements Favorite {
-
     private final List<Integer> favoriteRecipe;
 
     public CommonFavorite(List<Integer> favoriteRecipe) {
         this.favoriteRecipe = favoriteRecipe;
     }
 
-    public List<Integer> getFavoriteRecipe() {
+    @Override
+    public List<Integer> getFavoriteRecipes() {
         return favoriteRecipe;
     }
-
-    public void addFavoriteRecipe(int recipeId) {
-        if (!favoriteRecipe.contains(recipeId)) {
-            favoriteRecipe.add(recipeId);
-        }
-    }
-
-
-    public void removeFavoriteRecipe(int recipeId) {
-        favoriteRecipe.remove(recipeId);
-    }
-
-
-    public boolean isFavorite(int recipeId) {
-        return favoriteRecipe.contains(recipeId);
-    }
-
 
 }
