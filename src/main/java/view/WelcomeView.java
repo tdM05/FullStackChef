@@ -1,24 +1,47 @@
 package view;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
 
-public class WelcomeView {
-    private JButton guestButton;
-    private JButton loginORSignupButton;
-
+public class WelcomeView extends JPanel {
     public WelcomeView() {
-        guestButton = new JButton("Continue as Guest");
-        loginORSignupButton = new JButton("Login/Signup");
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        JLabel titleLabel = new JLabel("Welcome!");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        titleLabel.setAlignmentX(CENTER_ALIGNMENT);
 
-        guestButton.addActionListener(e -> navigateToSearchRecipeView());
-        loginORSignupButton.addActionListener(e -> navigateToLoginView());
+        JButton guestButton = new JButton("Continue as Guest");
+        JButton loginSignupButton = new JButton("Login/Signup");
+
+        guestButton.setAlignmentX(CENTER_ALIGNMENT);
+        loginSignupButton.setAlignmentX(CENTER_ALIGNMENT);
+
+        add(Box.createVerticalGlue());
+        add(titleLabel);
+        add(Box.createVerticalStrut(20));
+        add(guestButton);
+        add(Box.createVerticalStrut(10));
+        add(loginSignupButton);
+        add(Box.createVerticalGlue());
+
+        guestButton.addActionListener(e -> {
+            if (guestListener != null) guestListener.run();
+        });
+
+        loginSignupButton.addActionListener(e -> {
+            if (loginSignupListener != null) loginSignupListener.run();
+        });
     }
 
-    private void navigateToSearchRecipeView() {
-        // Navigate to SearchRecipeView
+    private Runnable guestListener;
+    private Runnable loginSignupListener;
+
+    public void addGuestListener(Runnable listener) {
+        guestListener = listener;
     }
 
-    private void navigateToLoginView() {
-        // Navigate to SignupView
+    public void addLoginSignupListener(Runnable listener) {
+        loginSignupListener = listener;
     }
 }

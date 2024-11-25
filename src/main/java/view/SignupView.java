@@ -2,17 +2,17 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 
-public class LoginView extends JPanel {
+public class SignupView extends JPanel {
     private final JTextField usernameField = new JTextField(20);
     private final JPasswordField passwordField = new JPasswordField(20);
+    private final JPasswordField repeatPasswordField = new JPasswordField(20);
     private final JLabel errorLabel = new JLabel();
 
-    public LoginView() {
+    public SignupView() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        JLabel titleLabel = new JLabel("Login");
+        JLabel titleLabel = new JLabel("Signup");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabel.setAlignmentX(CENTER_ALIGNMENT);
 
@@ -23,25 +23,27 @@ public class LoginView extends JPanel {
         add(usernameField);
         add(new JLabel("Password:"));
         add(passwordField);
+        add(new JLabel("Repeat Password:"));
+        add(repeatPasswordField);
         add(errorLabel);
 
-        JButton loginButton = new JButton("Login");
         JButton signupButton = new JButton("Signup");
+        JButton loginInsteadButton = new JButton("Login Instead");
         JButton cancelButton = new JButton("Cancel");
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.add(loginButton);
         buttonPanel.add(signupButton);
+        buttonPanel.add(loginInsteadButton);
         buttonPanel.add(cancelButton);
 
         add(buttonPanel);
 
-        loginButton.addActionListener(e -> {
-            if (loginListener != null) loginListener.run();
-        });
-
         signupButton.addActionListener(e -> {
             if (signupListener != null) signupListener.run();
+        });
+
+        loginInsteadButton.addActionListener(e -> {
+            if (loginInsteadListener != null) loginInsteadListener.run();
         });
 
         cancelButton.addActionListener(e -> {
@@ -49,16 +51,16 @@ public class LoginView extends JPanel {
         });
     }
 
-    private Runnable loginListener;
     private Runnable signupListener;
+    private Runnable loginInsteadListener;
     private Runnable cancelListener;
-
-    public void addLoginListener(Runnable listener) {
-        loginListener = listener;
-    }
 
     public void addSignupListener(Runnable listener) {
         signupListener = listener;
+    }
+
+    public void addLoginInsteadListener(Runnable listener) {
+        loginInsteadListener = listener;
     }
 
     public void addCancelListener(Runnable listener) {
