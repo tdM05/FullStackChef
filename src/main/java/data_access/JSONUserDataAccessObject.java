@@ -4,7 +4,7 @@ import entity.UserProfile;
 import entity.UserProfileFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import use_case.login.DataAccessException;
+import use_case.DataAccessException;
 
 import java.io.File;
 import java.io.FileWriter;
