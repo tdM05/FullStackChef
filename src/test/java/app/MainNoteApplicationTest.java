@@ -1,6 +1,6 @@
 package app;
 
-import entity.CommonUser;
+import entity.User;
 import org.junit.Before;
 import org.junit.Test;
 import use_case.note.NoteDataAccessInterface;
@@ -24,13 +24,13 @@ public class MainNoteApplicationTest {
             private String note = "test";
 
             @Override
-            public String saveNote(CommonUser user, String note) {
+            public String saveNote(User user, String note) {
                 this.note = note;
                 return note;
             }
 
             @Override
-            public String loadNote(CommonUser user) {
+            public String loadNote(User user) {
                 return note;
             }
         };

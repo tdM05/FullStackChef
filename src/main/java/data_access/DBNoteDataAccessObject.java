@@ -2,10 +2,10 @@ package data_access;
 
 import java.io.IOException;
 
-import entity.CommonUser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import entity.User;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -39,15 +39,15 @@ public class DBNoteDataAccessObject implements NoteDataAccessInterface {
     private static final String MESSAGE = "message";
 
     @Override
-    public String saveNote(CommonUser commonUser, String note) throws DataAccessException {
+    public String saveNote(User user, String note) throws DataAccessException {
         final OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
 
         // POST METHOD
         final MediaType mediaType = MediaType.parse(CONTENT_TYPE_JSON);
         final JSONObject requestBody = new JSONObject();
-        requestBody.put(USERNAME, commonUser.getName());
-        requestBody.put(PASSWORD, commonUser.getPassword());
+        requestBody.put(USERNAME, user.getName());
+        requestBody.put(PASSWORD, user.getPassword());
         final JSONObject extra = new JSONObject();
         extra.put("note", note);
         requestBody.put("info", extra);
@@ -63,7 +63,7 @@ public class DBNoteDataAccessObject implements NoteDataAccessInterface {
             final JSONObject responseBody = new JSONObject(response.body().string());
 
             if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
-                return loadNote(commonUser);
+                return loadNote(user);
             }
             else if (responseBody.getInt(STATUS_CODE_LABEL) == CREDENTIAL_ERROR) {
                 throw new DataAccessException("message could not be found or password was incorrect");
@@ -78,9 +78,9 @@ public class DBNoteDataAccessObject implements NoteDataAccessInterface {
     }
 
     @Override
-    public String loadNote(CommonUser commonUser) throws DataAccessException {
-        // Make an API call to get the commonUser object.
-        final String username = commonUser.getName();
+    public String loadNote(User user) throws DataAccessException {
+        // Make an API call to get the user object.
+        final String username = user.getName();
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
         final Request request = new Request.Builder()
                 .url(String.format("http://vm003.teach.cs.toronto.edu:20112/user?username=%s", username))
@@ -92,7 +92,7 @@ public class DBNoteDataAccessObject implements NoteDataAccessInterface {
             final JSONObject responseBody = new JSONObject(response.body().string());
 
             if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
-                final JSONObject userJSONObject = responseBody.getJSONObject("commonUser");
+                final JSONObject userJSONObject = responseBody.getJSONObject("user");
                 final JSONObject data = userJSONObject.getJSONObject("info");
                 return data.getString("note");
             }

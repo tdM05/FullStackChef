@@ -1,6 +1,6 @@
 package use_case.signup;
 
-import entity.CommonUser;
+import entity.User;
 
 /**
  * DAO for the Signup Use Case.
@@ -15,7 +15,7 @@ public interface SignupUserDataAccessInterface {
 
     /**
      * Saves the commonUser.
-     * @param commonUser the commonUser to save
+     * @param user the User to save
      */
-    void save(CommonUser commonUser);
+    void save(User user);
 }

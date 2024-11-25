@@ -29,7 +29,7 @@ public class Profile extends JPanel {
         profileDropDown.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         JMenuItem profileButton = new JMenuItem("Profile");
-        JMenuItem favoriteButton = new JMenuItem("CommonFavorite");
+        JMenuItem favoriteButton = new JMenuItem("Favorite");
         JMenuItem mealPlanButton = new JMenuItem("Meal Plan");
         this.groceryListButton = new JMenuItem("Grocery List");
         // add listener to groceryListButton

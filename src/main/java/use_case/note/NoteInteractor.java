@@ -11,11 +11,7 @@ public class NoteInteractor implements NoteInputBoundary {
 
     private final NoteDataAccessInterface noteDataAccessInterface;
     private final NoteOutputBoundary noteOutputBoundary;
-    // Note: this program has it hardcoded which commonUser object it is getting data for;
-    // you could change this if you wanted to generalize the code. For example,
-    // you might allow a commonUser of the program to create a new note, which you
-    // could store as a "commonUser" through the API OR you might maintain all notes
-    // in a JSON object stored in one common "commonUser" stored through the API.
+
     private final CommonUser commonUser = new CommonUser("jonathan_calver2", "abc123");
 
     public NoteInteractor(NoteDataAccessInterface noteDataAccessInterface,
