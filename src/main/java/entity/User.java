@@ -1,7 +1,6 @@
 package entity;
 
 public interface User {
-
         /**
         * Get the name of the user.
         * @return the name of the user
