@@ -1,7 +1,9 @@
 package view;
 
+import data_access.Constants;
 import data_access.RecipeDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.ViewManagerState;
 import interface_adapter.display_recipe.DisplayRecipeController;
 import interface_adapter.display_recipe.DisplayRecipePresenter;
 import interface_adapter.display_recipe.DisplayRecipeViewModel;
@@ -42,22 +44,29 @@ public class SearchRecipeView extends JPanel {
     private final int cornerRadius = 50;
     private Consumer<Integer> recipeClickListener;
 
+    //
+    private JMenuItem profileButton;
+
+    private ViewManagerModel viewManagerModel;
     /**
      * Constructor for the SearchRecipeView.
      * @param viewModel the ViewModel for the Search Recipe Use Case
+     * @param viewManagerModel the ViewManagerModel
      */
-    public SearchRecipeView(SearchRecipeViewModel viewModel) {
+    public SearchRecipeView(SearchRecipeViewModel viewModel,
+                            ViewManagerModel viewManagerModel) {
         this.viewModel = viewModel;
         setLayout(new BorderLayout());
-
+        this.viewManagerModel = viewManagerModel;
         loadScreen();
         registerPropertyChangeListeners();
     }
 
+
     private void loadScreen() {
 
         // Create the profile component
-        profile = new Profile();
+        profile = new Profile(this.viewManagerModel);
 
         // Create the search bar with rounded corners and shadow
         searchBar = createSearchBar();
@@ -161,7 +170,7 @@ public class SearchRecipeView extends JPanel {
 
         // Set search bar properties
         searchBar.setPreferredSize(new Dimension(800, 60));
-        searchBar.setFont(new Font("SansSerif", Font.ITALIC, 24)); // Italic font for placeholder
+        searchBar.setFont(new Font("SansSerif", Font.ITALIC, 24));
         searchBar.setForeground(Color.GRAY);
         searchBar.setBackground(Color.WHITE);
         searchBar.setOpaque(false);
@@ -200,66 +209,6 @@ public class SearchRecipeView extends JPanel {
         }
     }
 
-    // Custom Profile class
-    class Profile extends JPanel {
-        private Color circleColor = Color.GRAY;
-
-        public Profile() {
-
-            setPreferredSize(new Dimension(50, 50));
-            setOpaque(false);
-            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-            // Add mouse listener for hover effect
-            addMouseListener(new MouseAdapter() {
-
-                @Override
-                // Change color on hover
-                public void mouseEntered(MouseEvent e) {
-                    circleColor = Color.BLACK;
-                    repaint();
-                }
-
-                // Reset color when not hovered
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    circleColor = Color.GRAY;
-                    repaint();
-                }
-            });
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-
-            Graphics2D g2d = (Graphics2D) g.create();
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-            // Determine size and position
-            int diameter = Math.min(getWidth(), getHeight()) - 1;
-            int x = (getWidth() - diameter) / 2;
-            int y = (getHeight() - diameter) / 2;
-
-            // Draw the circle
-            g2d.setColor(circleColor);
-            g2d.fillOval(x, y, diameter, diameter);
-
-            // Optionally, draw initials or an icon in the circle
-            g2d.setColor(Color.WHITE);
-            g2d.setFont(new Font("SansSerif", Font.BOLD, diameter / 2));
-            FontMetrics fm = g2d.getFontMetrics();
-
-            String initials = "P";
-            int stringWidth = fm.stringWidth(initials);
-            int stringHeight = fm.getAscent();
-            int textX = x + (diameter - stringWidth) / 2;
-            int textY = y + (diameter + stringHeight) / 2 - 4;
-            g2d.drawString(initials, textX, textY);
-
-            g2d.dispose();
-        }
-    }
 
     private void registerPropertyChangeListeners() {
         viewModel.addPropertyChangeListener(new PropertyChangeListener() {
@@ -366,14 +315,14 @@ public class SearchRecipeView extends JPanel {
         nameLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
         card.add(nameLabel, BorderLayout.SOUTH);
 
-        final ViewManagerModel viewManagerModel = new ViewManagerModel();
-        DisplayRecipePresenter displayRecipePresenter = new DisplayRecipePresenter(viewManagerModel,
-                new DisplayRecipeViewModel());
-        DisplayRecipeDataAccessInterface displayRecipeDataAccessInterface = new RecipeDataAccessObject();
-        DisplayRecipeInputBoundary displayRecipeUseCaseInteractor = new DisplayRecipeInteractor(
-                displayRecipePresenter, displayRecipeDataAccessInterface);
-
-        final DisplayRecipeController displayRecipeController = new DisplayRecipeController(displayRecipeUseCaseInteractor);
+//        final ViewManagerModel viewManagerModel = new ViewManagerModel();
+//        DisplayRecipePresenter displayRecipePresenter = new DisplayRecipePresenter(viewManagerModel,
+//                new DisplayRecipeViewModel());
+//        DisplayRecipeDataAccessInterface displayRecipeDataAccessInterface = new RecipeDataAccessObject();
+//        DisplayRecipeInputBoundary displayRecipeUseCaseInteractor = new DisplayRecipeInteractor(
+//                displayRecipePresenter, displayRecipeDataAccessInterface);
+//
+//        final DisplayRecipeController displayRecipeController = new DisplayRecipeController(displayRecipeUseCaseInteractor);
 
         card.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
@@ -381,9 +330,14 @@ public class SearchRecipeView extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 System.out.println("Recipe card clicked. Recipe ID: " + recipe.id());
-                if (recipeClickListener != null) {
-                    recipeClickListener.accept(recipe.id()); // Trigger the listener with the recipe ID
-                }
+
+                final ViewManagerState state = new ViewManagerState(
+                        Constants.DISPLAY_RECIPE_VIEW,
+                        recipe.id());
+                viewManagerModel.setState(state);
+                viewManagerModel.setContext(recipe.id());
+                viewManagerModel.firePropertyChanged();
+
             }
         });
 

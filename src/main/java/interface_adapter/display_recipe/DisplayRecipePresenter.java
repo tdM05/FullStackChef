@@ -42,7 +42,7 @@ public class DisplayRecipePresenter implements DisplayRecipeOutputBoundary {
         );
 
         // Switch the view state
-        viewManager.setState(displayRecipeViewModel.getViewName());
+//        viewManager.setState(displayRecipeViewModel.getViewName());
     }
 
     @Override
