@@ -3,6 +3,7 @@ package app;
 import data_access.Constants;
 import data_access.RecipeDataAccessObject;
 import data_access.grocery_list.GroceryListDataAccessObject;
+import data_access.grocery_list.GroceryListInMemoryDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import use_case.grocery_list.GroceryListDataAccessInterface;
 import use_case.search_recipe.SearchRecipeDataAccessInterface;
@@ -21,6 +22,7 @@ public class SearchRecipeApplication {
         final SearchRecipeDataAccessInterface searchRecipeDAO = new RecipeDataAccessObject();
         final DisplayRecipeDataAccessInterface displayRecipeDAO = new RecipeDataAccessObject();
         final GroceryListDataAccessInterface groceryListDAO = new GroceryListDataAccessObject();
+//        final GroceryListDataAccessInterface groceryListDAO = new GroceryListInMemoryDataAccessObject();
 
         // Set up a frame with a CardLayout to handle view switching
         final JFrame frame = new JFrame();
@@ -54,7 +56,7 @@ public class SearchRecipeApplication {
 
         // We need to add things in this order
         final GroceryListAppBuilder groceryListBuilder = new GroceryListAppBuilder();
-        groceryListBuilder.addGroceryListDAO(new GroceryListDataAccessObject())
+        groceryListBuilder.addGroceryListDAO(groceryListDAO)
                 .addGroceryListView(viewManagerModel)
                 .addGroceryListUseCase();
 
