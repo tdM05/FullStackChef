@@ -19,6 +19,7 @@ import view.ViewManager;
 public class DisplayRecipeAppBuilder {
     public static final int HEIGHT = 800;
     public static final int WIDTH = 1200;
+
     private DisplayRecipeDataAccessInterface displayRecipeDAO;
     private DisplayRecipeViewModel displayRecipeViewModel = new DisplayRecipeViewModel();
     private DisplayRecipeView displayRecipeView;

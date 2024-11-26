@@ -9,7 +9,7 @@ public class FavoriteRecipeOutputData {
         this.useCaseFailed = useCaseFailed;
     }
 
-    public boolean getIsFavorite() {
+    public boolean getFavorite() {
         return favorite;
     }
 

@@ -77,32 +77,6 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
         });
     }
 
-    private JButton createFavoriteButton() {
-        JButton button = new JButton();
-        button.setPreferredSize(new Dimension(50, 50));
-
-        // Load the heart icon image
-        try {
-            // Replace "heart.png" with the path to your heart image
-            ImageIcon heartIcon = new ImageIcon(getClass().getResource("/resources/heart.png"));
-            // Optionally, scale the icon to fit the button
-            Image image = heartIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-            heartIcon = new ImageIcon(image);
-            button.setIcon(heartIcon);
-        } catch (Exception e) {
-            System.err.println("Error loading heart icon: " + e.getMessage());
-        }
-
-        // Remove button border and background for a cleaner look
-        button.setBorderPainted(false);
-        button.setContentAreaFilled(false);
-        button.setFocusPainted(false);
-
-        // The button doesn't do anything yet
-
-        return button;
-    }
-
     public void setRecipeController(DisplayRecipeController controller) {
         this.controller = controller;
     }

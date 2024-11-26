@@ -8,12 +8,12 @@ public interface FavoriteRecipeOutputBoundary {
      * Prepares the success view for the Favorite Recipe Use Case.
      * @param outputData the output data
      */
-    void prepareFavoriteRecipeSuccessView(FavoriteRecipeOutputData outputData);
+    void prepareSuccessView(FavoriteRecipeOutputData outputData);
 
     /**
      * Prepares the failure view for the Favorite Recipe Use Case.
      * @param errorMessage the explanation of the failure
      */
-    void prepareFavoriteRecipeFailView(String errorMessage);
+    void prepareFailView(String errorMessage);
 
 }

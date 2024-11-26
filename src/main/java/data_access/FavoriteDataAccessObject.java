@@ -20,7 +20,7 @@ import use_case.favorite_recipe.FavoriteException;
 /**
  * The DAO for accessing favorite recipes stored in the database.
  */
-public class DBUserDataAccessObject implements FavoriteRecipeDataAccessInterface {
+public class FavoriteDataAccessObject implements FavoriteRecipeDataAccessInterface {
     private static final int SUCCESS_CODE = 200;
     private static final int CREDENTIAL_ERROR = 401;
     private static final String CONTENT_TYPE_LABEL = "Content-Type";
@@ -68,7 +68,7 @@ public class DBUserDataAccessObject implements FavoriteRecipeDataAccessInterface
     }
 
     @Override
-    public List<Integer> saveFavorites(User user) throws FavoriteException {
+    public void saveFavorites(User user) throws FavoriteException {
         final OkHttpClient client = new OkHttpClient().newBuilder().build();
 
         final MediaType mediaType = MediaType.parse(CONTENT_TYPE_JSON);
@@ -93,7 +93,7 @@ public class DBUserDataAccessObject implements FavoriteRecipeDataAccessInterface
             final JSONObject responseBody = new JSONObject(response.body().string());
 
             if (responseBody.getInt(STATUS_CODE_LABEL) == SUCCESS_CODE) {
-                return getFavorites(user); // Retrieve updated list to confirm sync
+                getFavorites(user);
             } else if (responseBody.getInt(STATUS_CODE_LABEL) == CREDENTIAL_ERROR) {
                 throw new FavoriteException("Invalid credentials provided.");
             } else {
