@@ -1,14 +1,14 @@
-package use_case.display_favorite;
+package use_case.search;
 
 /**
- * The Output Data for the Display Favorite Use Case.
+ * The Output Data for the Search Use Case.
  */
-public class DisplayFavoriteOutputData {
+public class SearchOutputData {
     private int recipeId;
     private String recipeName;
     private String imageUrl;
 
-    public DisplayFavoriteOutputData(int recipeId, String recipeName, String imageUrl) {
+    public SearchOutputData(int recipeId, String recipeName, String imageUrl) {
         this.recipeId = recipeId;
         this.recipeName = recipeName;
         this.imageUrl = imageUrl;
