@@ -6,8 +6,8 @@ package use_case.favorite_recipe;
 public class FavoriteRecipeInputData {
     private final int recipeId;
 
-    public FavoriteRecipeInputData(int id) {
-        this.recipeId = id;
+    public FavoriteRecipeInputData(int recipeId) {
+        this.recipeId = recipeId;
     }
 
     public int getRecipeId() {
