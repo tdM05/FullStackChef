@@ -17,7 +17,7 @@ public class ChangePasswordInteractor implements ChangePasswordInputBoundary {
 
     @Override
     public void execute(ChangePasswordInputData changePasswordInputData){
-        // Retrieve existing user
+        // Retrieve existing commonUser
         User user = userDataAccessObject.getUserByUsername(changePasswordInputData.getUsername());
 
         // Check if the new password is the same as the original password, prepare fail view
@@ -26,10 +26,10 @@ public class ChangePasswordInteractor implements ChangePasswordInputBoundary {
             return;
         }
 
-        // Update the user's password
+        // Update the commonUser's password
         user.setPassword(changePasswordInputData.getPassword());
 
-        // Save the updated user
+        // Save the updated commonUser
         userDataAccessObject.changePassword(user);
 
         // Prepare the output data and success view
