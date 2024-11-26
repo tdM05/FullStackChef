@@ -10,5 +10,6 @@ public interface GroceryListOutputBoundary {
      * Prepares the view to display an error message.
      * @param errorMessage The error message to display.
      */
+
     void prepareFailView(String errorMessage);
 }

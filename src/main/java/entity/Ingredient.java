@@ -18,10 +18,22 @@ public interface Ingredient {
     float getAmount();
 
     /**
+     * Sets the amount of this ingredient.
+     * @param amount the amount of this ingredient
+     */
+    void setAmount(float amount);
+
+    /**
      * Returns the unit of this ingredient.
      * @return the unit of this ingredient
      */
     String getUnit();
+
+    /**
+     * Sets the unit of this ingredient.
+     * @param unit the unit of this ingredient
+     */
+    void setUnit(String unit);
 
     /**
      * Returns the ID of this ingredient.
