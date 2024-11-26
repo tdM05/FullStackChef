@@ -54,15 +54,20 @@ public class SearchRecipeAppBuilder {
         return this;
     }
 
+    public SearchRecipeAppBuilder addViewManagerModel(ViewManagerModel viewManagerModel) {
+        this.viewManagerModel = viewManagerModel;
+        return this;
+    }
+
     /**
      * Creates the SearchRecipeView and underlying SearchRecipeViewModel.
-     *
+     * @param currentViewManagerModel the view manager model
      * @return this builder
      */
-    public SearchRecipeAppBuilder addSearchRecipeView() {
-        viewManagerModel = new ViewManagerModel();
+    public SearchRecipeAppBuilder addSearchRecipeView(ViewManagerModel currentViewManagerModel) {
+        this.viewManagerModel = currentViewManagerModel;
         searchrecipeViewModel = new SearchRecipeViewModel();
-        searchRecipeView = new SearchRecipeView(searchrecipeViewModel);
+        searchRecipeView = new SearchRecipeView(searchrecipeViewModel, viewManagerModel);
         return this;
     }
 

@@ -1,18 +1,37 @@
 package entity;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * The representation of an ingredient in our program.
  */
 public class CommonIngredient implements Ingredient {
     private String name;
     private float amount;
-    private int id;
+    @Nullable
+    private Integer id;
     private String unit;
 
     public CommonIngredient(String name, float amount, int id, String unit) {
         this.name = name;
         this.amount = amount;
         this.id = id;
+        this.unit = unit;
+    }
+
+    public CommonIngredient(String name, float amount, String unit) {
+        this.name = name;
+        this.amount = amount;
+        this.unit = unit;
+    }
+
+    @Override
+    public void setAmount(float amount) {
+        this.amount = amount;
+    }
+
+    @Override
+    public void setUnit(String unit) {
         this.unit = unit;
     }
 
