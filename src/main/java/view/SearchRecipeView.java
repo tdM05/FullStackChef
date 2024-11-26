@@ -237,7 +237,7 @@ public class SearchRecipeView extends JPanel {
             profileDropDown.addSeparator();
             profileDropDown.add(logoutButton);
 
-            profileButton.addActionListener(e -> navigateToProfileView());
+            // profileButton.addActionListener(e -> navigateToProfileView());
 
             // Add hover effect for the dropdown
             addMouseListener(new MouseAdapter() {
@@ -490,7 +490,7 @@ public class SearchRecipeView extends JPanel {
     }
 
     private void navigateToProfileView() {
-        // Navigate to ProfileView
+        // Navigate to Profile View
     }
 
     public void setRecipeController(SearchRecipeController controller) {

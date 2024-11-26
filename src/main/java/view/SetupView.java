@@ -3,42 +3,43 @@ package view;
 import interface_adapter.UserProfileViewModel;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
 
 public class SetupView extends JPanel {
-    private JTextField displayNameField;
-    private JButton skipButton;
-    private JButton nextButton;
+    private final JTextField displayNameField = new JTextField(20);
+    private Runnable skipListener;
+    private Runnable nextListener;
 
     public SetupView(UserProfileViewModel userProfileViewModel) {
-        displayNameField = new JTextField(20);
-        skipButton = new JButton("Skip");
-        nextButton = new JButton("Next");
-
-        skipButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                navigateToSearchRecipeView();
-            }
-        });
-
-        nextButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                userProfileViewModel.getState().setDisplayName(displayNameField.getText());
-                userProfileViewModel.firePropertyChanged();
-                navigateToSearchRecipeView();
-            }
-        });
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         add(new JLabel("Display Name:"));
         add(displayNameField);
-        add(skipButton);
-        add(nextButton);
+
+        JButton skipButton = new JButton("Skip");
+        JButton nextButton = new JButton("Next");
+
+        skipButton.addActionListener(e -> {
+            if (skipListener != null) skipListener.run();
+        });
+
+        nextButton.addActionListener(e -> {
+            userProfileViewModel.getState().setDisplayName(displayNameField.getText());
+            userProfileViewModel.firePropertyChanged();
+            if (nextListener != null) nextListener.run();
+        });
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(skipButton);
+        buttonPanel.add(nextButton);
+        add(buttonPanel);
     }
 
-    private void navigateToSearchRecipeView() {
-        // Navigate to SearchRecipeView
+    public void addSkipListener(Runnable listener) {
+        this.skipListener = listener;
+    }
+
+    public void addNextListener(Runnable listener) {
+        this.nextListener = listener;
     }
 }

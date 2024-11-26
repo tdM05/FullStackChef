@@ -2,63 +2,42 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import interface_adapter.UserProfileViewModel;
-import interface_adapter.change_password.ChangePasswordController;
 
-public class ProfileView {
-    private JLabel usernameLabel;
-    private JLabel displayNameLabel;
-    private JTextField displayNameField;
-    private JPasswordField newPasswordField;
-    private JButton changePasswordButton;
-    private JButton changeDisplayNameButton;
-    private JPanel panel;
+public class ProfileView extends JPanel {
+    private final JLabel usernameLabel;
+    private final JLabel displayNameLabel;
+    private Runnable changePasswordListener;
+    private Runnable changeDisplayNameListener;
 
-    public ProfileView(UserProfileViewModel userProfileViewModel, ChangePasswordController changePasswordController) {
-        JFrame frame = new JFrame("Profile View");
-        panel = new JPanel(new GridLayout(6, 2));
+    public ProfileView(UserProfileViewModel userProfileViewModel) {
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         usernameLabel = new JLabel("Username: " + userProfileViewModel.getState().getName());
         displayNameLabel = new JLabel("Display Name: " + userProfileViewModel.getState().getDisplayName());
-        displayNameField = new JTextField(userProfileViewModel.getState().getDisplayName());
-        newPasswordField = new JPasswordField();
-        changePasswordButton = new JButton("Change Password");
-        changeDisplayNameButton = new JButton("Change Display Name");
 
-        panel.add(usernameLabel);
-        panel.add(new JLabel()); // Empty cell
-        panel.add(displayNameLabel);
-        panel.add(displayNameField);
-        panel.add(new JLabel("New Password:"));
-        panel.add(newPasswordField);
-        panel.add(changePasswordButton);
-        panel.add(changeDisplayNameButton);
+        JButton changePasswordButton = new JButton("Change Password");
+        JButton changeDisplayNameButton = new JButton("Change Display Name");
 
-        changePasswordButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                changePasswordController.execute(
-                        userProfileViewModel.getState().getName(),
-                        new String(newPasswordField.getPassword())
-                );
-            }
+        changePasswordButton.addActionListener(e -> {
+            if (changePasswordListener != null) changePasswordListener.run();
         });
 
-        changeDisplayNameButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                userProfileViewModel.getState().setDisplayName(displayNameField.getText());
-                userProfileViewModel.firePropertyChanged();
-                displayNameLabel.setText("Display Name: " + userProfileViewModel.getState().getDisplayName());
-            }
+        changeDisplayNameButton.addActionListener(e -> {
+            if (changeDisplayNameListener != null) changeDisplayNameListener.run();
         });
 
-        frame.add(panel);
-        frame.setSize(400, 300);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+        add(usernameLabel);
+        add(displayNameLabel);
+        add(changePasswordButton);
+        add(changeDisplayNameButton);
+    }
+
+    public void addChangePasswordListener(Runnable listener) {
+        this.changePasswordListener = listener;
+    }
+
+    public void addChangeDisplayNameListener(Runnable listener) {
+        this.changeDisplayNameListener = listener;
     }
 }

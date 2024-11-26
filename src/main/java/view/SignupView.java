@@ -1,7 +1,6 @@
 package view;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class SignupView extends JPanel {
     private final JTextField usernameField = new JTextField(20);
@@ -9,14 +8,14 @@ public class SignupView extends JPanel {
     private final JPasswordField repeatPasswordField = new JPasswordField(20);
     private final JLabel errorLabel = new JLabel();
 
+    private Runnable signupListener;
+    private Runnable cancelListener;
+
     public SignupView() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         JLabel titleLabel = new JLabel("Signup");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabel.setAlignmentX(CENTER_ALIGNMENT);
-
-        errorLabel.setForeground(Color.RED);
 
         add(titleLabel);
         add(new JLabel("Username:"));
@@ -25,45 +24,44 @@ public class SignupView extends JPanel {
         add(passwordField);
         add(new JLabel("Repeat Password:"));
         add(repeatPasswordField);
-        add(errorLabel);
 
         JButton signupButton = new JButton("Signup");
-        JButton loginInsteadButton = new JButton("Login Instead");
-        JButton cancelButton = new JButton("Cancel");
-
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(signupButton);
-        buttonPanel.add(loginInsteadButton);
-        buttonPanel.add(cancelButton);
-
-        add(buttonPanel);
-
         signupButton.addActionListener(e -> {
             if (signupListener != null) signupListener.run();
         });
 
-        loginInsteadButton.addActionListener(e -> {
-            if (loginInsteadListener != null) loginInsteadListener.run();
-        });
-
+        JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(e -> {
             if (cancelListener != null) cancelListener.run();
         });
+
+        errorLabel.setForeground(Color.RED);
+        add(errorLabel);
+        add(signupButton);
+        add(cancelButton);
     }
 
-    private Runnable signupListener;
-    private Runnable loginInsteadListener;
-    private Runnable cancelListener;
+    public String getUsername() {
+        return usernameField.getText();
+    }
+
+    public String getPassword() {
+        return new String(passwordField.getPassword());
+    }
+
+    public String getRepeatPassword() {
+        return new String(repeatPasswordField.getPassword());
+    }
+
+    public void displayError(String message) {
+        errorLabel.setText(message);
+    }
 
     public void addSignupListener(Runnable listener) {
-        signupListener = listener;
-    }
-
-    public void addLoginInsteadListener(Runnable listener) {
-        loginInsteadListener = listener;
+        this.signupListener = listener;
     }
 
     public void addCancelListener(Runnable listener) {
-        cancelListener = listener;
+        this.cancelListener = listener;
     }
 }
