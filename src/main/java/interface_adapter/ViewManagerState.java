@@ -5,7 +5,7 @@ package interface_adapter;
  * and the context of the view (which could be for example the id).
  */
 public class ViewManagerState {
-    private String viewName;
+    private final String viewName;
     private Object context;
 
     // Constructor
@@ -14,26 +14,29 @@ public class ViewManagerState {
         this.context = context;
     }
 
-    public ViewManagerState() {
-
-    }
-
-    // Getter for viewName
+    /**
+     * Retrieves the view name.
+     *
+     * @return the view name
+     */
     public String getViewName() {
         return viewName;
     }
 
-    // Setter for viewName
-    public void setViewName(String viewName) {
-        this.viewName = viewName;
-    }
-
-    // Getter for context
+    /**
+     * Retrieves the context.
+     *
+     * @return the context
+     */
     public Object getContext() {
         return context;
     }
 
-    // Setter for context
+    /**
+     * Sets the context.
+     *
+     * @param context the context to set
+     */
     public void setContext(Object context) {
         this.context = context;
     }

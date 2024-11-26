@@ -4,12 +4,13 @@ import data_access.Constants;
 import data_access.FavoriteDataAccessObject;
 import data_access.RecipeDataAccessObject;
 import data_access.grocery_list.GroceryListDataAccessObject;
-
+import data_access.grocery_list.GroceryListInMemoryDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import use_case.favorite_recipe.FavoriteRecipeDataAccessInterface;
 import use_case.grocery_list.GroceryListDataAccessInterface;
 import use_case.search_recipe.SearchRecipeDataAccessInterface;
 import use_case.display_recipe.DisplayRecipeDataAccessInterface;
+import view.Profile;
 import view.ViewManager;
 
 import javax.swing.JFrame;
@@ -17,6 +18,7 @@ import java.awt.CardLayout;
 
 public class SearchRecipeApplication {
 
+    @SuppressWarnings({"checkstyle:UnusedLocalVariable", "checkstyle:SuppressWarnings"})
     public static void main(String[] args) {
 
         final SearchRecipeDataAccessInterface searchRecipeDAO = new RecipeDataAccessObject();
