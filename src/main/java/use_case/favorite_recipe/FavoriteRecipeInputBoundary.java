@@ -7,14 +7,9 @@ public interface FavoriteRecipeInputBoundary {
 
     /**
      * Executes the Favorite Recipe Use Case. Dynamically determines whether to add
-     * or remove a recipe based on its current state in the user's favorites.
+     * or delete a recipe based on its current state in the user's favorites.
      * @param favoriteRecipeInputData the input data for the use case
      */
-    void executeFavoriteAction(FavoriteRecipeInputData favoriteRecipeInputData);
+    void executeFavorite(FavoriteRecipeInputData favoriteRecipeInputData);
 
-    /**
-     * Executes the Favorite Recipe Use Case. Determines whether a recipe is in the user's favorites.
-     * @param favoriteRecipeInputData the input data for the use case
-     */
-    void executeIsFavorite(FavoriteRecipeInputData favoriteRecipeInputData);
 }
