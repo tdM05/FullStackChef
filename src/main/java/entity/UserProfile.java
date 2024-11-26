@@ -7,17 +7,17 @@
 // * The representation of a user profile in our program.
 // */
 //public class UserProfile {
-//    private final User user;
+//    private final CommonUser user;
 //    private final List<Recipe> favoriteMeals;
 //    private final List<DietaryRestriction> dietaryRestrictions;
 //
-//    public UserProfile(User user) {
+//    public UserProfile(CommonUser user) {
 //        this.user = user;
 //        this.favoriteMeals = new ArrayList<>();
 //        this.dietaryRestrictions = new ArrayList<>();
 //    }
 //
-//    public User getUser() {
+//    public CommonUser getUser() {
 //        return user;
 //    }
 //

@@ -14,8 +14,8 @@ public interface LoginUserDataAccessInterface {
     boolean existsByName(String username);
 
     /**
-     * Saves the user.
-     * @param user the user to save
+     * Saves the commonUser.
+     * @param user the commonUser to save
      */
     void save(User user);
 

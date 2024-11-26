@@ -20,6 +20,7 @@ import java.util.List;
 public class Profile extends JPanel {
     private Color circleColor = Color.GRAY;
     private JPopupMenu profileDropDown;
+    private JMenuItem favoriteButton;
     private JMenuItem groceryListButton;
     private JMenuItem dietButton;
     private ViewManagerModel viewManagerModel;
@@ -44,7 +45,17 @@ public class Profile extends JPanel {
         profileDropDown.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         JMenuItem profileButton = new JMenuItem("Profile");
-        JMenuItem favoriteButton = new JMenuItem("Favorite");
+
+        this.favoriteButton = new JMenuItem("Favorite");
+        favoriteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Favorite button clicked");
+                ViewManagerState state = new ViewManagerState(Constants.FAVORITE_VIEW, null);
+                viewManagerModel.setState(state);
+                viewManagerModel.firePropertyChanged();
+            }
+        });
         JMenuItem mealPlanButton = new JMenuItem("Meal Plan");
         this.groceryListButton = new JMenuItem("Grocery List");
         this.dietButton = new JMenuItem("Diet");
