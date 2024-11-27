@@ -1,11 +1,10 @@
 package data_access.UserProfile;
 
+import app.SessionManager;
 import data_access.Constants;
 import entity.CommonUser;
 import entity.User;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,9 +29,56 @@ public class UserProfileDao implements StoreMealDataAccessInterface, LoginUserDa
         client = new OkHttpClient();
     }
 
+    /**
+     * Set the meals of the user.
+     *
+     * Precondition: The user has logged in.
+     * @param mealIds The meal ids.
+     */
     @Override
     public void setMeals(List<Integer> mealIds) {
+        // http://vm003.teach.cs.toronto.edu:20112/modifyUserInfo
+        final String url = "http://vm003.teach.cs.toronto.edu:20112/modifyUserInfo";
+        final JSONObject jsonBody = new JSONObject();
 
+        // create the info object
+        final JSONObject info = new JSONObject();
+        final JSONArray meals = new JSONArray(mealIds);
+
+        // Get the current user
+        final SessionManager session = SessionManager.getInstance();
+        final User user = session.getCurrentUser();
+        try {
+            jsonBody.put("username", user.getName());
+            jsonBody.put("password", user.getPassword());
+            info.put(Constants.MEAL_ID, meals);
+            jsonBody.put("info", info);
+        }
+        catch (JSONException exception) {
+            throw new ProfileException("Failed to set meals.");
+        }
+        final RequestBody body = RequestBody.create(jsonBody.toString(), MediaType.parse("application/json"));
+
+        final Request request = new Request.Builder()
+                .url(url)
+                .method("PUT", body)
+                .addHeader("token", "GBBHZDA1bqRXSKp2KuKN6BqdSFFoYahy")
+                .addHeader("Content-Type", "application/json")
+                .build();
+
+        // here we actually call the api
+        try {
+            final Response response = client.newCall(request).execute();
+            final JSONObject responseBody = new JSONObject(response.body().string());
+            final int code = responseBody.getInt(STATUS_CODE_LABEL);
+            final String message = responseBody.getString(Constants.MESSAGE);
+            if (code != SUCCESS_CODE || !message.equals("User info modified successfully.")) {
+                throw new ProfileException(message);
+            }
+        }
+        catch (IOException | JSONException exception) {
+            throw new ProfileException("Failed to set meals.");
+        };
     }
 
     // LoginUserDataAccessInterface

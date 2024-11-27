@@ -14,7 +14,7 @@ public class StoreMealInteractor implements StoreMealInputBoundary{
 
     @Override
     public void execute(StoreMealInputData inputData) {
-        List<Integer> mealIds = inputData.getRecipeIds();
+        final List<Integer> mealIds = inputData.getRecipeIds();
         final SessionManager sessionManager = SessionManager.getInstance();
         final User user = sessionManager.getCurrentUser();
         // Add this meal to the actual api
