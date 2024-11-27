@@ -5,10 +5,8 @@ package use_case.login;
  */
 public interface LoginOutputBoundary {
     /**
-     * Prepares the success view for the Login Use Case.
-     * @param loginOutputData the output data
-     */
-    void prepareSuccessView(LoginOutputData loginOutputData);
+     * This just goes to the search page since we have successfully logged in*/
+    void prepareSuccessView();
 
     /**
      * Prepares the failure view for the Login Use Case.

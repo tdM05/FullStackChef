@@ -14,27 +14,9 @@ public interface LoginUserDataAccessInterface {
     boolean existsByName(String username);
 
     /**
-     * Saves the commonUser.
-     * @param user the commonUser to save
-     */
-    void save(User user);
-
-    /**
      * Returns the user with the given username.
      * @param username the username to look up
      * @return the user with the given username
      */
-    User get(String username);
-
-    /**
-     * Returns the username of the curren user of the application.
-     * @return the username of the current user; null indicates that no one is logged into the application.
-     */
-    String getCurrentUsername();
-
-    /**
-     * Sets the username indicating who is the current user of the application.
-     * @param username the new current username; null to indicate that no one is currently logged into the application.
-     */
-    void setCurrentUsername(String username);
+    User getUser(String username);
 }

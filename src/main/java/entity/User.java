@@ -1,5 +1,10 @@
 package entity;
 
+import java.util.List;
+
+/**
+ * The representation of a user in our program.
+ */
 public interface User {
         /**
         * Get the name of the user.
@@ -20,9 +25,20 @@ public interface User {
         void setPassword(String password);
 
         /**
+         * Get the meal ids of the user.
+         * @return the meal ids of the user
+         */
+        List<Integer> getMealIds();
+
+        /**
+         * Add a meal id to the user.
+         * @param mealId the meal id to add
+         */
+        void setMealIDs(List<Integer> mealId);
+
+        /**
         * Get the favorite recipes of the user.
         * @return the favorite recipes of the user
         */
         Favorite getFavorite();
-
 }

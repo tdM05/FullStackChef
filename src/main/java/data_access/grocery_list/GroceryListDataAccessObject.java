@@ -4,11 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.SessionManager;
 import data_access.Constants;
-import entity.CommonMeasurable;
-import entity.CommonPair;
-import entity.Measurable;
-import entity.Pair;
+import entity.*;
 import entity.grocery_list.CommonIngredientWithConvertedUnits;
 import entity.grocery_list.IngredientWithConvertedUnits;
 import okhttp3.OkHttpClient;
@@ -39,12 +37,9 @@ public class GroceryListDataAccessObject implements GroceryListDataAccessInterfa
 
     @Override
     public List<Integer> getAllRecipeIds() {
-        // TODO get all recipe ids from the profile api.
-        final List<Integer> res = new ArrayList<>();
-        res.add(716429);
-        res.add(654959);
-        res.add(654959); // add a duplicate to test the simplification
-        return res;
+        final SessionManager sessionManager = SessionManager.getInstance();
+        final User user = sessionManager.getCurrentUser();
+        return user.getMealIds();
     }
 
     @Override

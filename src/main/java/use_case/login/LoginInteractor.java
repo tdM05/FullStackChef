@@ -1,5 +1,6 @@
 package use_case.login;
 
+import app.SessionManager;
 import entity.User;
 
 /**
@@ -10,32 +11,35 @@ public class LoginInteractor implements LoginInputBoundary {
     private final LoginOutputBoundary loginPresenter;
 
     public LoginInteractor(LoginUserDataAccessInterface userDataAccessInterface,
-                           LoginOutputBoundary loginOutputBoundary){
+                           LoginOutputBoundary loginOutputBoundary) {
         this.userDataAccessObject = userDataAccessInterface;
         this.loginPresenter = loginOutputBoundary;
     }
 
     @Override
-    public void execute(LoginInputData loginInputData){
-        final String username = loginInputData.getUsername();
-        final String password = loginInputData.getPassword();
+    public void execute(LoginInputData loginInputData) {
+        final String inputUsername = loginInputData.getUsername();
+        final String inputPassword = loginInputData.getPassword();
 
-        if (!userDataAccessObject.existsByName(username)){
+        // check if the username exists
+        if (!userDataAccessObject.existsByName(inputUsername)) {
             loginPresenter.prepareFailView("Username does not exist");
         }
+        // check if the inputPassword is correct
         else {
-            final String pwd = userDataAccessObject.get(username).getPassword();
-
-            if (!password.equals(pwd)) {
-                loginPresenter.prepareFailView("Incorrect password");
+            final User user = userDataAccessObject.getUser(loginInputData.getUsername());
+            // the api puts the expected password into user so we check
+            final String expectedPassword = user.getPassword();
+            if (!inputPassword.equals(expectedPassword)) {
+                loginPresenter.prepareFailView("Incorrect inputPassword");
+                return;
             }
-            else {
-                final User user = userDataAccessObject.get(loginInputData.getUsername());
-                userDataAccessObject.setCurrentUsername(user.getName());
-
-                final LoginOutputData loginOutputData = new LoginOutputData(user.getName(), false);
-                loginPresenter.prepareSuccessView(loginOutputData);
-            }
+            // So inputUsername and inputPassword are correct
+            // Set the current user in the session manager
+            final SessionManager sessionManager = SessionManager.getInstance();
+            sessionManager.setCurrentUser(user);
+            loginPresenter.prepareSuccessView();
         }
     }
 }
+
