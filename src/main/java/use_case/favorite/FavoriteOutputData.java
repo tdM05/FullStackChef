@@ -1,12 +1,12 @@
-package use_case.favorite_recipe;
+package use_case.favorite;
 
 /**
  * The Output Data for the Favorite Recipe Use Case.
  */
-public class FavoriteRecipeOutputData {
+public class FavoriteOutputData {
     private final boolean favorite;
 
-    public FavoriteRecipeOutputData(boolean favorite) {
+    public FavoriteOutputData(boolean favorite) {
         this.favorite = favorite;
     }
 
