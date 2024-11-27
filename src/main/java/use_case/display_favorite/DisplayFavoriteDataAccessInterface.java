@@ -1,7 +1,7 @@
 package use_case.display_favorite;
 
-
 import entity.Recipe;
+import entity.User;
 
 import java.util.List;
 
@@ -11,10 +11,19 @@ import java.util.List;
 public interface DisplayFavoriteDataAccessInterface {
 
     /**
-     * Get the list of favorite recipes
-     * @param recipeIdList the list of recipe ids
-     * @return the list of favorite recipes
+     * Returns the list of favorite recipe IDs for the given user.
+     *
+     * @param user the user whose favorite recipes are to be retrieved
+     * @return the list of favorite recipe IDs for the given user
      */
-    List<Recipe> getFavoriteRecipes(List<String> recipeIdList);
+    List<Integer> getFavorites(User user);
+
+    /**
+     * Returns the list of recipes for the given recipe IDs.
+     *
+     * @param recipeId the list of recipe IDs to be retrieved
+     * @return the list of recipes for the given recipe IDs
+     */
+    List<Recipe> getRecipes(String recipeId);
 
 }
