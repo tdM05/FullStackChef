@@ -1,7 +1,9 @@
 package use_case.search;
 
 import entity.Recipe;
+import org.json.JSONException;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -15,7 +17,7 @@ public interface SearchDataAccessInterface {
      * @param number the number of recipes to return
      * @return the list of recipes that can be made with the given ingredients
      */
-    List<Recipe> getRecipes(List<String> ingredients, int number);
+    List<Recipe> getRecipes(List<String> ingredients, int number) throws IOException, JSONException;
 
     /**
      * Returns the list of recipes that can be made with the given ingredients and diet filter.
