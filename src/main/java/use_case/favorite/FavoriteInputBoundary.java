@@ -1,15 +1,15 @@
-package use_case.favorite_recipe;
+package use_case.favorite;
 
 /**
  * The input boundary for the Favorite Recipe Use Case.
  */
-public interface FavoriteRecipeInputBoundary {
+public interface FavoriteInputBoundary {
 
     /**
      * Executes the Favorite Recipe Use Case. Dynamically determines whether to add
      * or delete a recipe based on its current state in the user's favorites.
-     * @param favoriteRecipeInputData the input data for the use case
+     * @param favoriteInputData the input data for the use case
      */
-    void executeFavorite(FavoriteRecipeInputData favoriteRecipeInputData);
+    void execute(FavoriteInputData favoriteInputData);
 
 }
