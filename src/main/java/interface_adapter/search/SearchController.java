@@ -1,4 +1,4 @@
-package interface_adapter.search_recipe;
+package interface_adapter.search;
 
 import use_case.search_recipe.SearchRecipeInputBoundary;
 import use_case.search_recipe.SearchRecipeInputData;
@@ -6,11 +6,11 @@ import use_case.search_recipe.SearchRecipeInputData;
 /**
  * Controller for the Search Recipe Use Case.
  */
-public class SearchRecipeController {
+public class SearchController {
 
     private final SearchRecipeInputBoundary searchRecipeInteractor;
 
-    public SearchRecipeController(SearchRecipeInputBoundary searchRecipeInteractor) {
+    public SearchController(SearchRecipeInputBoundary searchRecipeInteractor) {
         this.searchRecipeInteractor = searchRecipeInteractor;
     }
 

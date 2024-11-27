@@ -1,4 +1,4 @@
-package interface_adapter.search_recipe;
+package interface_adapter.search;
 
 import java.util.List;
 
@@ -10,11 +10,11 @@ import use_case.search_recipe.SearchRecipeOutputData;
  * Encapsulate the state management within the SearchRecipeViewModel
  * such that the view interacts with the ViewModel rather than directly with the State
  */
-public class SearchRecipeViewModel extends ViewModel<SearchRecipeState> {
+public class SearchViewModel extends ViewModel<SearchState> {
 
-    public SearchRecipeViewModel() {
+    public SearchViewModel() {
         super("search recipe");
-        setState(new SearchRecipeState());
+        setState(new SearchState());
     }
 
     public List<SearchRecipeOutputData> getRecipes() {

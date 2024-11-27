@@ -4,14 +4,13 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.display_recipe.DisplayRecipeViewModel;
-import interface_adapter.favorite_recipe.FavoriteRecipeController;
-import interface_adapter.favorite_recipe.FavoriteRecipePresenter;
-import interface_adapter.favorite_recipe.FavoriteRecipeViewModel;
-import use_case.favorite_recipe.FavoriteRecipeDataAccessInterface;
-import use_case.favorite_recipe.FavoriteRecipeInteractor;
-import use_case.favorite_recipe.FavoriteRecipeOutputBoundary;
-import view.FavoriteRecipeView;
+import interface_adapter.favorite.FavoriteController;
+import interface_adapter.favorite.FavoritePresenter;
+import interface_adapter.favorite.FavoriteViewModel;
+import use_case.favorite.FavoriteDataAccessInterface;
+import use_case.favorite.FavoriteInteractor;
+import use_case.favorite.FavoriteOutputBoundary;
+import view.FavoriteView;
 
 /**
  * Builder for the Favorite Application.
@@ -20,10 +19,10 @@ public class FavoriteAppBuilder {
     public static final int HEIGHT = 800;
     public static final int WIDTH = 600;
     
-    private FavoriteRecipeDataAccessInterface favoriteRecipeDAO;
-    private FavoriteRecipeViewModel favoriteRecipeViewModel = new FavoriteRecipeViewModel();
-    private FavoriteRecipeView favoriteRecipeView;
-    private FavoriteRecipeInteractor favoriteRecipeInteractor;
+    private FavoriteDataAccessInterface favoriteRecipeDAO;
+    private FavoriteViewModel favoriteViewModel = new FavoriteViewModel();
+    private FavoriteView favoriteView;
+    private FavoriteInteractor favoriteRecipeInteractor;
     private ViewManagerModel viewManagerModel;
     
     
@@ -33,14 +32,14 @@ public class FavoriteAppBuilder {
      * @param recipeDataAccess the DAO to use
      * @return this builder
      */
-    public FavoriteAppBuilder addFavoriteDAO(FavoriteRecipeDataAccessInterface recipeDataAccess) {
+    public FavoriteAppBuilder addFavoriteDAO(FavoriteDataAccessInterface recipeDataAccess) {
         favoriteRecipeDAO = recipeDataAccess;
         return this;
     }
     
     
     /**
-     * Creates the objects for the Favorite Recipe Use Case and connects the FavoriteRecipeView to its
+     * Creates the objects for the Favorite Recipe Use Case and connects the FavoriteView to its
      * controller.
      *
      * @return this builder
@@ -48,21 +47,21 @@ public class FavoriteAppBuilder {
      */
     
     public FavoriteAppBuilder addFavoriteRecipeUseCase() {
-        final FavoriteRecipeOutputBoundary recipeOutputBoundary = new FavoriteRecipePresenter(viewManagerModel, favoriteRecipeViewModel);
-        favoriteRecipeInteractor = new FavoriteRecipeInteractor(favoriteRecipeDAO, recipeOutputBoundary);
+        final FavoriteOutputBoundary recipeOutputBoundary = new FavoritePresenter(viewManagerModel, favoriteViewModel);
+        favoriteRecipeInteractor = new FavoriteInteractor(favoriteRecipeDAO, recipeOutputBoundary);
         
-        final FavoriteRecipeController controller = new FavoriteRecipeController(favoriteRecipeInteractor);
-        if (favoriteRecipeView == null) {
+        final FavoriteController controller = new FavoriteController(favoriteRecipeInteractor);
+        if (favoriteView == null) {
             throw new RuntimeException("addRecipeView must be called before addRecipeUseCase");
         }
-        favoriteRecipeView.setFavoriteController(controller);
+        favoriteView.setFavoriteController(controller);
         return this;
     }
 
     public FavoriteAppBuilder addFavoriteRecipeView(ViewManagerModel currentViewManagerModel) {
         viewManagerModel = currentViewManagerModel;
-        favoriteRecipeViewModel = new FavoriteRecipeViewModel();
-        favoriteRecipeView = new FavoriteRecipeView(favoriteRecipeViewModel,viewManagerModel);
+        favoriteViewModel = new FavoriteViewModel();
+        favoriteView = new FavoriteView(favoriteViewModel,viewManagerModel);
         return this;
     }
     
@@ -79,12 +78,12 @@ public class FavoriteAppBuilder {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
 
-        frame.add(favoriteRecipeView);
+        frame.add(favoriteView);
         
         return frame;
     }
 
-    public FavoriteRecipeView getFavoriteRecipeView() {
-        return favoriteRecipeView;
+    public FavoriteView getFavoriteRecipeView() {
+        return favoriteView;
     }
 }

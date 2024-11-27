@@ -1,4 +1,4 @@
-package entity.grocery_list;
+package entity;
 
 /**
  * The representation of an ingredient in our program.

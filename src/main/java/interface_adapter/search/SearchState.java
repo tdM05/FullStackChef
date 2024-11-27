@@ -1,4 +1,4 @@
-package interface_adapter.search_recipe;
+package interface_adapter.search;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import use_case.search_recipe.SearchRecipeOutputData;
  * The State for a recipe search.
  * Updated such that recipe search is simply a List of Recipe
  */
-public class SearchRecipeState {
+public class SearchState {
     private List<SearchRecipeOutputData> recipeSearch;
     private String error;
 

@@ -1,9 +1,9 @@
-package interface_adapter.favorite_recipe;
+package interface_adapter.favorite;
 
 /**
  * The state of the Favorite Recipe.
  */
-public class FavoriteRecipeState {
+public class FavoriteState {
     private boolean favorite = false;
     private String error;
 

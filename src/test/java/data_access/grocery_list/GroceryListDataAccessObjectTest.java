@@ -2,7 +2,7 @@ package data_access.grocery_list;
 
 import entity.Measurable;
 import entity.Pair;
-import entity.grocery_list.IngredientWithConvertedUnits;
+import entity.IngredientWithConvertedUnits;
 import org.junit.Test;
 
 import java.util.ArrayList;
