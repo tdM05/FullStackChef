@@ -4,12 +4,13 @@ package use_case.display_favorite;
 import app.SessionUser;
 import entity.Recipe;
 import entity.User;
-import use_case.search_recipe.CommonSearchRecipeOutputData;
-import use_case.search_recipe.SearchRecipeOutputData;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The interactor for the Display Favorite Use Case.
+ */
 public class DisplayFavoriteInteractor implements DisplayFavoriteInputBoundary {
 
     private final DisplayFavoriteDataAccessInterface dataAccess;
