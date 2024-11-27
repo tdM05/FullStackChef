@@ -1,14 +1,12 @@
 package use_case.grocery_list;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import data_access.grocery_list.GroceryListException;
 import entity.CommonIngredient;
 import entity.Ingredient;
-import entity.grocery_list.IngredientWithConvertedUnits;
+import entity.IngredientWithConvertedUnits;
 
 /**
  * The interactor for the Grocery List use case.

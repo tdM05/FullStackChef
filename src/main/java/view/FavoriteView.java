@@ -3,17 +3,17 @@ package view;
 import data_access.Constants;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.ViewManagerState;
-import interface_adapter.favorite_recipe.FavoriteRecipeController;
-import interface_adapter.favorite_recipe.FavoriteRecipeViewModel;
+import interface_adapter.favorite.FavoriteController;
+import interface_adapter.favorite.FavoriteViewModel;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class FavoriteRecipeView extends JPanel {
+public class FavoriteView extends JPanel {
 
-    private FavoriteRecipeController controller;
+    private FavoriteController controller;
 
-    public FavoriteRecipeView(FavoriteRecipeViewModel viewModel, ViewManagerModel viewManagerModel) {
+    public FavoriteView(FavoriteViewModel viewModel, ViewManagerModel viewManagerModel) {
         // Set layout for the panel
         setLayout(new BorderLayout());
 
@@ -44,7 +44,7 @@ public class FavoriteRecipeView extends JPanel {
         add(tabbedPane, BorderLayout.CENTER);
     }
 
-    public void setFavoriteController(FavoriteRecipeController controller) {
+    public void setFavoriteController(FavoriteController controller) {
         this.controller = controller;
     }
 }

@@ -4,13 +4,11 @@ import data_access.Constants;
 import data_access.FavoriteDataAccessObject;
 import data_access.RecipeDataAccessObject;
 import data_access.grocery_list.GroceryListDataAccessObject;
-import data_access.grocery_list.GroceryListInMemoryDataAccessObject;
 import interface_adapter.ViewManagerModel;
-import use_case.favorite_recipe.FavoriteRecipeDataAccessInterface;
+import use_case.favorite.FavoriteDataAccessInterface;
 import use_case.grocery_list.GroceryListDataAccessInterface;
 import use_case.search_recipe.SearchRecipeDataAccessInterface;
 import use_case.display_recipe.DisplayRecipeDataAccessInterface;
-import view.Profile;
 import view.ViewManager;
 
 import javax.swing.JFrame;
@@ -24,7 +22,7 @@ public class SearchRecipeApplication {
         final SearchRecipeDataAccessInterface searchRecipeDAO = new RecipeDataAccessObject();
         final DisplayRecipeDataAccessInterface displayRecipeDAO = new RecipeDataAccessObject();
         final GroceryListDataAccessInterface groceryListDAO = new GroceryListDataAccessObject();
-        final FavoriteRecipeDataAccessInterface favoriteDAO = new FavoriteDataAccessObject();
+        final FavoriteDataAccessInterface favoriteDAO = new FavoriteDataAccessObject();
 
         // Set up a frame with a CardLayout to handle view switching
         final JFrame frame = new JFrame();

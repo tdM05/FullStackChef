@@ -1,4 +1,4 @@
-package interface_adapter.search_recipe;
+package interface_adapter.search;
 
 import java.util.List;
 
@@ -9,14 +9,14 @@ import use_case.search_recipe.SearchRecipeOutputData;
 /**
  * The Presenter for the Search Recipe Use Case.
  */
-public class SearchRecipePresenter implements SearchRecipeOutputBoundary {
+public class SearchPresenter implements SearchRecipeOutputBoundary {
 
     private final ViewManagerModel viewManagerModel;
-    private final SearchRecipeViewModel searchRecipeViewModel;
+    private final SearchViewModel searchViewModel;
 
-    public SearchRecipePresenter(ViewManagerModel viewManagerModel, SearchRecipeViewModel searchRecipeViewModel) {
+    public SearchPresenter(ViewManagerModel viewManagerModel, SearchViewModel searchViewModel) {
         this.viewManagerModel = viewManagerModel;
-        this.searchRecipeViewModel = searchRecipeViewModel;
+        this.searchViewModel = searchViewModel;
     }
 
     /**
@@ -27,8 +27,8 @@ public class SearchRecipePresenter implements SearchRecipeOutputBoundary {
     @Override
     public void prepareSuccessView(List<SearchRecipeOutputData> outputDataList) {
         // On success, update the view model with the search results.
-        searchRecipeViewModel.setRecipes(outputDataList);
-        searchRecipeViewModel.firePropertyChanged("recipes");
+        searchViewModel.setRecipes(outputDataList);
+        searchViewModel.firePropertyChanged("recipes");
 
         // Optionally, switch the view to show the search results.
 //        viewManagerModel.setState("SearchResultsView");
@@ -43,7 +43,7 @@ public class SearchRecipePresenter implements SearchRecipeOutputBoundary {
     @Override
     public void prepareFailView(String errorMessage) {
         // On failure, update the view model with the error message.
-        searchRecipeViewModel.setError(errorMessage);
-        searchRecipeViewModel.firePropertyChanged("error");
+        searchViewModel.setError(errorMessage);
+        searchViewModel.firePropertyChanged("error");
     }
 }

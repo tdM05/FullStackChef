@@ -2,8 +2,8 @@ package view;
 
 import interface_adapter.ViewManagerModel;
 
-import interface_adapter.search_recipe.SearchRecipeViewModel;
-import interface_adapter.search_recipe.SearchRecipeController;
+import interface_adapter.search.SearchViewModel;
+import interface_adapter.search.SearchController;
 
 import use_case.search_recipe.SearchRecipeOutputData;
 
@@ -21,8 +21,8 @@ import java.util.List;
  */
 public class SearchRecipeView extends JPanel {
 
-    private final SearchRecipeViewModel viewModel;
-    private SearchRecipeController controller;
+    private final SearchViewModel viewModel;
+    private SearchController controller;
 
     private Profile profile;
     private JTextField searchBar;
@@ -39,7 +39,7 @@ public class SearchRecipeView extends JPanel {
      * @param viewModel the ViewModel for the Search Recipe Use Case
      * @param viewManagerModel the ViewManagerModel
      */
-    public SearchRecipeView(SearchRecipeViewModel viewModel,
+    public SearchRecipeView(SearchViewModel viewModel,
                             ViewManagerModel viewManagerModel) {
         this.viewModel = viewModel;
         setLayout(new BorderLayout());
@@ -245,7 +245,7 @@ public class SearchRecipeView extends JPanel {
         repaint();
     }
 
-    public void setRecipeController(SearchRecipeController controller) {
+    public void setRecipeController(SearchController controller) {
         this.controller = controller;
     }
 }

@@ -1,6 +1,4 @@
-package entity.grocery_list;
-
-import entity.Ingredient;
+package entity;
 
 /**
  * This class is necessary for ingredients that have been converted to some standard.

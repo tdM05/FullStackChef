@@ -2,7 +2,7 @@ package use_case.grocery_list;
 
 import java.util.List;
 
-import entity.grocery_list.IngredientWithConvertedUnits;
+import entity.IngredientWithConvertedUnits;
 
 /**
  * Interface for the GroceryList data access.

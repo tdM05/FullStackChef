@@ -14,13 +14,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import use_case.favorite_recipe.FavoriteRecipeDataAccessInterface;
-import use_case.favorite_recipe.FavoriteException;
+import use_case.favorite.FavoriteDataAccessInterface;
 
 /**
  * The DAO for accessing favorite recipes stored in the database.
  */
-public class FavoriteDataAccessObject implements FavoriteRecipeDataAccessInterface {
+public class FavoriteDataAccessObject implements FavoriteDataAccessInterface {
     private static final int SUCCESS_CODE = 200;
     private static final int CREDENTIAL_ERROR = 401;
     private static final String CONTENT_TYPE_LABEL = "Content-Type";

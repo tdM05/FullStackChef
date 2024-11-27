@@ -4,9 +4,9 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.search_recipe.SearchRecipeController;
-import interface_adapter.search_recipe.SearchRecipePresenter;
-import interface_adapter.search_recipe.SearchRecipeViewModel;
+import interface_adapter.search.SearchController;
+import interface_adapter.search.SearchPresenter;
+import interface_adapter.search.SearchViewModel;
 import use_case.search_recipe.SearchRecipeDataAccessInterface;
 import use_case.search_recipe.SearchRecipeInteractor;
 import use_case.search_recipe.SearchRecipeOutputBoundary;
@@ -19,7 +19,7 @@ public class SearchRecipeAppBuilder {
     public static final int HEIGHT = 800;
     public static final int WIDTH = 1200;
     private SearchRecipeDataAccessInterface searchrecipeDAO;
-    private SearchRecipeViewModel searchrecipeViewModel = new SearchRecipeViewModel();
+    private SearchViewModel searchrecipeViewModel = new SearchViewModel();
     private SearchRecipeView searchRecipeView;
     private SearchRecipeInteractor searchrecipeInteractor;
     private ViewManagerModel viewManagerModel;
@@ -43,10 +43,10 @@ public class SearchRecipeAppBuilder {
      * @throws RuntimeException if this method is called before addRecipeView
      */
     public SearchRecipeAppBuilder addSearchRecipeUseCase() {
-        final SearchRecipeOutputBoundary recipeOutputBoundary = new SearchRecipePresenter(viewManagerModel, searchrecipeViewModel);
+        final SearchRecipeOutputBoundary recipeOutputBoundary = new SearchPresenter(viewManagerModel, searchrecipeViewModel);
         searchrecipeInteractor = new SearchRecipeInteractor(searchrecipeDAO, recipeOutputBoundary);
 
-        final SearchRecipeController controller = new SearchRecipeController(searchrecipeInteractor);
+        final SearchController controller = new SearchController(searchrecipeInteractor);
         if (searchRecipeView == null) {
             throw new RuntimeException("addRecipeView must be called before addRecipeUseCase");
         }
@@ -66,7 +66,7 @@ public class SearchRecipeAppBuilder {
      */
     public SearchRecipeAppBuilder addSearchRecipeView(ViewManagerModel currentViewManagerModel) {
         this.viewManagerModel = currentViewManagerModel;
-        searchrecipeViewModel = new SearchRecipeViewModel();
+        searchrecipeViewModel = new SearchViewModel();
         searchRecipeView = new SearchRecipeView(searchrecipeViewModel, viewManagerModel);
         return this;
     }
