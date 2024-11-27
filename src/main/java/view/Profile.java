@@ -58,6 +58,15 @@ public class Profile extends JPanel {
         });
         JMenuItem mealPlanButton = new JMenuItem("Meal Plan");
         this.groceryListButton = new JMenuItem("Grocery List");
+        groceryListButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Grocery List button clicked");
+                ViewManagerState state = new ViewManagerState(Constants.GROCERY_LIST_VIEW, null);
+                viewManagerModel.setState(state);
+                viewManagerModel.firePropertyChanged();
+            }
+        });
         this.dietButton = new JMenuItem("Diet");
         JMenuItem logoutButton = new JMenuItem("Logout");
 
