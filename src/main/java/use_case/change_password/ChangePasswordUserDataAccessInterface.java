@@ -7,8 +7,8 @@ import entity.User;
  */
 public interface ChangePasswordUserDataAccessInterface {
     /**
-     * Updates the system to record this user's password.
-     * @param user the user whose password is to be updated
+     * Updates the system to record this commonUser's password.
+     * @param user the commonUser whose password is to be updated
      */
     void changePassword(User user);
 

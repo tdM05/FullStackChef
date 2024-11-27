@@ -1,31 +1,20 @@
 package view;
 
-import data_access.Constants;
-import data_access.RecipeDataAccessObject;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.ViewManagerState;
-import interface_adapter.display_recipe.DisplayRecipeController;
-import interface_adapter.display_recipe.DisplayRecipePresenter;
-import interface_adapter.display_recipe.DisplayRecipeViewModel;
+
 import interface_adapter.search_recipe.SearchRecipeViewModel;
 import interface_adapter.search_recipe.SearchRecipeController;
-import use_case.display_recipe.DisplayRecipeDataAccessInterface;
-import use_case.display_recipe.DisplayRecipeInputBoundary;
-import use_case.display_recipe.DisplayRecipeInteractor;
+
 import use_case.search_recipe.SearchRecipeOutputData;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.RoundRectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.net.URL;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * The View for the Search Recipe Use Case.
@@ -42,12 +31,9 @@ public class SearchRecipeView extends JPanel {
 
     // Adjust the roundness
     private final int cornerRadius = 50;
-    private Consumer<Integer> recipeClickListener;
-
-    //
-    private JMenuItem profileButton;
 
     private ViewManagerModel viewManagerModel;
+
     /**
      * Constructor for the SearchRecipeView.
      * @param viewModel the ViewModel for the Search Recipe Use Case
@@ -61,7 +47,6 @@ public class SearchRecipeView extends JPanel {
         loadScreen();
         registerPropertyChangeListeners();
     }
-
 
     private void loadScreen() {
 
@@ -209,7 +194,6 @@ public class SearchRecipeView extends JPanel {
         }
     }
 
-
     private void registerPropertyChangeListeners() {
         viewModel.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
@@ -235,10 +219,6 @@ public class SearchRecipeView extends JPanel {
         displayRecipes(recipes);
     }
 
-    public void addRecipeClickListener(Consumer<Integer> listener) {
-        this.recipeClickListener = listener;
-    }
-
     private void displayRecipes(List<SearchRecipeOutputData> recipes) {
         // Remove all existing components from the center panel
         centerPanel.removeAll();
@@ -253,135 +233,16 @@ public class SearchRecipeView extends JPanel {
         topPanel.add(profile, BorderLayout.LINE_END);
         topPanel.add(searchPanel, BorderLayout.CENTER);
 
-        // Create a panel to hold the recipe cards
-        JPanel resultsPanel = new JPanel();
-        resultsPanel.setBackground(Color.WHITE);
-        resultsPanel.setLayout(new GridLayout(0, 3, 20, 20)); // 3 columns, variable rows
-        resultsPanel.setBorder(new EmptyBorder(20, 20, 20, 20)); // Add padding
+        // Create the recipes panel
+        RecipePanel recipesPanel = new RecipePanel(recipes, viewManagerModel);
 
-        // Add recipe cards to the results panel
-        for (SearchRecipeOutputData recipe : recipes) {
-            JPanel recipeCard = createRecipeCard(recipe);
-            resultsPanel.add(recipeCard);
-        }
-
-        // Wrap the results panel in a scroll pane with vertical-only scrolling
-        JScrollPane scrollPane = new JScrollPane(resultsPanel,
-                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // Disable horizontal scrolling
-
-        scrollPane.setBorder(null); // Remove border if desired
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // Adjust scroll speed
-
-        // Ensure the resultsPanel matches the viewport's width to prevent horizontal scrolling
-        resultsPanel.setPreferredSize(new Dimension(scrollPane.getViewport().getWidth(), resultsPanel.getPreferredSize().height));
-        scrollPane.getViewport().addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                resultsPanel.setPreferredSize(new Dimension(scrollPane.getViewport().getWidth(), resultsPanel.getHeight()));
-                resultsPanel.revalidate();
-            }
-        });
-
-        // Add the scroll pane to the center panel
+        // Add the recipes panel to the center panel
         centerPanel.setLayout(new BorderLayout());
-        centerPanel.add(scrollPane, BorderLayout.CENTER);
+        centerPanel.add(recipesPanel, BorderLayout.CENTER);
 
         // Refresh the UI
         revalidate();
         repaint();
-    }
-
-    private JPanel createRecipeCard(SearchRecipeOutputData recipe) {
-        JPanel card = new JPanel();
-        card.setBackground(Color.WHITE);
-        card.setLayout(new BorderLayout());
-        card.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-
-        // Add the image with specified size 312x231
-        JLabel imageLabel = new JLabel();
-        imageLabel.setPreferredSize(new Dimension(312, 231));
-        imageLabel.setHorizontalAlignment(JLabel.CENTER);
-        imageLabel.setVerticalAlignment(JLabel.CENTER);
-
-        // Load the image asynchronously with the specified dimensions
-        new ImageLoader(recipe.getImageUrl(), imageLabel, 312, 231).execute();
-
-        card.add(imageLabel, BorderLayout.CENTER);
-
-        // Add the recipe name
-        JLabel nameLabel = new JLabel(recipe.getRecipeName());
-        nameLabel.setHorizontalAlignment(JLabel.CENTER);
-        nameLabel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        card.add(nameLabel, BorderLayout.SOUTH);
-
-//        final ViewManagerModel viewManagerModel = new ViewManagerModel();
-//        DisplayRecipePresenter displayRecipePresenter = new DisplayRecipePresenter(viewManagerModel,
-//                new DisplayRecipeViewModel());
-//        DisplayRecipeDataAccessInterface displayRecipeDataAccessInterface = new RecipeDataAccessObject();
-//        DisplayRecipeInputBoundary displayRecipeUseCaseInteractor = new DisplayRecipeInteractor(
-//                displayRecipePresenter, displayRecipeDataAccessInterface);
-//
-//        final DisplayRecipeController displayRecipeController = new DisplayRecipeController(displayRecipeUseCaseInteractor);
-
-        card.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-        card.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                System.out.println("Recipe card clicked. Recipe ID: " + recipe.id());
-
-                final ViewManagerState state = new ViewManagerState(
-                        Constants.DISPLAY_RECIPE_VIEW,
-                        recipe.id());
-                viewManagerModel.setState(state);
-                viewManagerModel.setContext(recipe.id());
-                viewManagerModel.firePropertyChanged();
-
-            }
-        });
-
-        return card;
-    }
-
-    /**
-     * SwingWorker to load images asynchronously to prevent UI freezing.
-     */
-    private static class ImageLoader extends SwingWorker<ImageIcon, Void> {
-        private final String imageUrl;
-        private final JLabel imageLabel;
-        private final int width;
-        private final int height;
-
-        public ImageLoader(String imageUrl, JLabel imageLabel, int width, int height) {
-            this.imageUrl = imageUrl;
-            this.imageLabel = imageLabel;
-            this.width = width;
-            this.height = height;
-        }
-
-        @Override
-        protected ImageIcon doInBackground() throws Exception {
-            URL url = new URL(imageUrl);
-            Image image = ImageIO.read(url);
-            if (image != null) {
-                Image scaledImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-                return new ImageIcon(scaledImage);
-            }
-            return null;
-        }
-
-        @Override
-        protected void done() {
-            try {
-                ImageIcon icon = get();
-                if (icon != null) {
-                    imageLabel.setIcon(icon);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     public void setRecipeController(SearchRecipeController controller) {

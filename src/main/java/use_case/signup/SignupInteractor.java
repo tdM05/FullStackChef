@@ -23,13 +23,13 @@ public class SignupInteractor implements SignupInputBoundary {
     public void execute(SignupInputData signupInputData){
         // If username already exists (not unique)
         if (userDataAccessObject.existsByName(signupInputData.getUsername())){
-            userPresenter.prepareFailView("User already exists.");
+            userPresenter.prepareFailView("CommonUser already exists.");
         }
         // If password not match with repetition
         else if (!signupInputData.getPassword().equals(signupInputData.getRepeatPassword())) {
             userPresenter.prepareFailView("Password don't match.");
         }
-        // User created
+        // CommonUser created
         else {
             final User user = userFactory.create(signupInputData.getUsername(), signupInputData.getPassword());
             userDataAccessObject.save(user);
