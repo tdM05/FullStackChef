@@ -1,15 +1,15 @@
-package use_case.favorite_recipe;
+package use_case.favorite;
 
 /**
  * The output data interface for the Favorite Recipe Use Case.
  */
-public interface FavoriteRecipeOutputBoundary {
+public interface FavoriteOutputBoundary {
 
     /**
      * Prepares the success view for the Favorite Recipe Use Case.
      * @param outputData the output data
      */
-    void prepareSuccessView(FavoriteRecipeOutputData outputData);
+    void prepareSuccessView(FavoriteOutputData outputData);
 
     /**
      * Prepares the failure view for the Favorite Recipe Use Case.
