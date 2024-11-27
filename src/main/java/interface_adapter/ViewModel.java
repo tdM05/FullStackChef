@@ -36,13 +36,6 @@ public class ViewModel<T> {
         this.state = state;
     }
 
-    public Object getContext() {
-        return this.context;
-    }
-
-    public void setContext(Object context) {
-        this.context = context;
-    }
 
     /**
      * Fires a property changed event for the state of this ViewModel.

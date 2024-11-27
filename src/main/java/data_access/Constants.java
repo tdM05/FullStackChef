@@ -19,6 +19,7 @@ public class Constants {
     public static final String DISPLAY_RECIPE_VIEW = "displayRecipeView";
     public static final String GROCERY_LIST_VIEW = "groceryListView";
     public static final String FAVORITE_VIEW = "favoriteView";
+    public static final String LOGIN_VIEW = "loginView";
 
     // json keys
     public static final String MEAL_ID = "meal_plan";

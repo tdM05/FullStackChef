@@ -1,5 +1,6 @@
 package app;
 
+import app.builders.NoteAppBuilder;
 import data_access.DBNoteDataAccessObject;
 import use_case.note.NoteDataAccessInterface;
 

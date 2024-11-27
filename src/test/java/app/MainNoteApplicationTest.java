@@ -1,5 +1,6 @@
 package app;
 
+import app.builders.NoteAppBuilder;
 import entity.User;
 import org.junit.Before;
 import org.junit.Test;

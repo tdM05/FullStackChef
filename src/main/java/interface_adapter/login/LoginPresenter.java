@@ -9,25 +9,26 @@ import use_case.login.LoginOutputBoundary;
  */
 public class LoginPresenter implements LoginOutputBoundary {
     private final LoginViewModel loginViewModel;
-    private final LoggedInViewModel loggedInViewModel;
     private final ViewManagerModel viewManagerModel;
 
     public LoginPresenter(LoginViewModel loginViewModel,
-                          LoggedInViewModel loggedInViewModel,
                           ViewManagerModel viewManagerModel){
         this.loginViewModel = loginViewModel;
-        this.loggedInViewModel = loggedInViewModel;
         this.viewManagerModel = viewManagerModel;
     }
 
     @Override
-    public void prepareSuccessView(){
+    public void prepareSuccessView() {
+        final LoginState state = loginViewModel.getState();
+        state.setSuccess(true);
+        loginViewModel.firePropertyChanged();
     }
 
     @Override
-    public void prepareFailView(String error){
-        final LoginState loginState = loginViewModel.getState();
-        loginState.setLoginError(error);
+    public void prepareFailView(String error) {
+        final LoginState state = loginViewModel.getState();
+        state.setSuccess(false);
+        state.setError(error);
         loginViewModel.firePropertyChanged();
     }
 }

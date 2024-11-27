@@ -1,7 +1,6 @@
-package app;
+package app.builders;
 
 import data_access.Constants;
-import data_access.RecipeDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.grocery_list.GroceryListController;
 import interface_adapter.grocery_list.GroceryListPresenter;
@@ -12,7 +11,6 @@ import use_case.grocery_list.GroceryListOutputBoundary;
 import view.GroceryListView;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * Builder for the Grocery List app.

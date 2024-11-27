@@ -1,10 +1,9 @@
-package app;
+package app.builders;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.display_recipe.DisplayRecipeViewModel;
 import interface_adapter.favorite_recipe.FavoriteRecipeController;
 import interface_adapter.favorite_recipe.FavoriteRecipePresenter;
 import interface_adapter.favorite_recipe.FavoriteRecipeViewModel;
