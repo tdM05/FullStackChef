@@ -18,11 +18,4 @@ public interface User {
         * @param password the new password
         */
         void setPassword(String password);
-
-        /**
-        * Get the favorite recipes of the user.
-        * @return the favorite recipes of the user
-        */
-        Favorite getFavorite();
-
 }
