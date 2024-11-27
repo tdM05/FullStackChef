@@ -73,12 +73,18 @@ public class SearchRecipeApplication {
                 .addLoginView(viewManagerModel)
                 .addLoginUseCase();
 
+        final SignupAppBuilder signupBuilder = new SignupAppBuilder();
+        signupBuilder.addSignupDAO(userProfileDao)
+                .addSignupView(viewManagerModel)
+                .addSignupUseCase();
+
         // Add both views to the frame's CardLayout
         frame.add(searchBuilder.build().getContentPane(), Constants.SEARCH_VIEW);
         frame.add(displayBuilder.build().getContentPane(), Constants.DISPLAY_RECIPE_VIEW);
         frame.add(groceryListBuilder.build().getContentPane(), Constants.GROCERY_LIST_VIEW);
         frame.add(favoriteBuilder.build().getContentPane(), Constants.FAVORITE_VIEW);
         frame.add(loginBuilder.build().getContentPane(), Constants.LOGIN_VIEW);
+        frame.add(signupBuilder.build().getContentPane(), Constants.SIGNUP_VIEW);
 
         // Set the initial view to the search view
         cardLayout.show(frame.getContentPane(), Constants.LOGIN_VIEW);

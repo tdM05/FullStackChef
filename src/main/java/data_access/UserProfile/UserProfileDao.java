@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import use_case.login.LoginUserDataAccessInterface;
+import use_case.signup.SignupUserDataAccessInterface;
 import use_case.store_meal.StoreMealDataAccessInterface;
 
 import java.io.IOException;
@@ -18,7 +19,8 @@ import java.util.List;
 /**
  * The Data Access Object for the User Profile.
  */
-public class UserProfileDao implements StoreMealDataAccessInterface, LoginUserDataAccessInterface {
+public class UserProfileDao implements StoreMealDataAccessInterface, LoginUserDataAccessInterface,
+        SignupUserDataAccessInterface {
     private static final String API_KEY = Constants.API_KEY;
     private static final String STATUS_CODE_LABEL = Constants.STATUS_CODE_LABEL;
     private static final int SUCCESS_CODE = Constants.SUCCESS_CODE;
@@ -98,7 +100,7 @@ public class UserProfileDao implements StoreMealDataAccessInterface, LoginUserDa
             final int code = responseBody.getInt(STATUS_CODE_LABEL);
             final String message = responseBody.getString(Constants.MESSAGE);
             if (code != SUCCESS_CODE) {
-                throw new ProfileException(message);
+                return false;
             }
             return message.equals(USER_EXISTS);
         }
@@ -158,6 +160,48 @@ public class UserProfileDao implements StoreMealDataAccessInterface, LoginUserDa
         }
         catch (IOException | JSONException exception) {
             throw new ProfileException("Failed to get user.");
+        }
+    }
+
+    /**
+     * Save the user.
+     * This will save the user to the database.
+     *
+     * @param username The user to save.
+     * @param password The password of the user.
+     *
+     * @throws ProfileException when the user fails to save.
+     */
+    public void save(String username, String password) throws ProfileException {
+        // http://vm003.teach.cs.toronto.edu:20112/user
+        final String url = "http://vm003.teach.cs.toronto.edu:20112/user";
+        final JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("username", username);
+            jsonBody.put("password", password);
+        }
+        catch (JSONException exception) {
+            throw new ProfileException("Failed to save user.");
+        }
+        final RequestBody body = RequestBody.create(jsonBody.toString(), MediaType.parse("application/json"));
+
+        final Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .addHeader("token", "GBBHZDA1bqRXSKp2KuKN6BqdSFFoYahy")
+                .addHeader("Content-Type", "application/json")
+                .build();
+        try {
+            final Response response = client.newCall(request).execute();
+            final JSONObject responseBody = new JSONObject(response.body().string());
+            final int code = responseBody.getInt(STATUS_CODE_LABEL);
+            final String message = responseBody.getString(Constants.MESSAGE);
+            if (code != SUCCESS_CODE || !message.equals("User created successfully.")) {
+                throw new ProfileException(message);
+            }
+        }
+        catch (IOException | JSONException exception) {
+            throw new ProfileException("Failed to save user.");
         }
     }
 }

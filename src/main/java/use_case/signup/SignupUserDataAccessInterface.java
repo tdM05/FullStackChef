@@ -15,7 +15,8 @@ public interface SignupUserDataAccessInterface {
 
     /**
      * Saves the commonUser.
-     * @param user the User to save
+     * @param username the username to save.
+     * @param password the password to save.
      */
-    void save(User user);
+    void save(String username, String password);
 }

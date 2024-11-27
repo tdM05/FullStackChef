@@ -1,7 +1,6 @@
 package app.builders;
 
 import data_access.Constants;
-import data_access.UserProfile.UserProfileDao;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
@@ -60,7 +59,7 @@ public class LoginAppBuilder {
             throw new IllegalStateException("You must add the Login view before adding the use case.");
         }
 
-        loginView.setController(loginController);
+        loginView.setLoginController(loginController);
         return this;
     }
 
