@@ -8,6 +8,6 @@ public interface DisplayFavoriteInputBoundary {
     /**
      * Executes the Display Favorite Use Case.
      */
-    void executeDisplayFavorite();
+    void execute();
 
 }

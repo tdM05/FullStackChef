@@ -9,5 +9,5 @@ public interface CheckFavoriteInputBoundary {
      * Executes the Check Favorite Use Case.
      * @param checkFavoriteInputData the input data
      */
-    void executeCheckFavorite(CheckFavoriteInputData checkFavoriteInputData);
+    void execute(CheckFavoriteInputData checkFavoriteInputData);
 }
