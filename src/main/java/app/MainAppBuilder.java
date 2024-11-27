@@ -1,11 +1,14 @@
-//package app;
+package app;
 //
 //import interface_adapter.display_recipe.DisplayRecipeController;
 //
 //import javax.swing.*;
 //import java.awt.*;
 //
-//public class MainAppBuilder {
+public class MainAppBuilder {
+
+}
+
 //    private JFrame frame;
 //    private CardLayout cardLayout;
 //

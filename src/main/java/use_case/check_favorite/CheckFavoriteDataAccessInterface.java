@@ -4,6 +4,9 @@ import entity.User;
 
 import java.util.List;
 
+/**
+ * The data access interface for the Check Favorite Use Case.
+ */
 public interface CheckFavoriteDataAccessInterface {
 
     /**
