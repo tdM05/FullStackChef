@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import use_case.search.SearchDataAccessInterface;
 import use_case.search_recipe.SearchRecipeDataAccessInterface;
 import use_case.display_recipe.DisplayRecipeDataAccessInterface;
 
@@ -20,7 +21,7 @@ import use_case.display_recipe.DisplayRecipeDataAccessInterface;
  * The DAO for recipe data.
  * Implements both SearchRecipeDataAccessInterface and DisplayRecipeDataAccessInterface.
  */
-public class RecipeDataAccessObject implements SearchRecipeDataAccessInterface, DisplayRecipeDataAccessInterface {
+public class RecipeDataAccessObject implements SearchRecipeDataAccessInterface, DisplayRecipeDataAccessInterface, SearchDataAccessInterface {
     private static final String API_KEY = Constants.API_KEY;
     private static final String BASE_SEARCH_URL = "https://api.spoonacular.com/recipes/complexSearch";
     private static final String BASE_DETAILS_URL = "https://api.spoonacular.com/recipes/%d/information?&apiKey=%s&includeNutrition=true";
