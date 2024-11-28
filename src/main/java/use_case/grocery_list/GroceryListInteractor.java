@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import app.SessionManager;
 import data_access.grocery_list.GroceryListException;
 import entity.CommonIngredient;
 import entity.Ingredient;
+import entity.User;
 import entity.grocery_list.IngredientWithConvertedUnits;
 
 /**
@@ -26,6 +28,9 @@ public class GroceryListInteractor implements GroceryListInputBoundary {
 
     @Override
     public void execute() {
+        // this is session manager and user is just testing to see if the user is logged in (using breakpoints).
+        SessionManager sessionManager = SessionManager.getInstance();
+        User user = sessionManager.getCurrentUser();
         try {
             // Get recipe ids from the profile api
             final List<Integer> recipeIds = dataAccess.getAllRecipeIds();

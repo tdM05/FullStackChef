@@ -24,5 +24,8 @@ public class Constants {
 
     // json keys
     public static final String MEAL_ID = "meal_plan";
+    public static final String FAVORITE = "favorite";
+    public static final String DIETARY_RESTRICTIONS = "dietary_restrictions";
+    public static final String INFO = "info";
 }
 

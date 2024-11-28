@@ -41,4 +41,13 @@ public interface User {
         * @return the favorite recipes of the user
         */
         Favorite getFavorite();
+
+        void setFavorite(Favorite favorite);
+        /**
+         * Get the dietary restrictions of the user.
+         * @return the dietary restrictions of the user
+         */
+        DietaryRestriction getDietaryRestrictions();
+
+        void setDietaryRestrictions(DietaryRestriction dietaryRestriction);
 }

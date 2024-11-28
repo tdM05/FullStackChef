@@ -1,14 +1,15 @@
 package use_case.store_meal;
 
-import java.util.List;
+import org.json.JSONObject;
 
 /**
  * The data access interface for storing meals.
  */
 public interface StoreMealDataAccessInterface {
     /**
-     * Sets the meals in the database.
-     * @param mealIds The list of meal ids to store.
+     * Set the meals of the user.
+     * Precondition: The user has logged in.
+     * @param userJSON This is what you get when you call UserToJSON.userToJSON(user)
      */
-    void setMeals(List<Integer> mealIds);
+    void setInfo(JSONObject userJSON);
 }

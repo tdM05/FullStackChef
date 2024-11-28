@@ -9,8 +9,9 @@ import java.util.List;
 public class CommonUser implements User {
     private final String name;
     private String password;
-    private final Favorite favorite;
+    private Favorite favorite;
     private List<Integer> mealIds;
+    private DietaryRestriction dietaryRestrictions;
     // Delete later because the notes application needs it for now but it will be deleted later so please ignore it
     public CommonUser(String name, String password) {
         this.name = name;
@@ -47,6 +48,11 @@ public class CommonUser implements User {
     }
 
     @Override
+    public void setFavorite(Favorite newFavorite) {
+        this.favorite = newFavorite;
+    }
+
+    @Override
     public List<Integer> getMealIds() {
         return mealIds;
     }
@@ -54,5 +60,15 @@ public class CommonUser implements User {
     @Override
     public void setMealIDs(List<Integer> newMealIds) {
         this.mealIds = new ArrayList<>(newMealIds);
+    }
+
+    @Override
+    public DietaryRestriction getDietaryRestrictions() {
+        return dietaryRestrictions;
+    }
+
+    @Override
+    public void setDietaryRestrictions(DietaryRestriction newDietaryRestrictions) {
+        this.dietaryRestrictions = newDietaryRestrictions;
     }
 }

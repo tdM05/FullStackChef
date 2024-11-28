@@ -2,7 +2,9 @@ package data_access.UserProfile;
 
 import app.SessionManager;
 import data_access.Constants;
+import entity.CommonFavorite;
 import entity.CommonUser;
+import entity.DietaryRestriction;
 import entity.User;
 import okhttp3.*;
 import org.json.JSONArray;
@@ -21,10 +23,11 @@ import java.util.List;
  */
 public class UserProfileDao implements StoreMealDataAccessInterface, LoginUserDataAccessInterface,
         SignupUserDataAccessInterface {
-    private static final String API_KEY = Constants.API_KEY;
     private static final String STATUS_CODE_LABEL = Constants.STATUS_CODE_LABEL;
     private static final int SUCCESS_CODE = Constants.SUCCESS_CODE;
-
+    private static final String USERNAME = "username";
+    private static final String PASSWORD = "password";
+    private static final String INFO = "info";
     private final OkHttpClient client;
 
     public UserProfileDao() {
@@ -33,32 +36,15 @@ public class UserProfileDao implements StoreMealDataAccessInterface, LoginUserDa
 
     /**
      * Set the meals of the user.
-     *
      * Precondition: The user has logged in.
-     * @param mealIds The meal ids.
+     * @param userJSON This is what you get when you call UserToJSON.userToJSON(user)
      */
     @Override
-    public void setMeals(List<Integer> mealIds) {
+    public void setInfo(JSONObject userJSON) {
         // http://vm003.teach.cs.toronto.edu:20112/modifyUserInfo
         final String url = "http://vm003.teach.cs.toronto.edu:20112/modifyUserInfo";
-        final JSONObject jsonBody = new JSONObject();
+        final JSONObject jsonBody = userJSON;
 
-        // create the info object
-        final JSONObject info = new JSONObject();
-        final JSONArray meals = new JSONArray(mealIds);
-
-        // Get the current user
-        final SessionManager session = SessionManager.getInstance();
-        final User user = session.getCurrentUser();
-        try {
-            jsonBody.put("username", user.getName());
-            jsonBody.put("password", user.getPassword());
-            info.put(Constants.MEAL_ID, meals);
-            jsonBody.put("info", info);
-        }
-        catch (JSONException exception) {
-            throw new ProfileException("Failed to set meals.");
-        }
         final RequestBody body = RequestBody.create(jsonBody.toString(), MediaType.parse("application/json"));
 
         final Request request = new Request.Builder()
@@ -111,7 +97,7 @@ public class UserProfileDao implements StoreMealDataAccessInterface, LoginUserDa
 
     /**
      * Get the user by username.
-     * This will get the meals of the user to null if the key doesn't exist, and it will set it correctly
+     * This will set the meals of the user to null if the key doesn't exist, and it will set it correctly
      * if the key does exist.
      *
      * @param username The username of the user.
@@ -139,6 +125,8 @@ public class UserProfileDao implements StoreMealDataAccessInterface, LoginUserDa
             final String name = userJson.getString("username");
             final String password = userJson.getString("password");
             final JSONObject info = userJson.getJSONObject("info");
+
+            final User user = new CommonUser(name, password);
             // We check if it has meals
             if (info.has(Constants.MEAL_ID)) {
                 final JSONArray mealsObject = info.getJSONArray(Constants.MEAL_ID);
@@ -152,11 +140,14 @@ public class UserProfileDao implements StoreMealDataAccessInterface, LoginUserDa
                     }
                 }
                 // if the user has meals, we get and return a user with meal
-                final User user = new CommonUser(name, password);
                 user.setMealIDs(meals);
-                return user;
             }
-            return new CommonUser(name, password);
+            // TODO change this since it is temporary for testing
+            // we should check if they have favorites and dietary restrictions
+            // and do something similar to the if statement above
+            user.setFavorite(new CommonFavorite(new ArrayList<>()));
+            user.setDietaryRestrictions(new DietaryRestriction(new ArrayList<>()));
+            return user;
         }
         catch (IOException | JSONException exception) {
             throw new ProfileException("Failed to get user.");
@@ -165,7 +156,7 @@ public class UserProfileDao implements StoreMealDataAccessInterface, LoginUserDa
 
     /**
      * Save the user.
-     * This will save the user to the database.
+     * This will save the user to the database and is used when registering a new user.
      *
      * @param username The user to save.
      * @param password The password of the user.
