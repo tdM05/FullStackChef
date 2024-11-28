@@ -1,6 +1,5 @@
 package data_access.UserProfile;
 
-import app.SessionManager;
 import data_access.Constants;
 import entity.CommonFavorite;
 import entity.CommonUser;
