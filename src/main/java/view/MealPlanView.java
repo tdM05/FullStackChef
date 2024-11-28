@@ -243,4 +243,8 @@ public class MealPlanView extends JPanel implements PropertyChangeListener {
             frame.setVisible(true);
         });
     }
+
+    public void setMealPlanController(GenerateMealPlanController controller) {
+        this.controller = controller;
+    }
 }

@@ -11,7 +11,6 @@ import use_case.display_recipe.DisplayRecipeDataAccessInterface;
 import use_case.display_recipe.DisplayRecipeInteractor;
 import use_case.display_recipe.DisplayRecipeOutputBoundary;
 import view.DisplayRecipeView;
-import view.ViewManager;
 
 /**
  * Builder for the Display Recipe Application.

@@ -1,6 +1,7 @@
 package interface_adapter.mealplan.generate_mealplan;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.ViewManagerState;
 import use_case.mealplan.generate_mealplan.GenerateMealPlanOutputBoundary;
 import use_case.mealplan.generate_mealplan.GenerateMealPlanOutputData;
 import use_case.mealplan.generate_mealplan.GenerateMealPlanRecipeDto;
@@ -62,7 +63,9 @@ public class GenerateMealPlanPresenter implements GenerateMealPlanOutputBoundary
         System.out.println("Meal plan successfully set in ViewModel.");
 
         // Update the view state in the ViewManagerModel
-        viewManager.setState(viewModel.getViewName());
+        ViewManagerState state = new ViewManagerState(viewModel.getViewName(), null); // Use null for context if no additional context is required
+        viewManager.setState(state);
+        System.out.println("View state updated in ViewManagerModel.");
     }
 
     /**
@@ -80,7 +83,8 @@ public class GenerateMealPlanPresenter implements GenerateMealPlanOutputBoundary
         System.out.println("Error message successfully set in ViewModel.");
 
         // Update the view state in the ViewManagerModel
-        viewManager.setState(viewModel.getViewName());
-        System.out.println("===========================");
+        ViewManagerState state = new ViewManagerState(viewModel.getViewName(), null); // Use null for context if no additional context is required
+        viewManager.setState(state);
+        System.out.println("View state updated in ViewManagerModel.");
     }
 }
