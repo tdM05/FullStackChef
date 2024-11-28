@@ -11,25 +11,22 @@ public class SignupInteractor implements SignupInputBoundary {
     private final SignupOutputBoundary userPresenter;
     private final UserFactory userFactory;
 
-    public SignupInteractor(SignupUserDataAccessInterface signupUserDataAccessInterface,
+    public SignupInteractor(SignupUserDataAccessInterface signupDataAccessInterface,
                             SignupOutputBoundary signupOutputBoundary,
-                            UserFactory userFactory){
-        this.userDataAccessObject = signupUserDataAccessInterface;
+                            UserFactory userFactory) {
+        this.userDataAccessObject = signupDataAccessInterface;
         this.userPresenter = signupOutputBoundary;
         this.userFactory = userFactory;
     }
 
     @Override
-    public void execute(SignupInputData signupInputData){
-        // If username already exists (not unique)
-        if (userDataAccessObject.existsByName(signupInputData.getUsername())){
-            userPresenter.prepareFailView("CommonUser already exists.");
+    public void execute(SignupInputData signupInputData) {
+        if (userDataAccessObject.existsByName(signupInputData.getUsername())) {
+            userPresenter.prepareFailView("User already exists.");
         }
-        // If password not match with repetition
         else if (!signupInputData.getPassword().equals(signupInputData.getRepeatPassword())) {
-            userPresenter.prepareFailView("Password don't match.");
+            userPresenter.prepareFailView("Passwords don't match.");
         }
-        // CommonUser created
         else {
             final User user = userFactory.create(signupInputData.getUsername(), signupInputData.getPassword());
             userDataAccessObject.save(user);
@@ -40,7 +37,7 @@ public class SignupInteractor implements SignupInputBoundary {
     }
 
     @Override
-    public void switchToLoginview() {
+    public void switchToLoginView() {
         userPresenter.switchToLoginView();
     }
 }
