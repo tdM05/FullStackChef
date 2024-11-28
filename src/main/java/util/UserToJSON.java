@@ -2,13 +2,16 @@ package util;
 
 import data_access.Constants;
 import data_access.UserProfile.ProfileException;
+import entity.DietaryRestriction;
+import entity.Favorite;
+import entity.Ingredient;
 import entity.User;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Converts a User object to a JSON object.
@@ -31,66 +34,37 @@ public class UserToJSON {
             // create the meals to add to info
             final JSONObject mealJSONArray = new JSONObject();
 
-            // add monday meals
-            final JSONArray mondayMeals = new JSONArray();
-            for (int mealId : user.getMealIds().get(Constants.MONDAY)) {
-                mondayMeals.put(mealId);
+            // add meals for each day of the week
+            for (String day : Constants.DAYS_OF_WEEK) {
+                final JSONArray dayMeals = new JSONArray();
+                final Map<String, List<Integer>> userMealIds = user.getMealIds();
+                if (userMealIds.containsKey(day)) {
+                    for (int mealId : userMealIds.get(day)) {
+                        dayMeals.put(mealId);
+                    }
+                }
+                mealJSONArray.put(day, dayMeals);
             }
-            mealJSONArray.put(Constants.MONDAY, mondayMeals);
 
-            // add tuesday meals
-            final JSONArray tuesdayMeals = new JSONArray();
-            for (int mealId : user.getMealIds().get(Constants.TUESDAY)) {
-                tuesdayMeals.put(mealId);
-            }
-            mealJSONArray.put(Constants.TUESDAY, tuesdayMeals);
-            // add wednesday meals
-            final JSONArray wednesdayMeals = new JSONArray();
-            for (int mealId : user.getMealIds().get(Constants.WEDNESDAY)) {
-                wednesdayMeals.put(mealId);
-            }
-            mealJSONArray.put(Constants.WEDNESDAY, wednesdayMeals);
-
-            // add thursday meals
-            final JSONArray thursdayMeals = new JSONArray();
-            for (int mealId : user.getMealIds().get(Constants.THURSDAY)) {
-                thursdayMeals.put(mealId);
-            }
-            mealJSONArray.put(Constants.THURSDAY, thursdayMeals);
-
-            // add friday meals
-            final JSONArray fridayMeals = new JSONArray();
-            for (int mealId : user.getMealIds().get(Constants.FRIDAY)) {
-                fridayMeals.put(mealId);
-            }
-            mealJSONArray.put(Constants.FRIDAY, fridayMeals);
-
-            // add saturday meals
-            final JSONArray saturdayMeals = new JSONArray();
-            for (int mealId : user.getMealIds().get(Constants.SATURDAY)) {
-                saturdayMeals.put(mealId);
-            }
-            mealJSONArray.put(Constants.SATURDAY, saturdayMeals);
-
-            // add sunday meals
-            final JSONArray sundayMeals = new JSONArray();
-            for (int mealId : user.getMealIds().get(Constants.SUNDAY)) {
-                sundayMeals.put(mealId);
-            }
-            mealJSONArray.put(Constants.SUNDAY, sundayMeals);
-
-            info.put(Constants.MEAL_ID, mealJSONArray);
+            info.put(Constants.MEAL_IDS, mealJSONArray);
 
             // create the favorites to add to info
             final JSONArray favorite = new JSONArray();
-            for (int favId : user.getFavorite().getFavoriteRecipes()) {
-                favorite.put(favId);
+            final Favorite userFavorite = user.getFavorite();
+            if (userFavorite != null) {
+                for (int favId : userFavorite.getFavoriteRecipes()) {
+                    favorite.put(favId);
+                }
             }
             info.put(Constants.FAVORITE, favorite);
+
             // create the dietary restrictions to add to info
             final JSONArray dietaryRestrictions = new JSONArray();
-            for (String restriction : user.getDietaryRestrictions().getDiets()) {
-                dietaryRestrictions.put(restriction);
+            DietaryRestriction userDietaryRestrictions = user.getDietaryRestrictions();
+            if (userDietaryRestrictions != null) {
+                for (String restriction : userDietaryRestrictions.getDiets()) {
+                    dietaryRestrictions.put(restriction);
+                }
             }
             info.put(Constants.DIETARY_RESTRICTIONS, dietaryRestrictions);
 

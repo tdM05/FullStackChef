@@ -1,5 +1,7 @@
 package interface_adapter.mealplan.generate_mealplan;
 
+import app.SessionManager;
+import entity.User;
 import use_case.mealplan.generate_mealplan.GenerateMealPlanInputBoundary;
 import use_case.mealplan.generate_mealplan.GenerateMealPlanInputData;
 
@@ -16,6 +18,8 @@ public class GenerateMealPlanController {
 
         public void execute(String diet, String startDate) {
             final GenerateMealPlanInputData inputData = new GenerateMealPlanInputData(diet, startDate);
-            generateMealPlanUseCaseInteractor.execute(inputData);
+            SessionManager sessionManager = SessionManager.getInstance();
+            User user = sessionManager.getCurrentUser();
+            generateMealPlanUseCaseInteractor.execute(inputData, user);
         }
 }

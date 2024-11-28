@@ -16,7 +16,7 @@ public class ModifyUserJSONInfo {
      * @return The updated JSONArray.
      * @throws IllegalArgumentException if the key is not found in the JSON object.
      */
-    public static <T> JSONArray modifyUserJSONInfo(JSONObject userJSON, String key, T value) throws IllegalArgumentException {
+    public static <T> JSONArray modifyUserJSONArrayInfo(JSONObject userJSON, String key, T value) throws IllegalArgumentException {
         try {
             final JSONObject info = userJSON.getJSONObject(Constants.INFO);
             final JSONArray jsonArray = info.getJSONArray(key);

@@ -3,6 +3,7 @@ package app;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
+import data_access.UserProfile.UserProfileDao;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanController;
 import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanPresenter;
@@ -10,6 +11,8 @@ import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanViewModel;
 import use_case.mealplan.generate_mealplan.GenerateMealPlanDataAccessInterface;
 import use_case.mealplan.generate_mealplan.GenerateMealPlanInteractor;
 import use_case.mealplan.generate_mealplan.GenerateMealPlanOutputBoundary;
+import use_case.set_meals.StoreMealInputBoundary;
+import use_case.set_meals.StoreMealInteractor;
 import view.MealPlanView;
 
 /**
@@ -45,7 +48,10 @@ public class MealPlanAppBuilder {
     public MealPlanAppBuilder addMealPlanUseCase() {
         final GenerateMealPlanOutputBoundary outputBoundary =
                 new GenerateMealPlanPresenter(viewManagerModel, mealPlanViewModel);
-        mealPlanInteractor = new GenerateMealPlanInteractor(outputBoundary, mealPlanDAO);
+        // add the set meal use case
+        final UserProfileDao userProfileDao = new UserProfileDao();
+        final StoreMealInputBoundary storeMealUseCase = new StoreMealInteractor(userProfileDao);
+        mealPlanInteractor = new GenerateMealPlanInteractor(outputBoundary, mealPlanDAO, storeMealUseCase);
 
         final GenerateMealPlanController controller = new GenerateMealPlanController(mealPlanInteractor);
         if (mealPlanView == null) {

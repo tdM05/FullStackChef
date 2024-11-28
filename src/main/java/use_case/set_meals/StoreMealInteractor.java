@@ -31,16 +31,28 @@ public class StoreMealInteractor implements StoreMealInputBoundary {
      */
     @Override
     public void execute(StoreMealInputData inputData, User user) {
-        final int mealId = inputData.getRecipeId();
         final JSONObject userJSON = UserToJSON.userToJSON(user);
 
-        final JSONArray newMeals = ModifyUserJSONInfo.modifyUserJSONInfo(userJSON, Constants.MEAL_ID, mealId);
+        final JSONObject info = userJSON.getJSONObject(Constants.INFO);
+        final JSONObject mealIdsJSON = info.getJSONObject(Constants.MEAL_IDS);
+
+        final Map<String, List<Integer>> mealIds = inputData.getMealIds();
+        // put all mealIds into the mealIdsJSON
+        for (Map.Entry<String, List<Integer>> entry : mealIds.entrySet()) {
+            final JSONArray dayMeals = new JSONArray();
+            for (int meal : entry.getValue()) {
+                dayMeals.put(meal);
+            }
+            mealIdsJSON.put(entry.getKey(), dayMeals);
+        }
+        // now userJSON has the mealIds added to it
         // Send this new user info to the api
         dataAccess.setInfo(userJSON);
 
-        JSONObject meals =
+        // set user meals locally
+        final Map<String, List<Integer>> newMeals = JSONMealsToMap(mealIdsJSON);
         // Add this meal locally to the user
-        user.setMealIDs(JSONArrayToList(newMeals));
+        user.setMealIDs(newMeals);
     }
 
     /**
@@ -61,6 +73,7 @@ public class StoreMealInteractor implements StoreMealInputBoundary {
         }
         return mealList;
     }
+
     Map<String, List<Integer>> JSONMealsToMap(JSONObject meals) {
         final Map<String, List<Integer>> mealMap = new java.util.HashMap<>();
         try {

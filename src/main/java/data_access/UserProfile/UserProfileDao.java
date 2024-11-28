@@ -130,9 +130,13 @@ public class UserProfileDao implements StoreMealDataAccessInterface, LoginUserDa
             final User user = new CommonUser(name, password);
             final Map<String, List<Integer>> mealIds = new HashMap<>();
             // We check if it has meals
-            if (info.has(Constants.MEAL_ID)) {
-
-                final JSONObject mealsObject = info.getJSONObject(Constants.MEAL_ID);
+            if (info.has(Constants.MEAL_IDS)) {
+                // first we should reset user meals if the MEAL_ID key is not a json object
+                if (!(info.get(Constants.MEAL_IDS) instanceof JSONObject)) {
+                    user.setMealIDs(new HashMap<>());
+                    return user;
+                }
+                final JSONObject mealsObject = info.getJSONObject(Constants.MEAL_IDS);
 
                 // deal with monday
                 mealIds.put(Constants.MONDAY, new ArrayList<>());

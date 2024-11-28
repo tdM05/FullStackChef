@@ -1,14 +1,19 @@
 package use_case.mealplan.generate_mealplan;
 
 import entity.Recipe;
+import entity.User;
 import org.json.JSONException;
+import use_case.set_meals.StoreMealInputBoundary;
+import use_case.set_meals.StoreMealInputData;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.time.format.TextStyle;
 
 /**
  * The Interactor for the Generate Meal Plan Use Case.
@@ -21,16 +26,21 @@ public class GenerateMealPlanInteractor implements GenerateMealPlanInputBoundary
 
     private final GenerateMealPlanOutputBoundary mealPlanPresenter;
     private final GenerateMealPlanDataAccessInterface mealPlanDataAccessObject;
+    private final StoreMealInputBoundary storeMealUseCase;
 
     /**
      * Constructs a GenerateMealPlanInteractor.
      *
      * @param presenter  The output boundary to prepare views for the use case.
      * @param dataAccess The data access interface to interact with external data sources.
+     * @param storeMealUseCase The use case to store meals.
      */
-    public GenerateMealPlanInteractor(GenerateMealPlanOutputBoundary presenter, GenerateMealPlanDataAccessInterface dataAccess) {
+    public GenerateMealPlanInteractor(GenerateMealPlanOutputBoundary presenter,
+                                      GenerateMealPlanDataAccessInterface dataAccess,
+                                      StoreMealInputBoundary storeMealUseCase) {
         mealPlanPresenter = presenter;
         mealPlanDataAccessObject = dataAccess;
+        this.storeMealUseCase = storeMealUseCase;
     }
 
     /**
@@ -43,16 +53,19 @@ public class GenerateMealPlanInteractor implements GenerateMealPlanInputBoundary
      * @param inputData The input data containing the diet and start date.
      */
     @Override
-    public void execute(GenerateMealPlanInputData inputData) {
+    public void execute(GenerateMealPlanInputData inputData, User user) {
         try {
             // Fetch the meal plan
             Map<String, List<Recipe>> rawMealPlan = mealPlanDataAccessObject.generateWeeklyMealPlan(
                     inputData.getDiet(),
                     inputData.getStartDate()
             );
+            // save this meal to user
+            storeMealUseCase.execute(new StoreMealInputData(convertRecipeMap(rawMealPlan)), user);
 
             // Convert string keys to LocalDate and transform recipes to DTOs
-            Map<LocalDate, List<GenerateMealPlanRecipeDto>> mealPlan = convertKeysAndTransformRecipes(rawMealPlan, LocalDate.parse(inputData.getStartDate()));
+            final Map<LocalDate, List<GenerateMealPlanRecipeDto>> mealPlan = convertKeysAndTransformRecipes(rawMealPlan,
+                    LocalDate.parse(inputData.getStartDate()));
 
             // Prepare success output
             mealPlanPresenter.prepareSuccessView(new GenerateMealPlanOutputData(mealPlan));
@@ -61,6 +74,16 @@ public class GenerateMealPlanInteractor implements GenerateMealPlanInputBoundary
             // Notify the presenter of failure with the error message
             mealPlanPresenter.prepareFailView("Error: " + e.getMessage());
         }
+    }
+
+    public static Map<String, List<Integer>> convertRecipeMap(Map<String, List<Recipe>> recipeMap) {
+        return recipeMap.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey, // Keep the same keys
+                        entry -> entry.getValue().stream()
+                                .map(Recipe::getRecipeId) // Map recipes to their IDs
+                                .collect(Collectors.toList()) // Collect to a List<Integer>
+                ));
     }
 
     /**

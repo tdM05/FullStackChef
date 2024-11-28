@@ -1,7 +1,5 @@
 package data_access;
 
-import java.util.Iterator;
-
 /**
  * Constants for the data access layer.
  */
@@ -25,20 +23,20 @@ public class Constants {
     public static final String SIGNUP_VIEW = "signupView";
 
     // json keys
-    public static final String MEAL_ID = "meal_plan";
+    public static final String MEAL_IDS = "meal_plan";
     public static final String FAVORITE = "favorite";
     public static final String DIETARY_RESTRICTIONS = "dietary_restrictions";
     public static final String INFO = "info";
     public static final String MEAL_PLAN_VIEW = "mealPlanView";
 
     // days of the week
-    public static final String MONDAY = "Monday";
-    public static final String TUESDAY = "Tuesday";
-    public static final String WEDNESDAY = "Wednesday";
-    public static final String THURSDAY = "Thursday";
-    public static final String FRIDAY = "Friday";
-    public static final String SATURDAY = "Saturday";
-    public static final String SUNDAY = "Sunday";
+    public static final String MONDAY = "monday";
+    public static final String TUESDAY = "tuesday";
+    public static final String WEDNESDAY = "wednesday";
+    public static final String THURSDAY = "thursday";
+    public static final String FRIDAY = "friday";
+    public static final String SATURDAY = "saturday";
+    public static final String SUNDAY = "sunday";
     public static final String[] DAYS_OF_WEEK = {MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY};
 }
 
