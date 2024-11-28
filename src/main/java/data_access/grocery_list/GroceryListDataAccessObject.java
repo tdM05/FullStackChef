@@ -39,7 +39,13 @@ public class GroceryListDataAccessObject implements GroceryListDataAccessInterfa
     public List<Integer> getAllRecipeIds() {
         final SessionManager sessionManager = SessionManager.getInstance();
         final User user = sessionManager.getCurrentUser();
-        return user.getMealIds();
+        // turn all the meal_ids from user into one big list
+        final List<Integer> res = new ArrayList<>();
+
+        for (List<Integer> ids : user.getMealIds().values()) {
+            res.addAll(ids);
+        }
+        return res;
     }
 
     @Override

@@ -11,11 +11,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
-import use_case.store_meal.StoreMealDataAccessInterface;
+import use_case.set_meals.StoreMealDataAccessInterface;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The Data Access Object for the User Profile.
@@ -126,20 +128,70 @@ public class UserProfileDao implements StoreMealDataAccessInterface, LoginUserDa
             final JSONObject info = userJson.getJSONObject("info");
 
             final User user = new CommonUser(name, password);
+            final Map<String, List<Integer>> mealIds = new HashMap<>();
             // We check if it has meals
             if (info.has(Constants.MEAL_ID)) {
-                final JSONArray mealsObject = info.getJSONArray(Constants.MEAL_ID);
-                final List<Integer> meals = new ArrayList<>();
-                for (int i = 0; i < mealsObject.length(); i++) {
-                    if (!(mealsObject.get(i) instanceof Integer)) {
-                        return new CommonUser(name, password);
+
+                final JSONObject mealsObject = info.getJSONObject(Constants.MEAL_ID);
+
+                // deal with monday
+                mealIds.put(Constants.MONDAY, new ArrayList<>());
+                if (mealsObject.has(Constants.MONDAY)) {
+                    final JSONArray mondayMeals = mealsObject.getJSONArray(Constants.MONDAY);
+                    for (int i = 0; i < mondayMeals.length(); i++) {
+                        mealIds.get(Constants.MONDAY).add(mondayMeals.getInt(i));
                     }
-                    else {
-                        meals.add((Integer) mealsObject.get(i));
+                }
+                // deal with tuesday
+                mealIds.put(Constants.TUESDAY, new ArrayList<>());
+                if (mealsObject.has(Constants.TUESDAY)) {
+                    final JSONArray tuesdayMeals = mealsObject.getJSONArray(Constants.TUESDAY);
+                    for (int i = 0; i < tuesdayMeals.length(); i++) {
+                        mealIds.get(Constants.TUESDAY).add(tuesdayMeals.getInt(i));
+                    }
+                }
+                // deal with wednesday
+                mealIds.put(Constants.WEDNESDAY, new ArrayList<>());
+                if (mealsObject.has(Constants.WEDNESDAY)) {
+                    final JSONArray wednesdayMeals = mealsObject.getJSONArray(Constants.WEDNESDAY);
+                    for (int i = 0; i < wednesdayMeals.length(); i++) {
+                        mealIds.get(Constants.WEDNESDAY).add(wednesdayMeals.getInt(i));
+                    }
+                }
+                // deal with thursday
+                mealIds.put(Constants.THURSDAY, new ArrayList<>());
+                if (mealsObject.has(Constants.THURSDAY)) {
+                    final JSONArray thursdayMeals = mealsObject.getJSONArray(Constants.THURSDAY);
+                    for (int i = 0; i < thursdayMeals.length(); i++) {
+                        mealIds.get(Constants.THURSDAY).add(thursdayMeals.getInt(i));
+                    }
+                }
+                // deal with friday
+                mealIds.put(Constants.FRIDAY, new ArrayList<>());
+                if (mealsObject.has(Constants.FRIDAY)) {
+                    final JSONArray fridayMeals = mealsObject.getJSONArray(Constants.FRIDAY);
+                    for (int i = 0; i < fridayMeals.length(); i++) {
+                        mealIds.get(Constants.FRIDAY).add(fridayMeals.getInt(i));
+                    }
+                }
+                // deal with saturday
+                mealIds.put(Constants.SATURDAY, new ArrayList<>());
+                if (mealsObject.has(Constants.SATURDAY)) {
+                    final JSONArray saturdayMeals = mealsObject.getJSONArray(Constants.SATURDAY);
+                    for (int i = 0; i < saturdayMeals.length(); i++) {
+                        mealIds.get(Constants.SATURDAY).add(saturdayMeals.getInt(i));
+                    }
+                }
+                // deal with sunday
+                mealIds.put(Constants.SUNDAY, new ArrayList<>());
+                if (mealsObject.has(Constants.SUNDAY)) {
+                    final JSONArray sundayMeals = mealsObject.getJSONArray(Constants.SUNDAY);
+                    for (int i = 0; i < sundayMeals.length(); i++) {
+                        mealIds.get(Constants.SUNDAY).add(sundayMeals.getInt(i));
                     }
                 }
                 // if the user has meals, we get and return a user with meal
-                user.setMealIDs(meals);
+                user.setMealIDs(mealIds);
             }
             // TODO change this since it is temporary for testing
             // we should check if they have favorites and dietary restrictions

@@ -1,4 +1,4 @@
-package use_case.store_meal;
+package use_case.set_meals;
 
 import entity.User;
 

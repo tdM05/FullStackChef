@@ -1,4 +1,4 @@
-package use_case.store_meal;
+package use_case.set_meals;
 
 import data_access.Constants;
 import data_access.UserProfile.ProfileException;
@@ -10,6 +10,7 @@ import util.ModifyUserJSONInfo;
 import util.UserToJSON;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * The Store Meal Interactor.
@@ -37,6 +38,7 @@ public class StoreMealInteractor implements StoreMealInputBoundary {
         // Send this new user info to the api
         dataAccess.setInfo(userJSON);
 
+        JSONObject meals =
         // Add this meal locally to the user
         user.setMealIDs(JSONArrayToList(newMeals));
     }
@@ -58,5 +60,18 @@ public class StoreMealInteractor implements StoreMealInputBoundary {
             }
         }
         return mealList;
+    }
+    Map<String, List<Integer>> JSONMealsToMap(JSONObject meals) {
+        final Map<String, List<Integer>> mealMap = new java.util.HashMap<>();
+        try {
+            for (String day : Constants.DAYS_OF_WEEK) {
+                final JSONArray dayMeals = meals.getJSONArray(day);
+                mealMap.put(day, JSONArrayToList(dayMeals));
+            }
+        }
+        catch (JSONException ex) {
+            throw new IllegalArgumentException("Failed to convert JSON to Map.");
+        }
+        return mealMap;
     }
 }

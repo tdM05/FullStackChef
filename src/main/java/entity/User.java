@@ -1,6 +1,7 @@
 package entity;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * The representation of a user in our program.
@@ -25,16 +26,17 @@ public interface User {
         void setPassword(String password);
 
         /**
-         * Get the meal ids of the user.
+         * Get the meal ids of the user. The key is the day of the week (in Constants.SOME_DAY format), and
+         * the value is a list of meal ids.
          * @return the meal ids of the user
          */
-        List<Integer> getMealIds();
+        Map<String, List<Integer>> getMealIds();
 
         /**
          * Add a meal id to the user.
          * @param mealId the meal id to add
          */
-        void setMealIDs(List<Integer> mealId);
+        void setMealIDs(Map<String, List<Integer>> mealId);
 
         /**
         * Get the favorite recipes of the user.

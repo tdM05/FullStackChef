@@ -1,8 +1,8 @@
-package use_case.store_meal;
+package use_case.set_meals;
 
 import app.SessionManager;
+import data_access.Constants;
 import data_access.UserProfile.UserProfileDao;
-import entity.CommonUser;
 import entity.User;
 import org.junit.Test;
 import use_case.login.LoginInputData;
@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 public class StoreMealInteractorTest {
     @Test
     public void execute() {
-        StoreMealInputData inputData = new StoreMealInputData(10);
+        StoreMealInputData inputData = new StoreMealInputData(10, Constants.MONDAY);
         UserProfileDao dao = new UserProfileDao();
         StoreMealInteractor interactor = new StoreMealInteractor(dao);
 

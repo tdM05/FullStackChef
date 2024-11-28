@@ -1,7 +1,9 @@
 package entity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The representation of a password-protected user for our program.
@@ -10,21 +12,20 @@ public class CommonUser implements User {
     private final String name;
     private String password;
     private Favorite favorite;
-    private List<Integer> mealIds;
+    private Map<String, List<Integer>> mealIds;
     private DietaryRestriction dietaryRestrictions;
-    // Delete later because the notes application needs it for now but it will be deleted later so please ignore it
+
     public CommonUser(String name, String password) {
         this.name = name;
         this.password = password;
         this.favorite = new CommonFavorite(new ArrayList<>());
-        mealIds = new ArrayList<>();
+        mealIds = new HashMap<>();
     }
 
     public CommonUser(String name, String password, Favorite favorite) {
         this.name = name;
         this.password = password;
         this.favorite = favorite;
-        mealIds = new ArrayList<>();
     }
 
     @Override
@@ -53,13 +54,13 @@ public class CommonUser implements User {
     }
 
     @Override
-    public List<Integer> getMealIds() {
+    public Map<String, List<Integer>> getMealIds() {
         return mealIds;
     }
 
     @Override
-    public void setMealIDs(List<Integer> newMealIds) {
-        this.mealIds = new ArrayList<>(newMealIds);
+    public void setMealIDs(Map<String, List<Integer>> newMealIds) {
+        this.mealIds = newMealIds;
     }
 
     @Override
