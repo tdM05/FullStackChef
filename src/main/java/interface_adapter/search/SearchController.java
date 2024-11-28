@@ -1,30 +1,24 @@
 package interface_adapter.search;
 
-import use_case.search_recipe.SearchRecipeInputBoundary;
-import use_case.search_recipe.SearchRecipeInputData;
+import use_case.search.SearchInputBoundary;
+import use_case.search.SearchInputData;
 
 /**
  * Controller for the Search Recipe Use Case.
  */
 public class SearchController {
+    private final SearchInputBoundary searchInteractor;
 
-    private final SearchRecipeInputBoundary searchRecipeInteractor;
-
-    public SearchController(SearchRecipeInputBoundary searchRecipeInteractor) {
-        this.searchRecipeInteractor = searchRecipeInteractor;
+    public SearchController(SearchInputBoundary searchInteractor) {
+        this.searchInteractor = searchInteractor;
     }
 
     /**
      * Executes the search for recipes that match the given input string.
-     * @param input the input string to search for
+     * @param query the input string to search for
      */
-    public void searchRecipe(String input) {
-        SearchRecipeInputData inputData = new SearchRecipeInputData() {
-            @Override
-            public String searchQuery() {
-                return input;
-            }
-        };
-        searchRecipeInteractor.execute(inputData);
+    public void execute(String query) {
+        SearchInputData searchInputData = new SearchInputData(query);
+        searchInteractor.execute(searchInputData);
     }
 }
