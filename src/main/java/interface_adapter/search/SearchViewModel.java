@@ -3,7 +3,7 @@ package interface_adapter.search;
 import java.util.List;
 
 import interface_adapter.ViewModel;
-import use_case.search_recipe.SearchRecipeOutputData;
+import use_case.search.SearchOutputData;
 
 /**
  * ViewModel for the Search Recipe Use Case.
@@ -13,15 +13,15 @@ import use_case.search_recipe.SearchRecipeOutputData;
 public class SearchViewModel extends ViewModel<SearchState> {
 
     public SearchViewModel() {
-        super("search recipe");
+        super("searchView");
         setState(new SearchState());
     }
 
-    public List<SearchRecipeOutputData> getRecipes() {
+    public List<SearchOutputData> getRecipes() {
         return getState().getRecipe();
     }
 
-    public void setRecipes(List<SearchRecipeOutputData> recipes) {
+    public void setRecipes(List<SearchOutputData> recipes) {
         getState().setRecipe(recipes);
         firePropertyChanged("recipes");
     }

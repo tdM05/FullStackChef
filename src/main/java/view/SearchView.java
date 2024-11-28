@@ -7,9 +7,7 @@ import interface_adapter.search.SearchController;
 import use_case.search.SearchOutputData;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
@@ -23,10 +21,11 @@ public class SearchView extends JPanel {
     private final SearchViewModel searchViewModel;
     private SearchController controller;
 
-    private Profile profile;
-    private SearchBar searchBar; // Updated type
     private JPanel topPanel;
     private JPanel centerPanel;
+
+    private Profile profile;
+    private SearchBar searchBar;
 
     private ViewManagerModel viewManagerModel;
 
@@ -48,6 +47,7 @@ public class SearchView extends JPanel {
         // Instantiate the SearchBar
         searchBar = new SearchBar("Search for recipes...");
         searchBar.addActionListener(e -> onSearch());
+
 
         // Create a panel to hold the search bar
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -132,7 +132,7 @@ public class SearchView extends JPanel {
         repaint();
     }
 
-    public void setRecipeController(SearchController controller) {
+    public void setSearchController(SearchController controller) {
         this.controller = controller;
     }
 

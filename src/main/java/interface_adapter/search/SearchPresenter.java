@@ -3,19 +3,17 @@ package interface_adapter.search;
 import java.util.List;
 
 import interface_adapter.ViewManagerModel;
-import use_case.search_recipe.SearchRecipeOutputBoundary;
-import use_case.search_recipe.SearchRecipeOutputData;
+import use_case.search.SearchOutputBoundary;
+import use_case.search.SearchOutputData;
 
 /**
  * The Presenter for the Search Recipe Use Case.
  */
-public class SearchPresenter implements SearchRecipeOutputBoundary {
+public class SearchPresenter implements SearchOutputBoundary {
 
-    private final ViewManagerModel viewManagerModel;
     private final SearchViewModel searchViewModel;
 
-    public SearchPresenter(ViewManagerModel viewManagerModel, SearchViewModel searchViewModel) {
-        this.viewManagerModel = viewManagerModel;
+    public SearchPresenter(SearchViewModel searchViewModel) {
         this.searchViewModel = searchViewModel;
     }
 
@@ -25,7 +23,7 @@ public class SearchPresenter implements SearchRecipeOutputBoundary {
      * @param outputDataList the output data
      */
     @Override
-    public void prepareSuccessView(List<SearchRecipeOutputData> outputDataList) {
+    public void prepareSuccessView(List<SearchOutputData> outputDataList) {
         // On success, update the view model with the search results.
         searchViewModel.setRecipes(outputDataList);
         searchViewModel.firePropertyChanged("recipes");
