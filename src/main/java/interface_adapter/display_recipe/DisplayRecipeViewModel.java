@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * The ViewModel for displaying recipe details.
  */
-public class DisplayRecipeViewModel extends ViewModel {
+public class DisplayRecipeViewModel extends ViewModel<DisplayRecipeState> {
 
     private String title;
     private String imageUrl;

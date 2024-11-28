@@ -3,7 +3,7 @@ package interface_adapter.display_recipe;
 import java.util.List;
 
 /**
- * The state for displaying a recipe.
+ * The State for Display Recipe.
  * Holds only the essential fields needed for the recipe display view.
  */
 public class DisplayRecipeState {

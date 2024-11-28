@@ -1,7 +1,7 @@
 package use_case.display_recipe;
 
 /**
- * Input boundary for the DisplayRecipe Use Case.
+ * Input boundary for the Display Recipe Use Case.
  * Provides an interface for executing the display recipe functionality.
  */
 public interface DisplayRecipeInputBoundary {

@@ -4,13 +4,17 @@ import app.builders.*;
 import data_access.Constants;
 import data_access.FavoriteDataAccessObject;
 import data_access.RecipeDataAccessObject;
+import data_access.MealPlanDataAccessObject;
 import data_access.UserProfile.UserProfileDao;
 import data_access.grocery_list.GroceryListDataAccessObject;
+import data_access.grocery_list.GroceryListInMemoryDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import use_case.favorite_recipe.FavoriteRecipeDataAccessInterface;
 import use_case.grocery_list.GroceryListDataAccessInterface;
+import use_case.mealplan.generate_mealplan.GenerateMealPlanDataAccessInterface;
 import use_case.search_recipe.SearchRecipeDataAccessInterface;
 import use_case.display_recipe.DisplayRecipeDataAccessInterface;
+import view.Profile;
 import view.ViewManager;
 
 import javax.swing.JFrame;
@@ -25,6 +29,7 @@ public class SearchRecipeApplication {
         final DisplayRecipeDataAccessInterface displayRecipeDAO = new RecipeDataAccessObject();
         final GroceryListDataAccessInterface groceryListDAO = new GroceryListDataAccessObject();
         final FavoriteRecipeDataAccessInterface favoriteDAO = new FavoriteDataAccessObject();
+        final GenerateMealPlanDataAccessInterface mealPlanDAO = new MealPlanDataAccessObject();
         final UserProfileDao userProfileDao = new UserProfileDao();
 
         // Set up a frame with a CardLayout to handle view switching
@@ -68,6 +73,11 @@ public class SearchRecipeApplication {
                 .addFavoriteRecipeView(viewManagerModel)
                 .addFavoriteRecipeUseCase();
 
+        final MealPlanAppBuilder mealPlanBuilder = new MealPlanAppBuilder();
+        mealPlanBuilder.addMealPlanDAO(new MealPlanDataAccessObject())
+                .addMealPlanView(viewManagerModel)
+                .addMealPlanUseCase();
+
         final LoginAppBuilder loginBuilder = new LoginAppBuilder();
         loginBuilder.addLoginDAO(userProfileDao)
                 .addLoginView(viewManagerModel)
@@ -83,6 +93,7 @@ public class SearchRecipeApplication {
         frame.add(displayBuilder.build().getContentPane(), Constants.DISPLAY_RECIPE_VIEW);
         frame.add(groceryListBuilder.build().getContentPane(), Constants.GROCERY_LIST_VIEW);
         frame.add(favoriteBuilder.build().getContentPane(), Constants.FAVORITE_VIEW);
+        frame.add(mealPlanBuilder.build().getContentPane(), Constants.MEAL_PLAN_VIEW);
         frame.add(loginBuilder.build().getContentPane(), Constants.LOGIN_VIEW);
         frame.add(signupBuilder.build().getContentPane(), Constants.SIGNUP_VIEW);
 
