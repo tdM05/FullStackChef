@@ -39,33 +39,34 @@ public class GenerateMealPlanPresenter implements GenerateMealPlanOutputBoundary
     public void prepareSuccessView(GenerateMealPlanOutputData outputData) {
         System.out.println("Preparing success view with meal plan data.");
         Map<LocalDate, List<GenerateMealPlanRecipeDto>> mealPlan = outputData.getMealPlan();
+//
+//        System.out.println("Generated Weekly Meal Plan:");
+//        System.out.println("===========================");
 
-        System.out.println("Generated Weekly Meal Plan:");
-        System.out.println("===========================");
-
-        for (Map.Entry<LocalDate, List<GenerateMealPlanRecipeDto>> entry : mealPlan.entrySet()) {
-            String formattedDate = entry.getKey().toString(); // Format the LocalDate as desired
-            System.out.println(formattedDate + ":");
-
-            if (entry.getValue().isEmpty()) {
-                System.out.println("  (No recipes available)");
-            } else {
-                for (GenerateMealPlanRecipeDto recipe : entry.getValue()) {
-                    System.out.println("  - " + recipe.getTitle() + " (ID: " + recipe.getId() + ")");
-                }
-            }
-        }
+//        for (Map.Entry<LocalDate, List<GenerateMealPlanRecipeDto>> entry : mealPlan.entrySet()) {
+//            String formattedDate = entry.getKey().toString(); // Format the LocalDate as desired
+//            System.out.println(formattedDate + ":");
+//
+//            if (entry.getValue().isEmpty()) {
+//                System.out.println("  (No recipes available)");
+//            } else {
+//                for (GenerateMealPlanRecipeDto recipe : entry.getValue()) {
+//                    System.out.println("  - " + recipe.getTitle() + " (ID: " + recipe.getId() + ")");
+//                }
+//            }
+//        }
 
         System.out.println("===========================");
 
         // Update the ViewModel
-        viewModel.updateMealPlan(mealPlan);
-        System.out.println("Meal plan successfully set in ViewModel.");
+//        viewModel.updateMealPlan(mealPlan);
+//        System.out.println("Meal plan successfully set in ViewModel.");
 
         // Update the view state in the ViewManagerModel
-        ViewManagerState state = new ViewManagerState(viewModel.getViewName(), null); // Use null for context if no additional context is required
-        viewManager.setState(state);
-        System.out.println("View state updated in ViewManagerModel.");
+//        ViewManagerState state = new ViewManagerState(viewModel.getViewName(), null); // Use null for context if no additional context is required
+        final GenerateMealPlanState state = viewModel.getState(); //state is null
+        state.setMealPlan(mealPlan);
+        viewModel.firePropertyChanged();
     }
 
     /**

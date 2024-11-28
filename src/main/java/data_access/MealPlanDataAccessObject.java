@@ -18,7 +18,7 @@ import java.util.*;
  */
 public class MealPlanDataAccessObject implements GenerateMealPlanDataAccessInterface {
 
-    private static final String API_KEY = ""; // Replace with your actual API key
+    private static final String API_KEY = Constants.API_KEY;
     private static final String BASE_URL = "https://api.spoonacular.com/mealplanner/generate"; // Base URL for the Spoonacular API
     private final OkHttpClient client;
 
@@ -46,15 +46,17 @@ public class MealPlanDataAccessObject implements GenerateMealPlanDataAccessInter
         }
 
         // Build and execute the HTTP GET request
-        Request request = new Request.Builder().url(url).get().build();
+        final Request request = new Request.Builder().url(url).get().build();
 
-        try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) {
-                throw new IOException("Failed to fetch meal plan");
-            }
+        try {
+            final Response response = client.newCall(request).execute();
+
             // Parse and return the meal plan from the response JSON
-            JSONObject jsonResponse = new JSONObject(response.body().string());
+            final JSONObject jsonResponse = new JSONObject(response.body().string());
             return parseMealPlan(jsonResponse.getJSONObject("week"));
+        }
+        catch (IOException e) {
+            throw new IOException("Failed to fetch meal plan: " + e.getMessage());
         }
     }
 

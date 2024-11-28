@@ -1,6 +1,7 @@
 package view;
 
 import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanController;
+import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanState;
 import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanViewModel;
 import use_case.mealplan.generate_mealplan.GenerateMealPlanRecipeDto;
 
@@ -168,20 +169,26 @@ public class MealPlanView extends JPanel implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        switch (evt.getPropertyName()) {
-            case "mealPlan":
-                updateMealPlan((Map<LocalDate, List<GenerateMealPlanRecipeDto>>) evt.getNewValue());
-                break;
-            case "isLoading":
-                showLoadingSpinner((boolean) evt.getNewValue());
-                break;
-            case "errorMessage":
-                String errorMessage = (String) evt.getNewValue();
-                if (errorMessage != null && !errorMessage.isEmpty()) {
-                    JOptionPane.showMessageDialog(this, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                break;
+        if (evt.getNewValue() instanceof GenerateMealPlanState) {
+            final GenerateMealPlanState state = (GenerateMealPlanState) evt.getNewValue();
+            final Map<LocalDate, List<GenerateMealPlanRecipeDto>> mealPlanData = state.getMealPlan();
+            updateMealPlan(mealPlanData);
         }
+//        switch (evt.getPropertyName()) {
+//            case "mealPlan":
+//                final Map<LocalDate, List<GenerateMealPlanRecipeDto>> mealPlanData = (Map<LocalDate, List<GenerateMealPlanRecipeDto>>) evt.getNewValue();
+//                updateMealPlan(mealPlanData);
+//                break;
+//            case "isLoading":
+//                showLoadingSpinner((boolean) evt.getNewValue());
+//                break;
+//            case "errorMessage":
+//                String errorMessage = (String) evt.getNewValue();
+//                if (errorMessage != null && !errorMessage.isEmpty()) {
+//                    JOptionPane.showMessageDialog(this, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+//                }
+//                break;
+//        }
     }
 
     private void updateMealPlan(Map<LocalDate, List<GenerateMealPlanRecipeDto>> mealPlanData) {

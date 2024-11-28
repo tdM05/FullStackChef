@@ -19,6 +19,7 @@ public class GenerateMealPlanViewModel extends ViewModel<GenerateMealPlanState> 
 
     public GenerateMealPlanViewModel() {
         super("generate meal plan");
+        setState(new GenerateMealPlanState());
     }
 
     /**
