@@ -10,5 +10,5 @@ public interface UserFactory {
      * @param password the password of the new user
      * @return the new user
      */
-    CommonUser create(String username, String password);
+    User create(String username, String password);
 }
