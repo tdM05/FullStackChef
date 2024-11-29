@@ -1,0 +1,21 @@
+package entity.user_profile;
+
+/**
+ * Factory for creating users.
+ */
+public interface UserFactory {
+    /**
+     * Creates a new CommonUser.
+     * @param username the name of the new user
+     * @param password the password of the new user
+     * @return the new user
+     */
+    User create(String username, String password);
+
+    /**
+     * Creates a guest user.
+     *
+     * @return the guest user
+     */
+    User createGuest();
+}
