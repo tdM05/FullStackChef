@@ -1,6 +1,8 @@
 package interface_adapter.display_recipe;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.search.SearchState;
+import interface_adapter.search.SearchViewModel;
 import use_case.display_recipe.DisplayRecipeOutputBoundary;
 import use_case.display_recipe.DisplayRecipeOutputData;
 
@@ -12,11 +14,13 @@ import java.util.stream.Collectors;
  */
 public class DisplayRecipePresenter implements DisplayRecipeOutputBoundary {
 
-    private final ViewManagerModel viewManager;
+    private final ViewManagerModel viewManagerModel;
+    private final SearchViewModel searchViewModel;
     private final DisplayRecipeViewModel displayRecipeViewModel;
 
-    public DisplayRecipePresenter(ViewManagerModel viewManager, DisplayRecipeViewModel displayRecipeViewModel) {
-        this.viewManager = viewManager;
+    public DisplayRecipePresenter(ViewManagerModel viewManagerModel, SearchViewModel searchViewModel, DisplayRecipeViewModel displayRecipeViewModel) {
+        this.viewManagerModel = viewManagerModel;
+        this.searchViewModel = searchViewModel;
         this.displayRecipeViewModel = displayRecipeViewModel;
     }
 
@@ -41,12 +45,22 @@ public class DisplayRecipePresenter implements DisplayRecipeOutputBoundary {
                 instructionStrings
         );
 
-        // Switch the view state
-//        viewManager.setState(displayRecipeViewModel.getViewName());
+        final DisplayRecipeState displayRecipeState = displayRecipeViewModel.getState();
+        this.displayRecipeViewModel.setState(displayRecipeState);
+        this.displayRecipeViewModel.firePropertyChanged();
+
+        this.viewManagerModel.setState(displayRecipeViewModel.getViewName());
+        this.viewManagerModel.firePropertyChanged();
     }
 
     @Override
     public void prepareFailView(String errorMessage) {
         displayRecipeViewModel.updateWithError(errorMessage);
+    }
+
+    @Override
+    public void switchToSearchView() {
+        viewManagerModel.setState(searchViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
     }
 }
