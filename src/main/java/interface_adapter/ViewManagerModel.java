@@ -28,7 +28,7 @@ public class ViewManagerModel {
     public void setState(ViewManagerState state) {
         ViewManagerState oldState = this.currentState;
         this.currentState = state;
-        support.firePropertyChange("state", oldState, state);
+//        support.firePropertyChange("state", oldState, state);
     }
 
     /**

@@ -49,7 +49,7 @@ public class GroceryListDataAccessObject implements GroceryListDataAccessInterfa
     }
 
     @Override
-    public List<IngredientWithConvertedUnits> getAllIngredients(List<Integer> ids) {
+    public List<IngredientWithConvertedUnits> getAllIngredientsWithConvertedUnits(List<Integer> ids) {
         final List<IngredientWithConvertedUnits> res = new ArrayList<>();
         for (int id : ids) {
             final List<IngredientWithConvertedUnits> ingredient = getIngredientByRecipeId(id);
@@ -94,8 +94,6 @@ public class GroceryListDataAccessObject implements GroceryListDataAccessInterfa
 
     // This should already be implemented somewhere.
     private List<IngredientWithConvertedUnits> jsonToIngredients(JSONObject json) {
-        // This part maybe goes into json parser maybe not
-        // I've realized that it should only go into json parser if it is generic.
         // But this may be only used by this class.
         final List<IngredientWithConvertedUnits> res = new ArrayList<>();
         final JSONArray ingredients = json.getJSONArray("ingredients");
@@ -108,13 +106,16 @@ public class GroceryListDataAccessObject implements GroceryListDataAccessInterfa
             final String unit = amount.getString("unit");
             final float value = amount.getFloat("value");
             final IngredientWithConvertedUnits tmp = new CommonIngredientWithConvertedUnits(name, value, unit);
+            tmp.setConvertStatus(true);
+            tmp.setConvertedAmount(value);
+            tmp.setConvertedUnit(unit);
 
             // We need to convert the units to standard units grams.
-            final Pair<Measurable<Float>, Boolean> standardUnits = convertToStandardUnits(name, value, unit);
-
-            tmp.setConvertedAmount(standardUnits.getFirst().getNumber());
-            tmp.setConvertedUnit(standardUnits.getFirst().getUnit());
-            tmp.setConvertStatus(standardUnits.getSecond());
+//            final Pair<Measurable<Float>, Boolean> standardUnits = convertToStandardUnits(name, value, unit);
+//
+//            tmp.setConvertedAmount(standardUnits.getFirst().getNumber());
+//            tmp.setConvertedUnit(standardUnits.getFirst().getUnit());
+//            tmp.setConvertStatus(standardUnits.getSecond());
             res.add(tmp);
         }
         return res;

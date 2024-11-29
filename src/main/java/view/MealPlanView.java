@@ -1,8 +1,16 @@
 package view;
 
+import app.SessionManager;
+import data_access.Constants;
+import entity.User;
+import interface_adapter.ViewManagerModel;
+import interface_adapter.ViewManagerState;
 import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanController;
 import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanState;
 import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanViewModel;
+import interface_adapter.mealplan.update_meals.UpdateMealsController;
+import interface_adapter.mealplan.update_meals.UpdateMealsState;
+import interface_adapter.mealplan.update_meals.UpdateMealsViewModel;
 import use_case.mealplan.generate_mealplan.GenerateMealPlanRecipeDto;
 
 import javax.swing.*;
@@ -22,15 +30,25 @@ import java.util.Map;
 public class MealPlanView extends JPanel implements PropertyChangeListener {
 
     private final GenerateMealPlanViewModel viewModel;
+    private final UpdateMealsViewModel updateMealsViewModel;
+    private final ViewManagerModel viewManagerModel;
     private final JLabel loadingSpinner = new JLabel("Generating Your Meal Plan...", SwingConstants.CENTER);
     private final JPanel contentPanel = new JPanel(new GridLayout(1, 7, 5, 5)); // 7 columns for 7 days
     private final JLabel weekLabel = new JLabel("", SwingConstants.CENTER); // Displays the week range
     private GenerateMealPlanController controller;
+    private UpdateMealsController updateMealsController;
     private LocalDate startDate; // Tracks the current week's start date
+    private Map<LocalDate, List<GenerateMealPlanRecipeDto>> mealPlanData;
 
-    public MealPlanView(GenerateMealPlanViewModel viewModel) {
+    public MealPlanView(GenerateMealPlanViewModel viewModel,
+                        UpdateMealsViewModel updateMealsViewModel,
+                        ViewManagerModel viewManagerModel) {
+        this.viewManagerModel = viewManagerModel;
+        this.viewManagerModel.addPropertyChangeListener(this);
         this.viewModel = viewModel;
         this.viewModel.addPropertyChangeListener(this);
+        this.updateMealsViewModel = updateMealsViewModel;
+        this.updateMealsViewModel.addPropertyChangeListener(this);
         this.startDate = LocalDate.now().with(java.time.DayOfWeek.MONDAY); // Start from the current week's Monday
 
         setLayout(new BorderLayout());
@@ -60,20 +78,28 @@ public class MealPlanView extends JPanel implements PropertyChangeListener {
         // Navigation buttons with wide spacing and padding
         JPanel navigationPanel = new JPanel(new BorderLayout());
 
-        JButton previousButton = new JButton("Previous");
-        JButton nextButton = new JButton("Next");
+        JButton backButton = new JButton("Back");
+//        JButton previousButton = new JButton("Previous");
+//        JButton nextButton = new JButton("Next");
 
-        previousButton.addActionListener(e -> navigateToWeek(-1));
-        nextButton.addActionListener(e -> navigateToWeek(1));
+        backButton.addActionListener(evt -> {
+            final ViewManagerState state = new ViewManagerState(Constants.SEARCH_VIEW, null);
+            viewManagerModel.setState(state);
+            viewManagerModel.firePropertyChanged();
+        });
+
+//        previousButton.addActionListener(e -> navigateToWeek(-1));
+//        nextButton.addActionListener(e -> navigateToWeek(1));
 
         // Create panels to wrap buttons and add padding
         JPanel previousPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         previousPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0)); // Left padding
-        previousPanel.add(previousButton);
+        previousPanel.add(backButton);
+//        previousPanel.add(previousButton);
 
         JPanel nextPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         nextPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10)); // Right padding
-        nextPanel.add(nextButton);
+//        nextPanel.add(nextButton);
 
         // Add to navigationPanel
         navigationPanel.add(previousPanel, BorderLayout.WEST);
@@ -81,11 +107,16 @@ public class MealPlanView extends JPanel implements PropertyChangeListener {
 
         bottomPanel.add(navigationPanel, BorderLayout.NORTH);
 
-
         // Action buttons
         JPanel actionPanel = new JPanel();
         JButton generateGroceryListButton = new JButton("Generate Grocery List");
         JButton generateMealPlanButton = new JButton("Generate Meal Plan");
+
+        generateGroceryListButton.addActionListener(e -> {
+            final ViewManagerState state = new ViewManagerState(Constants.GROCERY_LIST_VIEW, null);
+            viewManagerModel.setState(state);
+            viewManagerModel.firePropertyChanged();
+        });
         generateMealPlanButton.addActionListener(e -> showGenerateMealPlanPopup());
         actionPanel.add(generateGroceryListButton);
         actionPanel.add(generateMealPlanButton);
@@ -95,6 +126,7 @@ public class MealPlanView extends JPanel implements PropertyChangeListener {
 
         // Initialize default view with empty day panels
         initializeEmptyPanels();
+
     }
 
     /**
@@ -129,6 +161,7 @@ public class MealPlanView extends JPanel implements PropertyChangeListener {
         startDate = startDate.plusWeeks(weeksOffset);
         updateWeekLabel();
         initializeEmptyPanels();
+        updateMealPlan(mealPlanData);
     }
 
     /**
@@ -172,7 +205,30 @@ public class MealPlanView extends JPanel implements PropertyChangeListener {
         if (evt.getNewValue() instanceof GenerateMealPlanState) {
             final GenerateMealPlanState state = (GenerateMealPlanState) evt.getNewValue();
             final Map<LocalDate, List<GenerateMealPlanRecipeDto>> mealPlanData = state.getMealPlan();
+            this.mealPlanData = mealPlanData;
             updateMealPlan(mealPlanData);
+        }
+        if (evt.getNewValue() instanceof UpdateMealsState) {
+            final UpdateMealsState state = (UpdateMealsState) evt.getNewValue();
+            final Map<LocalDate, List<GenerateMealPlanRecipeDto>> mealPlanData = state.getMealPlan();
+            this.mealPlanData = mealPlanData;
+            updateMealPlan(mealPlanData);
+        }
+        // if page switched to this then we update the meal plan
+        if (evt.getNewValue() instanceof ViewManagerState) {
+            // we only care if it switched to this view
+            final ViewManagerState state = (ViewManagerState) evt.getNewValue();
+            if (!state.getViewName().equals(Constants.MEAL_PLAN_VIEW)) {
+                return;
+            }
+            // test that we are not in this page
+            // fetch meal plan data
+            final SessionManager sessionManager = SessionManager.getInstance();
+            final User user = sessionManager.getCurrentUser();
+            user.getMealIds();
+
+            updateMealsController.execute(user);
+
         }
 //        switch (evt.getPropertyName()) {
 //            case "mealPlan":
@@ -238,20 +294,21 @@ public class MealPlanView extends JPanel implements PropertyChangeListener {
         contentPanel.setVisible(!show);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            GenerateMealPlanViewModel viewModel = new GenerateMealPlanViewModel();
-            MealPlanView mealPlanView = new MealPlanView(viewModel);
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> {
+//            GenerateMealPlanViewModel viewModel = new GenerateMealPlanViewModel();
+//            MealPlanView mealPlanView = new MealPlanView(viewModel);
+//
+//            JFrame frame = new JFrame("Meal Plan Viewer");
+//            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//            frame.setSize(1200, 800);
+//            frame.add(mealPlanView);
+//            frame.setVisible(true);
+//        });
+//    }
 
-            JFrame frame = new JFrame("Meal Plan Viewer");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(1200, 800);
-            frame.add(mealPlanView);
-            frame.setVisible(true);
-        });
-    }
-
-    public void setMealPlanController(GenerateMealPlanController controller) {
+    public void setMealPlanController(GenerateMealPlanController controller, UpdateMealsController updateMealsController) {
         this.controller = controller;
+        this.updateMealsController = updateMealsController;
     }
 }

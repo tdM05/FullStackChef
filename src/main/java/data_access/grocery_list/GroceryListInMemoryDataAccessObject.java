@@ -16,7 +16,9 @@ public class GroceryListInMemoryDataAccessObject implements GroceryListDataAcces
     public GroceryListInMemoryDataAccessObject() {
         // This is default dummy data
         ingredients = new ArrayList<>();
-        ingredients.add(new CommonIngredientWithConvertedUnits("name1", 1f, "grams"));
+        for (int i = 0; i < 100; i++) {
+            ingredients.add(new CommonIngredientWithConvertedUnits("name" + i, i, "grams"));
+        }
     }
 
     public GroceryListInMemoryDataAccessObject(List<IngredientWithConvertedUnits> ingredients) {
@@ -30,7 +32,7 @@ public class GroceryListInMemoryDataAccessObject implements GroceryListDataAcces
     }
 
     @Override
-    public List<IngredientWithConvertedUnits> getAllIngredients(List<Integer> ids) {
+    public List<IngredientWithConvertedUnits> getAllIngredientsWithConvertedUnits(List<Integer> ids) {
         return ingredients;
     }
 }

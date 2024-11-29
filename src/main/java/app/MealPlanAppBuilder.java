@@ -3,14 +3,22 @@ package app;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
+import data_access.UpdateMealsDataAccessObject;
 import data_access.UserProfile.UserProfileDao;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanController;
 import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanPresenter;
 import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanViewModel;
+import interface_adapter.mealplan.update_meals.UpdateMealsController;
+import interface_adapter.mealplan.update_meals.UpdateMealsPresenter;
+import interface_adapter.mealplan.update_meals.UpdateMealsViewModel;
 import use_case.mealplan.generate_mealplan.GenerateMealPlanDataAccessInterface;
 import use_case.mealplan.generate_mealplan.GenerateMealPlanInteractor;
 import use_case.mealplan.generate_mealplan.GenerateMealPlanOutputBoundary;
+import use_case.mealplan.update_meals.UpdateMealsDataAccessInterface;
+import use_case.mealplan.update_meals.UpdateMealsInputBoundary;
+import use_case.mealplan.update_meals.UpdateMealsInteractor;
+import use_case.mealplan.update_meals.UpdateMealsOutputBoundary;
 import use_case.set_meals.StoreMealInputBoundary;
 import use_case.set_meals.StoreMealInteractor;
 import view.MealPlanView;
@@ -45,7 +53,7 @@ public class MealPlanAppBuilder {
      *
      * @return this builder
      */
-    public MealPlanAppBuilder addMealPlanUseCase() {
+    public MealPlanAppBuilder addMealPlanUseCase(UpdateMealsViewModel updateMealsViewModel) {
         final GenerateMealPlanOutputBoundary outputBoundary =
                 new GenerateMealPlanPresenter(viewManagerModel, mealPlanViewModel);
         // add the set meal use case
@@ -57,7 +65,14 @@ public class MealPlanAppBuilder {
         if (mealPlanView == null) {
             throw new RuntimeException("addMealPlanView must be called before addMealPlanUseCase");
         }
-        mealPlanView.setMealPlanController(controller);
+        // add the updateMeals controller
+        // TODO refactor this to be its own builder
+        final UpdateMealsDataAccessInterface updateMealsDataAccess = new UpdateMealsDataAccessObject();
+        final UpdateMealsOutputBoundary updateMealsPresenter = new UpdateMealsPresenter(updateMealsViewModel);
+        final UpdateMealsInputBoundary updateMealsInteractor = new UpdateMealsInteractor(updateMealsPresenter,
+                updateMealsDataAccess);
+        final UpdateMealsController updateMealsController = new UpdateMealsController(updateMealsInteractor);
+        mealPlanView.setMealPlanController(controller, updateMealsController);
         return this;
     }
 
@@ -66,10 +81,12 @@ public class MealPlanAppBuilder {
      * @param currentViewManagerModel the ViewManagerModel to use
      * @return this builder
      */
-    public MealPlanAppBuilder addMealPlanView(ViewManagerModel currentViewManagerModel) {
+    public MealPlanAppBuilder addMealPlanView(ViewManagerModel currentViewManagerModel,
+                                              UpdateMealsViewModel updateMealsViewModel) {
         viewManagerModel = currentViewManagerModel;
         mealPlanViewModel = new GenerateMealPlanViewModel();
-        mealPlanView = new MealPlanView(mealPlanViewModel);
+        // TODO refactor this in a builder
+        mealPlanView = new MealPlanView(mealPlanViewModel, updateMealsViewModel, viewManagerModel);
         return this;
     }
 

@@ -9,6 +9,7 @@ import data_access.UserProfile.UserProfileDao;
 import data_access.grocery_list.GroceryListDataAccessObject;
 import data_access.grocery_list.GroceryListInMemoryDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.mealplan.update_meals.UpdateMealsViewModel;
 import use_case.favorite_recipe.FavoriteRecipeDataAccessInterface;
 import use_case.grocery_list.GroceryListDataAccessInterface;
 import use_case.mealplan.generate_mealplan.GenerateMealPlanDataAccessInterface;
@@ -64,7 +65,7 @@ public class SearchRecipeApplication {
 
         // We need to add things in this order
         final GroceryListAppBuilder groceryListBuilder = new GroceryListAppBuilder();
-        groceryListBuilder.addGroceryListDAO(new GroceryListDataAccessObject())
+        groceryListBuilder.addGroceryListDAO(groceryListDAO)
                 .addGroceryListView(viewManagerModel)
                 .addGroceryListUseCase();
 
@@ -73,10 +74,11 @@ public class SearchRecipeApplication {
                 .addFavoriteRecipeView(viewManagerModel)
                 .addFavoriteRecipeUseCase();
 
+        final UpdateMealsViewModel updateMealsViewModel = new UpdateMealsViewModel();
         final MealPlanAppBuilder mealPlanBuilder = new MealPlanAppBuilder();
         mealPlanBuilder.addMealPlanDAO(new MealPlanDataAccessObject())
-                .addMealPlanView(viewManagerModel)
-                .addMealPlanUseCase();
+                .addMealPlanView(viewManagerModel, updateMealsViewModel)
+                .addMealPlanUseCase(updateMealsViewModel);
 
         final LoginAppBuilder loginBuilder = new LoginAppBuilder();
         loginBuilder.addLoginDAO(userProfileDao)

@@ -14,7 +14,8 @@ public interface GroceryListDataAccessInterface {
      * @param ids The list of recipe IDs.
      * @return The list of ingredients.
      */
-    List<IngredientWithConvertedUnits> getAllIngredients(List<Integer> ids);
+    List<IngredientWithConvertedUnits> getAllIngredientsWithConvertedUnits(List<Integer> ids);
+
 
     /**
      * Get all recipe IDs for this week.

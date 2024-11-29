@@ -72,11 +72,18 @@ public class GroceryListView extends JPanel implements PropertyChangeListener {
         this.add(returnButton);
         this.groceryList.clear();
 
+        final JPanel listPanel = new JPanel();
+        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         for (String item : state.getList()) {
             final JLabel label = new JLabel(item);
             this.groceryList.add(label);
-            this.add(label);
+            listPanel.add(label);
         }
+
+        final JScrollPane scrollPane = new JScrollPane(listPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        this.add(scrollPane);
 
         this.revalidate();
         this.repaint();

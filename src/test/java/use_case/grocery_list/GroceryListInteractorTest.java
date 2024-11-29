@@ -41,7 +41,7 @@ public class GroceryListInteractorTest {
         ingredients.add(i1);
         GroceryListDataAccessInterface dao = new GroceryListDataAccessInterface() {
             @Override
-            public List<IngredientWithConvertedUnits> getAllIngredients(List<Integer> ids) {
+            public List<IngredientWithConvertedUnits> getAllIngredientsWithConvertedUnits(List<Integer> ids) {
                 return List.of();
             }
 

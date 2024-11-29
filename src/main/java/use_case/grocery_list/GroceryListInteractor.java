@@ -1,9 +1,7 @@
 package use_case.grocery_list;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import app.SessionManager;
 import data_access.grocery_list.GroceryListException;
@@ -35,7 +33,7 @@ public class GroceryListInteractor implements GroceryListInputBoundary {
             // Get recipe ids from the profile api
             final List<Integer> recipeIds = dataAccess.getAllRecipeIds();
             // Get ingredients from the recipe ids
-            final List<IngredientWithConvertedUnits> ingredients = dataAccess.getAllIngredients(recipeIds);
+            final List<IngredientWithConvertedUnits> ingredients = dataAccess.getAllIngredientsWithConvertedUnits(recipeIds);
             // Convert ingredients to strings
             final List<String> ingredientStrings = ingredientsToStrings(ingredients);
 

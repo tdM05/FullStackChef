@@ -13,12 +13,12 @@ import static org.junit.Assert.*;
 public class GroceryListDataAccessObjectTest {
 
     @Test
-    public void getAllIngredientsWithOneID() {
+    public void getAllIngredientsWithConvertedUnitsWithOneID() {
         List<Integer> input = new ArrayList<>();
         input.add(716429);
         GroceryListDataAccessObject groceryListDataAccessObject = new GroceryListDataAccessObject();
 
-        List<IngredientWithConvertedUnits> res = groceryListDataAccessObject.getAllIngredients(input);
+        List<IngredientWithConvertedUnits> res = groceryListDataAccessObject.getAllIngredientsWithConvertedUnits(input);
         assert res.get(0).getName().equals("butter");
     }
 
