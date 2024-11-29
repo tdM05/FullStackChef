@@ -23,9 +23,8 @@ public class MainApp {
                                             .addLoginUseCase()
                                             .addSearchUseCase()
                                             .addDisplayRecipeUseCase()
-                                            //.addCheckFavoriteUseCase()
+                                            .addCheckFavoriteUseCase()
                                             .build();
-
         application.setVisible(true);
         }
 }

@@ -179,7 +179,6 @@ public class MainAppBuilder {
      * Adds the DisplayRecipe Use Case to the application.
      * @return this AppBuilder
      */
-
     public MainAppBuilder addDisplayRecipeUseCase() {
         final DisplayRecipeOutputBoundary displayRecipeOutputBoundary = new DisplayRecipePresenter(viewManagerModel, searchViewModel, displayRecipeViewModel);
         final DisplayRecipeInputBoundary displayRecipeInteractor = new DisplayRecipeInteractor(recipeDataAccessObject, displayRecipeOutputBoundary);
@@ -194,7 +193,6 @@ public class MainAppBuilder {
      * Adds the CheckFavorite Use Case to the application.
      * @return this AppBuilder
      */
-/*
     public MainAppBuilder addCheckFavoriteUseCase() {
         final CheckFavoriteOutputBoundary checkFavoriteOutputBoundary = new CheckFavoritePresenter(viewManagerModel, searchViewModel, displayRecipeViewModel);
         final CheckFavoriteInputBoundary checkFavoriteInteractor = new CheckFavoriteInteractor(favoriteDataAccessObject, checkFavoriteOutputBoundary);
@@ -203,8 +201,11 @@ public class MainAppBuilder {
         searchView.setCheckFavoriteController(checkFavoriteController);
         return this;
     }
-*/
 
+    /**
+     * Adds the Favorite Use Case to the application.
+     * @return this AppBuilder
+     */
 
 
     /**

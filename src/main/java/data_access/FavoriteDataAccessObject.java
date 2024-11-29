@@ -14,12 +14,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import use_case.check_favorite.CheckFavoriteDataAccessInterface;
 import use_case.favorite.FavoriteDataAccessInterface;
 
 /**
  * The DAO for accessing favorite recipes stored in the database.
  */
-public class FavoriteDataAccessObject implements FavoriteDataAccessInterface {
+public class FavoriteDataAccessObject implements CheckFavoriteDataAccessInterface, FavoriteDataAccessInterface {
     private static final int SUCCESS_CODE = 200;
     private static final int CREDENTIAL_ERROR = 401;
     private static final String CONTENT_TYPE_LABEL = "Content-Type";
@@ -38,10 +39,19 @@ public class FavoriteDataAccessObject implements FavoriteDataAccessInterface {
         this.client = new OkHttpClient();
     }
 
+    /**
+     * Constructs a new RecipeDataAccessObject with a provided OkHttpClient.
+     * Useful for injecting mock clients during testing.
+     *
+     * @param client the OkHttpClient to use for API requests
+     */
+    public FavoriteDataAccessObject(OkHttpClient client) {
+        this.client = client;
+    }
+
     @Override
     public List<Integer> getFavorites(User user) throws FavoriteException {
         final String username = user.getName();
-        final OkHttpClient client = new OkHttpClient().newBuilder().build();
 
         final Request request = new Request.Builder()
                 .url(String.format("http://vm003.teach.cs.toronto.edu:20112/user?username=%s", username))
