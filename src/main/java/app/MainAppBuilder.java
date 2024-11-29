@@ -3,6 +3,7 @@ package app;
 import data_access.DBUserDataAccessObject;
 import data_access.FavoriteDataAccessObject;
 import data_access.RecipeDataAccessObject;
+import data_access.grocery_list.GroceryListDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
@@ -12,6 +13,9 @@ import interface_adapter.display_favorites.DisplayFavoriteViewModel;
 import interface_adapter.display_recipe.DisplayRecipeController;
 import interface_adapter.display_recipe.DisplayRecipePresenter;
 import interface_adapter.display_recipe.DisplayRecipeViewModel;
+import interface_adapter.grocery_list.GroceryListController;
+import interface_adapter.grocery_list.GroceryListPresenter;
+import interface_adapter.grocery_list.GroceryListViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
@@ -27,6 +31,7 @@ import use_case.check_favorite.CheckFavoriteOutputBoundary;
 import use_case.display_recipe.DisplayRecipeInputBoundary;
 import use_case.display_recipe.DisplayRecipeInteractor;
 import use_case.display_recipe.DisplayRecipeOutputBoundary;
+import use_case.grocery_list.*;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -58,6 +63,7 @@ public class MainAppBuilder {
     private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final RecipeDataAccessObject recipeDataAccessObject = new RecipeDataAccessObject();
     private final FavoriteDataAccessObject favoriteDataAccessObject = new FavoriteDataAccessObject();
+    private final GroceryListDataAccessInterface groceryListDataAccessObject = new GroceryListDataAccessObject();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -69,6 +75,8 @@ public class MainAppBuilder {
     private DisplayRecipeViewModel displayRecipeViewModel;
     private DisplayFavoriteView displayFavoriteView;
     private DisplayFavoriteViewModel displayFavoriteViewModel;
+    private GroceryListView groceryListView;
+    private GroceryListViewModel groceryListViewModel;
 
     public MainAppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -132,6 +140,12 @@ public class MainAppBuilder {
         return this;
     }
 
+    public MainAppBuilder addGroceryListView() {
+        groceryListViewModel = new GroceryListViewModel();
+        groceryListView = new GroceryListView(groceryListViewModel);
+        cardPanel.add(groceryListView, groceryListView.getViewName());
+        return this;
+    }
     /**
      * Adds the Signup Use Case to the application.
      * @return this AppBuilder
@@ -207,6 +221,16 @@ public class MainAppBuilder {
      * @return this AppBuilder
      */
 
+    public MainAppBuilder addGroceryListUseCase() {
+        final GroceryListOutputBoundary groceryListOutputBoundary = new GroceryListPresenter(viewManagerModel, searchViewModel, groceryListViewModel);
+
+        final GroceryListInputBoundary groceryListInteractor = new GroceryListInteractor(groceryListDataAccessObject, groceryListOutputBoundary);
+
+        final GroceryListController groceryListController = new GroceryListController(groceryListInteractor);
+        searchView.setGroceryListController(groceryListController);
+        groceryListView.setController(groceryListController);
+        return this;
+    }
 
     /**
      * Builds the application.

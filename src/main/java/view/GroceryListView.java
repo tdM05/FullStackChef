@@ -18,9 +18,8 @@ import java.util.List;
  * The View for the grocery list.
  */
 public class GroceryListView extends JPanel implements PropertyChangeListener {
-    private final String viewName = "grocery list";
+    private final String viewName = Constants.GROCERY_LIST_VIEW;
     private final GroceryListViewModel groceryListViewModel;
-    private final ViewManagerModel viewManagerModel;
 
     private final JButton returnButton;
     private final List<JLabel> groceryList;
@@ -30,15 +29,11 @@ public class GroceryListView extends JPanel implements PropertyChangeListener {
 
     /**
      * Creates a new GroceryListView.
-     * @param viewManagerModel The view manager model.
-     * @param groceryListViewModel The view model for the grocery list.
+     *@param groceryListViewModel The view model for the grocery list.
      */
-    public GroceryListView(GroceryListViewModel groceryListViewModel,
-                           ViewManagerModel viewManagerModel) {
+    public GroceryListView(GroceryListViewModel groceryListViewModel) {
         this.groceryListViewModel = groceryListViewModel;
         this.groceryListViewModel.addPropertyChangeListener(this);
-        this.viewManagerModel = viewManagerModel;
-        this.viewManagerModel.addPropertyChangeListener(this);
         this.returnButton = new JButton("Return");
 /*        returnButton.addActionListener(evt -> {
             System.out.println("Return button pressed");
@@ -82,6 +77,9 @@ public class GroceryListView extends JPanel implements PropertyChangeListener {
         this.repaint();
     }
 
+    public String getViewName() {
+        return viewName;
+    }
     public void setController(GroceryListController controller) {
         this.controller = controller;
     }
