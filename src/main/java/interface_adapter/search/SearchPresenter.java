@@ -2,7 +2,6 @@ package interface_adapter.search;
 
 import java.util.List;
 
-import interface_adapter.ViewManagerModel;
 import use_case.search.SearchOutputBoundary;
 import use_case.search.SearchOutputData;
 
@@ -27,10 +26,6 @@ public class SearchPresenter implements SearchOutputBoundary {
         // On success, update the view model with the search results.
         searchViewModel.setRecipes(outputDataList);
         searchViewModel.firePropertyChanged("recipes");
-
-        // Optionally, switch the view to show the search results.
-//        viewManagerModel.setState("SearchResultsView");
-//        viewManagerModel.firePropertyChanged();
     }
 
     /**

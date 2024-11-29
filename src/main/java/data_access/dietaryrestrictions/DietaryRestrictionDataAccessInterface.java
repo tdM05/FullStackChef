@@ -1,6 +1,6 @@
 package data_access;
 
-import entity.DietaryRestriction;
+import entity.CommonDietaryRestriction;
 import java.io.IOException;
 
 /**
@@ -10,10 +10,10 @@ public interface DietaryRestrictionDataAccessInterface {
     /**
      * Saves the dietary restrictions for a user.
      *
-     * @param dietaryRestriction the dietary restrictions to save
+     * @param commonDietaryRestriction the dietary restrictions to save
      * @throws IOException if saving fails
      */
-    void saveDietaryRestrictions(DietaryRestriction dietaryRestriction) throws IOException;
+    void saveDietaryRestrictions(CommonDietaryRestriction commonDietaryRestriction) throws IOException;
 
     /**
      * Loads the dietary restrictions for a user.
@@ -21,5 +21,5 @@ public interface DietaryRestrictionDataAccessInterface {
      * @return the dietary restrictions
      * @throws IOException if loading fails
      */
-    DietaryRestriction loadDietaryRestrictions() throws IOException;
+    CommonDietaryRestriction loadDietaryRestrictions() throws IOException;
 }

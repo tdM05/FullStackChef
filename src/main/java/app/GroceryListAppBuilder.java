@@ -76,7 +76,7 @@ public class GroceryListAppBuilder {
         final JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setTitle("Grocery List");
-        frame.setSize(Constants.WIDTH, Constants.HEIGHT);
+        frame.setSize(1200, 800);
 
         frame.add(groceryListView);
         return frame;

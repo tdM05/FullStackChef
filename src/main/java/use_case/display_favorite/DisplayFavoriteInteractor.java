@@ -1,7 +1,7 @@
 package use_case.display_favorite;
 
-
 import app.SessionUser;
+import entity.CommonUser;
 import entity.Recipe;
 import entity.User;
 
@@ -17,7 +17,8 @@ public class DisplayFavoriteInteractor implements DisplayFavoriteInputBoundary {
     private final DisplayFavoriteOutputBoundary presenter;
 
     // The user is stored in the session.
-    private final User user = SessionUser.getInstance().getUser();
+    //private final User user = SessionUser.getInstance().getUser();
+    private final User user = new CommonUser("jonathan_calver2", "abc123");
 
     public DisplayFavoriteInteractor(DisplayFavoriteDataAccessInterface dataAccess,
                                      DisplayFavoriteOutputBoundary presenter) {

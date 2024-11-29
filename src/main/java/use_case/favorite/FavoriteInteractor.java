@@ -12,8 +12,8 @@ public class FavoriteInteractor implements FavoriteInputBoundary {
     private final FavoriteDataAccessInterface dataAccess;
     private final FavoriteOutputBoundary presenter;
 
-    // The user is stored in the session.
     private final User user = SessionUser.getInstance().getUser();
+
 
     public FavoriteInteractor(FavoriteDataAccessInterface dataAccess,
                               FavoriteOutputBoundary presenter) {
@@ -31,7 +31,7 @@ public class FavoriteInteractor implements FavoriteInputBoundary {
             favorites.add(favoriteInputData.getRecipeId());
         }
 
-        dataAccess.saveFavorites(user);
+        dataAccess.saveFavorites(user, favorites);
 
         final FavoriteOutputData outputData = new FavoriteOutputData(favorites.contains(favoriteInputData.getRecipeId()));
         presenter.prepareSuccessView(outputData);

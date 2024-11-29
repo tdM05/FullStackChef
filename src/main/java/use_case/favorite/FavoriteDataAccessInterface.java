@@ -21,6 +21,6 @@ public interface FavoriteDataAccessInterface {
      *
      * @param user the user whose favorite recipes are to be saved
      */
-    void saveFavorites(User user);
+    void saveFavorites(User user, List<Integer> favorites);
 
 }

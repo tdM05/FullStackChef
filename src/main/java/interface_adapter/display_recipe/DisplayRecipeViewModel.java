@@ -12,6 +12,7 @@ public class DisplayRecipeViewModel extends ViewModel<DisplayRecipeState> {
     private String imageUrl;
     private List<String> ingredients;
     private List<String> instructions;
+    private boolean isFavorite;
     private String errorMessage;
 
     public DisplayRecipeViewModel() {
@@ -29,6 +30,12 @@ public class DisplayRecipeViewModel extends ViewModel<DisplayRecipeState> {
         firePropertyChanged("state");
     }
 
+    public void updateFavoriteStatus(boolean isFavorite) {
+        this.isFavorite = isFavorite;
+
+        firePropertyChanged("state");
+    }
+
     public void updateWithError(String errorMessage) {
         this.errorMessage = errorMessage;
 
@@ -40,5 +47,7 @@ public class DisplayRecipeViewModel extends ViewModel<DisplayRecipeState> {
     public String getImageUrl() { return imageUrl; }
     public List<String> getIngredients() { return ingredients; }
     public List<String> getInstructions() { return instructions; }
+    public boolean getIsFavorite() { return isFavorite; }
     public String getErrorMessage() { return errorMessage; }
+
 }

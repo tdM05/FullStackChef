@@ -12,7 +12,6 @@ public class CheckFavoriteInteractor implements CheckFavoriteInputBoundary {
     private final CheckFavoriteDataAccessInterface dataAccess;
     private final CheckFavoriteOutputBoundary presenter;
 
-    // The user is stored in the session.
     private final User user = SessionUser.getInstance().getUser();
 
     public CheckFavoriteInteractor(CheckFavoriteDataAccessInterface dataAccess, CheckFavoriteOutputBoundary presenter) {

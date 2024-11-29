@@ -8,29 +8,20 @@ import use_case.favorite.FavoriteInputData;
  * It receives user actions and interacts with the use case layer.
  */
 public class FavoriteController {
-    private final FavoriteInputBoundary favoriteInputBoundary;
+    private final FavoriteInputBoundary favoriteInteractor;
 
-    public FavoriteController(FavoriteInputBoundary favoriteInputBoundary){
-        this.favoriteInputBoundary = favoriteInputBoundary;
+    public FavoriteController(FavoriteInputBoundary favoriteInputBoundary) {
+        this.favoriteInteractor = favoriteInputBoundary;
     }
 
     /**
      * Handles the action of adding or removing a recipe from favorites.
      * @param recipeId the ID of the recipe
      */
-    public void executeFavoriteAction(int recipeId){
+    public void execute(int recipeId){
         final FavoriteInputData favoriteInputData = new FavoriteInputData(recipeId);
-        favoriteInputBoundary.executeFavoriteAction(favoriteInputData);
+        favoriteInteractor.execute(favoriteInputData);
     }
 
-    /**
-     * Handles the action of checking if a recipe is a favorite.
-     *
-     * @param recipeId the ID of the recipe
-     */
-    public void executeIsFavorite(int recipeId){
-        final FavoriteInputData favoriteInputData = new FavoriteInputData(recipeId);
-        favoriteInputBoundary.executeIsFavorite(favoriteInputData);
-    }
 
 }

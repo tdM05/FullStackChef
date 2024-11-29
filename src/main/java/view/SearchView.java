@@ -1,6 +1,10 @@
 package view;
 
+import entity.CommonRecipe;
+import entity.Recipe;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.check_favorite.CheckFavoriteController;
+import interface_adapter.display_recipe.DisplayRecipeController;
 import interface_adapter.search.SearchViewModel;
 import interface_adapter.search.SearchController;
 
@@ -10,6 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,7 +24,10 @@ public class SearchView extends JPanel {
 
     private final String viewName = "searchView";
     private final SearchViewModel searchViewModel;
-    private SearchController controller;
+
+    private SearchController searchController;
+    private DisplayRecipeController displayRecipeController;
+    private CheckFavoriteController checkFavoriteController;
 
     private JPanel topPanel;
     private JPanel centerPanel;
@@ -75,9 +83,9 @@ public class SearchView extends JPanel {
     }
 
     private void onSearch() {
-        if (controller != null) {
+        if (searchController != null) {
             String query = searchBar.getText();
-            controller.execute(query);
+            searchController.execute(query);
         }
     }
 
@@ -106,9 +114,16 @@ public class SearchView extends JPanel {
         displayRecipes(recipes);
     }
 
-    private void displayRecipes(List<SearchOutputData> recipes) {
+    private void displayRecipes(List<SearchOutputData> outputData) {
         // Remove all existing components from the center panel
         centerPanel.removeAll();
+
+        List<Recipe> recipes = new ArrayList<>();
+
+        for (SearchOutputData data : outputData) {
+            Recipe recipe = new CommonRecipe(data.getRecipeId(),data.getRecipeName(), data.getImageUrl(),null,null,null, null, false);
+            recipes.add(recipe);
+        }
 
         // Create a new panel for the top search bar
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -121,7 +136,7 @@ public class SearchView extends JPanel {
         topPanel.add(searchPanel, BorderLayout.CENTER);
 
         // Create the recipes panel
-        RecipePanel recipesPanel = new RecipePanel(recipes, viewManagerModel);
+        RecipePanel recipesPanel = new RecipePanel(recipes,displayRecipeController,viewName);
 
         // Add the recipes panel to the center panel
         centerPanel.setLayout(new BorderLayout());
@@ -132,11 +147,19 @@ public class SearchView extends JPanel {
         repaint();
     }
 
-    public void setSearchController(SearchController controller) {
-        this.controller = controller;
-    }
-
     public String getViewName() {
         return viewName;
+    }
+
+    public void setSearchController(SearchController controller) {
+        this.searchController = controller;
+    }
+
+    public void setDisplayRecipeController(DisplayRecipeController displayRecipeController) {
+        this.displayRecipeController = displayRecipeController;
+    }
+
+    public void setCheckFavoriteController(CheckFavoriteController checkFavoriteController) {
+        this.checkFavoriteController = checkFavoriteController;
     }
 }
