@@ -2,7 +2,6 @@ package view;
 
 import data_access.Constants;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.ViewManagerState;
 import interface_adapter.display_recipe.DisplayRecipeController;
 import interface_adapter.display_recipe.DisplayRecipeViewModel;
 
@@ -16,22 +15,22 @@ import java.net.URL;
 
 public class DisplayRecipeView extends JPanel implements PropertyChangeListener {
 
+    private final String viewName = "displayRecipeView";
+
     private DisplayRecipeController controller;
     private final JLabel recipeTitleLabel = new JLabel();
     private final JLabel recipeImageLabel = new JLabel();
     private final JTextArea ingredientsArea = new JTextArea(10, 30);
     private final JTextArea instructionsArea = new JTextArea(10, 30);
     private final JLabel errorLabel = new JLabel();
-    private ViewManagerModel viewManagerModel;
+    private final DisplayRecipeViewModel displayRecipeViewModel;
 
     private FavoriteButton favoriteButton;
 
-    public DisplayRecipeView(DisplayRecipeViewModel viewModel,
-                             ViewManagerModel viewManagerModel) {
-        this.viewManagerModel = viewManagerModel;
-        viewManagerModel.addPropertyChangeListener(this);
+    public DisplayRecipeView(DisplayRecipeViewModel displayRecipeViewModel) {
+        this.displayRecipeViewModel = displayRecipeViewModel;
 
-        viewModel.addPropertyChangeListener(this);
+        displayRecipeViewModel.addPropertyChangeListener(this);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         recipeTitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         recipeImageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -70,14 +69,12 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
         add(backButton);
 
         backButton.addActionListener(e -> {
-            // This causes the view to switch to the main page
-            ViewManagerState state = new ViewManagerState(Constants.SEARCH_VIEW, null);
-            viewManagerModel.setState(state);
-            viewManagerModel.firePropertyChanged();
+                controller.switchToSearchView();
+
         });
     }
 
-    public void setRecipeController(DisplayRecipeController controller) {
+    public void setDisplayRecipeController(DisplayRecipeController controller) {
         this.controller = controller;
     }
 
@@ -85,14 +82,6 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getSource() instanceof DisplayRecipeViewModel) {
             updateView((DisplayRecipeViewModel) evt.getSource());
-        }
-        if (evt.getNewValue() instanceof ViewManagerState) {
-            final ViewManagerState state = (ViewManagerState) evt.getNewValue();
-            if (state.getViewName().equals(Constants.DISPLAY_RECIPE_VIEW)) {
-                // context must be an integer
-                final int ctx = (int) state.getContext();
-                loadRecipeDetails(ctx);
-            }
         }
 
     }
@@ -123,10 +112,13 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
         errorLabel.setText(viewModel.getErrorMessage() != null ? viewModel.getErrorMessage() : "");
     }
 
-
     public void loadRecipeDetails(int recipeId) {
         if (controller != null) {
             controller.execute(recipeId);
         }
+    }
+
+    public String getViewName() {
+        return viewName;
     }
 }

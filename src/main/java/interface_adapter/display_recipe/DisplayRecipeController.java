@@ -25,4 +25,11 @@ public class DisplayRecipeController {
         // 2. Tell the Interactor to execute.
         displayRecipeUseCaseInteractor.execute(inputData);
     }
+
+    /**
+     * Executes the "switch to SearchView" Use Case.
+     */
+    public void switchToSearchView() {
+        displayRecipeUseCaseInteractor.switchToSearchView();
+    }
 }
