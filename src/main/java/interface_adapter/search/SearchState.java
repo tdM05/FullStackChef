@@ -12,7 +12,6 @@ public class SearchState {
     private List<SearchOutputData> recipeSearch;
     private String error;
 
-
     public SearchState() {
     }
     public List<SearchOutputData> getRecipe() {

@@ -1,10 +1,9 @@
 package view;
 
-import data_access.dietaryrestrictions.DietaryRestrictionDataAccessObject;
-import data_access.Constants;
-import entity.DietaryRestriction;
+//import data_access.dietaryrestrictions.DietaryRestrictionDataAccessObject;
+import entity.CommonDietaryRestriction;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.ViewManagerState;
+//import interface_adapter.ViewManagerState;
 import interface_adapter.dietaryrestrictions.DietaryRestrictionController;
 import use_case.dietaryrestrictions.DietaryRestrictionInteractor;
 import interface_adapter.dietaryrestrictions.DietaryRestrictionPresenter;
@@ -47,7 +46,7 @@ public class Profile extends JPanel {
         JMenuItem profileButton = new JMenuItem("Profile");
 
         this.favoriteButton = new JMenuItem("Favorite");
-        favoriteButton.addActionListener(new ActionListener() {
+       /* favoriteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Favorite button clicked");
@@ -55,7 +54,7 @@ public class Profile extends JPanel {
                 viewManagerModel.setState(state);
                 viewManagerModel.firePropertyChanged();
             }
-        });
+        });*/
         JMenuItem mealPlanButton = new JMenuItem("Meal Plan");
         this.groceryListButton = new JMenuItem("Grocery List");
         this.dietButton = new JMenuItem("Diet");
@@ -136,9 +135,9 @@ public class Profile extends JPanel {
      */
     private void initializeDietaryRestrictions() {
         dietaryPresenter = new DietaryRestrictionPresenter(viewManagerModel, this);
-        DietaryRestrictionDataAccessObject dietaryDataAccess = new DietaryRestrictionDataAccessObject();
-        dietaryInteractor = new DietaryRestrictionInteractor(dietaryPresenter, dietaryDataAccess);
-        dietaryController = new DietaryRestrictionController(dietaryInteractor);
+        //DietaryRestrictionDataAccessObject dietaryDataAccess = new DietaryRestrictionDataAccessObject();
+        //dietaryInteractor = new DietaryRestrictionInteractor(dietaryPresenter, dietaryDataAccess);
+        //dietaryController = new DietaryRestrictionController(dietaryInteractor);
     }
 
     /**
@@ -146,7 +145,7 @@ public class Profile extends JPanel {
      */
     private void loadExistingDietaryRestrictions() {
         try {
-            DietaryRestriction existingRestrictions = dietaryInteractor.getDietaryRestrictions();
+            CommonDietaryRestriction existingRestrictions = dietaryInteractor.getDietaryRestrictions();
             if (existingRestrictions != null && existingRestrictions.getDiets() != null) {
                 existingDietaryRestrictions = existingRestrictions.getDiets();
             }

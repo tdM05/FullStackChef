@@ -1,7 +1,7 @@
 package interface_adapter.dietaryrestrictions;
 
 /**
- * The state for the DietaryRestriction ViewModel.
+ * The state for the CommonDietaryRestriction ViewModel.
  */
 public class DietaryRestrictionState {
     private String message;

@@ -1,8 +1,6 @@
-package use_case.search_recipe;
+package use_case.search;
 
-import data_access.RecipeDataAccessObject;
 import entity.CommonRecipe;
-import entity.NutritionalInfo;
 import entity.Recipe;
 import org.junit.Test;
 
@@ -11,7 +9,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class SearchRecipeInteractorTest {
+public class SearchInteractorTest {
 
     /**
      * This test is to test the execute method of the SearchRecipeInteractor.
@@ -19,7 +17,7 @@ public class SearchRecipeInteractorTest {
      */
     @Test
     public void execute() {
-        SearchRecipeDataAccessInterface dataAccess = new SearchRecipeDataAccessInterface() {
+        SearchDataAccessInterface dataAccess = new SearchDataAccessInterface() {
             @Override
             public List<Recipe> getRecipes(List<String> ingredients, int count) {
                 // notice that ingredients is the recipe list that the interactor gave it, so it should be consistent
@@ -36,11 +34,11 @@ public class SearchRecipeInteractorTest {
                 return res;
             }
         };
-        SearchRecipeOutputBoundary presenter = new SearchRecipeOutputBoundary() {
+        SearchOutputBoundary presenter = new SearchOutputBoundary() {
             @Override
-            public void prepareSuccessView(List<SearchRecipeOutputData> message) {
-                List<SearchRecipeOutputData> expectedOutputData = new ArrayList<>();
-                expectedOutputData.add(new CommonSearchRecipeOutputData("recipeName", "imageUrl", 1));
+            public void prepareSuccessView(List<SearchOutputData> message) {
+                List<SearchOutputData> expectedOutputData = new ArrayList<>();
+                expectedOutputData.add(new SearchOutputData(1,"recipeName", "imageUrl"));
 
                 assertEquals(expectedOutputData, message);
             }
@@ -50,15 +48,9 @@ public class SearchRecipeInteractorTest {
                 assertEquals("Failed to get recipes.", message);
             }
         };
-        SearchRecipeInteractor interactor = new SearchRecipeInteractor(dataAccess, presenter);
+        SearchInteractor interactor = new SearchInteractor(dataAccess, presenter);
 
-        SearchRecipeInputData inputData = new SearchRecipeInputData() {
-            @Override
-            public String searchQuery() {
-                // Notice that they don't have to be perfectly comma separated so long as there are commas.
-                return "chicken,  garlic,spinach";
-            }
-        };
+        SearchInputData inputData = new SearchInputData("chicken,  garlic,spinach");
         interactor.execute(inputData);
     }
 }

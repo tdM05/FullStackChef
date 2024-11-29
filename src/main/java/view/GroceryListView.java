@@ -2,7 +2,7 @@ package view;
 
 import data_access.Constants;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.ViewManagerState;
+//import interface_adapter.ViewManagerState;
 import interface_adapter.grocery_list.GroceryListController;
 import interface_adapter.grocery_list.GroceryListState;
 import interface_adapter.grocery_list.GroceryListViewModel;
@@ -40,13 +40,13 @@ public class GroceryListView extends JPanel implements PropertyChangeListener {
         this.viewManagerModel = viewManagerModel;
         this.viewManagerModel.addPropertyChangeListener(this);
         this.returnButton = new JButton("Return");
-        returnButton.addActionListener(evt -> {
+/*        returnButton.addActionListener(evt -> {
             System.out.println("Return button pressed");
             final ViewManagerState state = new ViewManagerState(Constants.SEARCH_VIEW, null);
             viewManagerModel.setState(state);
             viewManagerModel.firePropertyChanged();
         }
-        );
+        );*/
 
         this.groceryList = new ArrayList<>();
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS)); // Set layout to BoxLayout with vertical alignment
@@ -59,12 +59,12 @@ public class GroceryListView extends JPanel implements PropertyChangeListener {
             final GroceryListState state = (GroceryListState) evt.getNewValue();
             refreshPage(state);
         }
-        if (evt.getNewValue() instanceof ViewManagerState) {
+/*        if (evt.getNewValue() instanceof ViewManagerState) {
             final ViewManagerState state = (ViewManagerState) evt.getNewValue();
             if (state.getViewName().equals(Constants.GROCERY_LIST_VIEW)) {
                 updateGroceryList();
             }
-        }
+        }*/
     }
 
     private void refreshPage(GroceryListState state) {

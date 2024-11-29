@@ -1,19 +1,17 @@
 package view;
 
-import data_access.Constants;
-import interface_adapter.ViewManagerModel;
-import interface_adapter.ViewManagerState;
+import interface_adapter.display_favorites.DisplayFavoriteViewModel;
 import interface_adapter.favorite.FavoriteController;
-import interface_adapter.favorite.FavoriteViewModel;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class FavoriteView extends JPanel {
+public class DisplayFavoriteView extends JPanel {
 
+    private final String viewName = "displayFavoriteView";
     private FavoriteController controller;
 
-    public FavoriteView(FavoriteViewModel viewModel, ViewManagerModel viewManagerModel) {
+    public DisplayFavoriteView(DisplayFavoriteViewModel view) {
         // Set layout for the panel
         setLayout(new BorderLayout());
 
@@ -30,12 +28,6 @@ public class FavoriteView extends JPanel {
         JButton backButton = new JButton("Back");
         backButtonPanel.add(backButton);
         add(backButtonPanel, BorderLayout.SOUTH);
-        backButton.addActionListener(e -> {
-            // Switch to the main page
-            ViewManagerState state = new ViewManagerState(Constants.SEARCH_VIEW, null);
-            viewManagerModel.setState(state);
-            viewManagerModel.firePropertyChanged();
-        });
 
         // Tabbed pane
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -46,5 +38,9 @@ public class FavoriteView extends JPanel {
 
     public void setFavoriteController(FavoriteController controller) {
         this.controller = controller;
+    }
+
+    public String getViewName() {
+        return viewName;
     }
 }
