@@ -18,7 +18,7 @@ import java.util.*;
  */
 public class MealPlanDataAccessObject implements GenerateMealPlanDataAccessInterface {
 
-    private static final String API_KEY = ""; // Replace with your actual API key
+    private static final String API_KEY = "8c57d019b3ec4934bad61b670ecc45a9";
     private static final String BASE_URL = "https://api.spoonacular.com/mealplanner/generate"; // Base URL for the Spoonacular API
     private final OkHttpClient client;
 
@@ -50,13 +50,19 @@ public class MealPlanDataAccessObject implements GenerateMealPlanDataAccessInter
 
         try (Response response = client.newCall(request).execute()) {
             if (!response.isSuccessful()) {
-                throw new IOException("Failed to fetch meal plan");
+                throw new IOException("Failed to fetch meal plan: " + response.message());
             }
+
+            // Read the response body as a string once and parse it
+            String responseBodyString = response.body().string();
+            System.out.println("API Response: " + responseBodyString); // Log the full response
+            JSONObject jsonResponse = new JSONObject(responseBodyString);
+
             // Parse and return the meal plan from the response JSON
-            JSONObject jsonResponse = new JSONObject(response.body().string());
             return parseMealPlan(jsonResponse.getJSONObject("week"));
         }
     }
+
 
     /**
      * Parses the JSON response from the Spoonacular API to extract the weekly meal plan.

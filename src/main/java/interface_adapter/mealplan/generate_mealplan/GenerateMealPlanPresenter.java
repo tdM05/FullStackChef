@@ -37,7 +37,7 @@ public class GenerateMealPlanPresenter implements GenerateMealPlanOutputBoundary
      */
     @Override
     public void prepareSuccessView(GenerateMealPlanOutputData outputData) {
-        System.out.println("Preparing success view with meal plan data.");
+        System.out.println("Preparing success view with meal plan data...");
         Map<LocalDate, List<GenerateMealPlanRecipeDto>> mealPlan = outputData.getMealPlan();
 
         System.out.println("Generated Weekly Meal Plan:");
@@ -59,7 +59,7 @@ public class GenerateMealPlanPresenter implements GenerateMealPlanOutputBoundary
         System.out.println("===========================");
 
         // Update the ViewModel
-        viewModel.updateMealPlan(mealPlan);
+        viewModel.updateMealPlan(outputData.getMealPlan());
         System.out.println("Meal plan successfully set in ViewModel.");
 
         // Update the view state in the ViewManagerModel

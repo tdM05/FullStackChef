@@ -3,6 +3,7 @@ package app;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
+import data_access.dietaryrestrictions.DietaryRestrictionDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanController;
 import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanPresenter;
@@ -24,6 +25,7 @@ public class MealPlanAppBuilder {
     private MealPlanView mealPlanView;
     private GenerateMealPlanInteractor mealPlanInteractor;
     private ViewManagerModel viewManagerModel;
+    private DietaryRestrictionDataAccessObject dietaryAccess;
 
     /**
      * Sets the MealPlanDAO to be used in this application.
@@ -37,6 +39,17 @@ public class MealPlanAppBuilder {
     }
 
     /**
+     * Sets the DietaryRestrictionDataAccessObject for handling dietary restrictions.
+     *
+     * @param dietaryDataAccess the DAO for dietary restrictions
+     * @return this builder
+     */
+    public MealPlanAppBuilder addDietaryDataAccess(DietaryRestrictionDataAccessObject dietaryDataAccess) {
+        this.dietaryAccess = dietaryDataAccess;
+        return this;
+    }
+
+    /**
      * Creates the objects for the Meal Plan Use Case and connects the MealPlanView to its
      * controller.
      *
@@ -45,9 +58,20 @@ public class MealPlanAppBuilder {
     public MealPlanAppBuilder addMealPlanUseCase() {
         final GenerateMealPlanOutputBoundary outputBoundary =
                 new GenerateMealPlanPresenter(viewManagerModel, mealPlanViewModel);
-        mealPlanInteractor = new GenerateMealPlanInteractor(outputBoundary, mealPlanDAO);
+
+        // Pass dietaryAccess only if it's available, otherwise pass null or an empty dietary access object.
+        if (dietaryAccess == null) {
+            System.out.println("Dietary restrictions are not set. Defaulting to no restrictions.");
+        }
+
+        mealPlanInteractor = new GenerateMealPlanInteractor(
+                outputBoundary,
+                mealPlanDAO,
+                dietaryAccess // This can be null, and the interactor must handle it
+        );
 
         final GenerateMealPlanController controller = new GenerateMealPlanController(mealPlanInteractor);
+
         if (mealPlanView == null) {
             throw new RuntimeException("addMealPlanView must be called before addMealPlanUseCase");
         }

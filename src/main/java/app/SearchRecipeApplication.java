@@ -71,7 +71,7 @@ public class SearchRecipeApplication {
                 .addFavoriteRecipeUseCase();
 
         final MealPlanAppBuilder mealPlanBuilder = new MealPlanAppBuilder();
-        mealPlanBuilder.addMealPlanDAO(new MealPlanDataAccessObject())
+        mealPlanBuilder.addMealPlanDAO(mealPlanDAO)
                 .addMealPlanView(viewManagerModel)
                 .addMealPlanUseCase();
 

@@ -96,6 +96,20 @@ public class MealPlanView extends JPanel implements PropertyChangeListener {
         initializeEmptyPanels();
     }
 
+    public void setMealPlanViewModel(GenerateMealPlanViewModel mealPlanViewModel) {
+        if (this.viewModel != mealPlanViewModel) {
+            // Add property change listener for meal plan updates
+            mealPlanViewModel.addPropertyChangeListener(event -> {
+                if ("mealPlan".equals(event.getPropertyName())) {
+                    System.out.println("Property change detected for mealPlan. Updating view...");
+                    updateMealPlan(mealPlanViewModel.getMealPlan());
+                }
+            });
+
+            System.out.println("MealPlanViewModel updated and listener added.");
+        }
+    }
+
     /**
      * Initializes the content panel with empty day panels.
      */
@@ -170,11 +184,21 @@ public class MealPlanView extends JPanel implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         switch (evt.getPropertyName()) {
             case "mealPlan":
-                updateMealPlan((Map<LocalDate, List<GenerateMealPlanRecipeDto>>) evt.getNewValue());
+                Map<LocalDate, List<GenerateMealPlanRecipeDto>> mealPlanData =
+                        (Map<LocalDate, List<GenerateMealPlanRecipeDto>>) evt.getNewValue();
+
+                if (mealPlanData == null) {
+                    System.err.println("MealPlanView: Received null mealPlan data.");
+                } else {
+                    updateMealPlan(mealPlanData);
+                }
                 break;
+
             case "isLoading":
-                showLoadingSpinner((boolean) evt.getNewValue());
+                boolean isLoading = (boolean) evt.getNewValue();
+                showLoadingSpinner(isLoading);
                 break;
+
             case "errorMessage":
                 String errorMessage = (String) evt.getNewValue();
                 if (errorMessage != null && !errorMessage.isEmpty()) {
@@ -185,6 +209,11 @@ public class MealPlanView extends JPanel implements PropertyChangeListener {
     }
 
     private void updateMealPlan(Map<LocalDate, List<GenerateMealPlanRecipeDto>> mealPlanData) {
+        if (mealPlanData == null) {
+            System.err.println("Meal plan data is null. Cannot update UI.");
+            return;
+        }
+        System.out.println("Updating meal plan UI...");
         contentPanel.removeAll();
         for (Map.Entry<LocalDate, List<GenerateMealPlanRecipeDto>> entry : mealPlanData.entrySet()) {
             JPanel dayPanel = createDayPanel(entry.getKey(), entry.getValue());
