@@ -125,7 +125,9 @@ public class UserAppBuilder {
             ChangePasswordView changePasswordView = new ChangePasswordView(userProfileViewModel, changePasswordController, viewManagerModel);
             switchToView(changePasswordView);
         } else {
-            JOptionPane.showMessageDialog(frame, "Guest users cannot change password.", "Access Denied", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(frame,
+                    "Guest users cannot change password.",
+                    "Access Denied", JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -134,7 +136,9 @@ public class UserAppBuilder {
             ChangeDisplayNameView changeDisplayNameView = new ChangeDisplayNameView(userProfileViewModel);
             switchToView(changeDisplayNameView);
         } else {
-            JOptionPane.showMessageDialog(frame, "Guest users cannot change display name.", "Access Denied", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(frame,
+                    "Guest users cannot change display name.",
+                    "Access Denied", JOptionPane.WARNING_MESSAGE);
         }
     }
 

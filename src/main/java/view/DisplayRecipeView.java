@@ -8,6 +8,8 @@ import interface_adapter.display_recipe.DisplayRecipeViewModel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URL;
@@ -21,6 +23,8 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
     private final JTextArea instructionsArea = new JTextArea(10, 30);
     private final JLabel errorLabel = new JLabel();
     private ViewManagerModel viewManagerModel;
+
+    private FavoriteButton favoriteButton;
 
     public DisplayRecipeView(DisplayRecipeViewModel viewModel,
                              ViewManagerModel viewManagerModel) {
@@ -43,6 +47,24 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
         add(new JScrollPane(instructionsArea));
         add(errorLabel);
 
+        favoriteButton= new FavoriteButton();
+        favoriteButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        add(favoriteButton);
+
+        // Add an ActionListener to respond to state changes
+        favoriteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (favoriteButton.isSelected()) {
+                    System.out.println("Recipe favorited");
+                    // Add code to handle favoriting the recipe
+                } else {
+                    System.out.println("Recipe unfavorited");
+                    // Add code to handle unfavoriting the recipe
+                }
+            }
+        });
+
         final JButton backButton = new JButton("Back");
         backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(backButton);
@@ -54,7 +76,6 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
             viewManagerModel.firePropertyChanged();
         });
     }
-
 
     public void setRecipeController(DisplayRecipeController controller) {
         this.controller = controller;

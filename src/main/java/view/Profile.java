@@ -100,6 +100,17 @@ public class Profile extends JPanel {
             }
         });
 
+        // Add Action Listener to Logout Button
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Log out and go to WelcomeView
+                ViewManagerState state = new ViewManagerState("welcome view", null);
+                viewManagerModel.setState(state);
+                viewManagerModel.firePropertyChanged();
+            }
+        });
+
         // Add hover effect for the dropdown
         addMouseListener(new java.awt.event.MouseAdapter() {
             @Override

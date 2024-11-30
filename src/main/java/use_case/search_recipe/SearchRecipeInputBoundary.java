@@ -6,7 +6,7 @@ package use_case.search_recipe;
 public interface SearchRecipeInputBoundary {
     /**
      * Executes the Search Recipe use case.
-     * @param LogoutInputData the input data
+     * @param searchRecipeInputData the input data
      */
-    void execute(SearchRecipeInputData LogoutInputData);
+    void execute(SearchRecipeInputData searchRecipeInputData);
 }

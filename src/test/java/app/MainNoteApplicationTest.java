@@ -1,6 +1,6 @@
 package app;
 
-import entity.User;
+import entity.user_profile.User;
 import org.junit.Before;
 import org.junit.Test;
 import use_case.note.NoteDataAccessInterface;

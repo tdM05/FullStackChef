@@ -1,6 +1,6 @@
 package use_case.note;
 
-import entity.User;
+import entity.user_profile.User;
 
 /**
  * Interface for the NoteDAO. It consists of methods for
