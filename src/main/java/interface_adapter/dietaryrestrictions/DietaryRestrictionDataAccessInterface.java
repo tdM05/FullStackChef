@@ -1,4 +1,4 @@
-package data_access;
+package interface_adapter.dietaryrestrictions;
 
 import entity.CommonDietaryRestriction;
 import java.io.IOException;

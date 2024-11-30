@@ -1,24 +1,21 @@
 package view;
 
-//import data_access.dietaryrestrictions.DietaryRestrictionDataAccessObject;
 import app.SessionUser;
 import entity.CommonDietaryRestriction;
 import interface_adapter.ViewManagerModel;
-//import interface_adapter.ViewManagerState;
 import interface_adapter.dietaryrestrictions.DietaryRestrictionController;
+import interface_adapter.dietaryrestrictions.DietaryRestrictionPresenter;
 import interface_adapter.grocery_list.GroceryListController;
 import interface_adapter.mealplan.update_meals.UpdateMealsController;
 import use_case.dietaryrestrictions.DietaryRestrictionInteractor;
-import interface_adapter.dietaryrestrictions.DietaryRestrictionPresenter;
+import data_access.dietaryrestrictions.DietaryRestrictionDataAccessObject;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-// Custom Profile class
 public class Profile extends JPanel {
     private final JMenuItem mealPlanButton;
     private Color circleColor = Color.GRAY;
@@ -26,16 +23,16 @@ public class Profile extends JPanel {
     private JMenuItem favoriteButton;
     private JMenuItem groceryListButton;
     private JMenuItem dietButton;
+
     // Dietary Restrictions Components
     private DietaryRestrictionPresenter dietaryPresenter;
     private DietaryRestrictionInteractor dietaryInteractor;
     private DietaryRestrictionController dietaryController;
 
-    // Existing dietary restrictions
     private List<String> existingDietaryRestrictions = new ArrayList<>();
 
-    // controllers
-    GroceryListController groceryListController;
+    // Controllers
+    private GroceryListController groceryListController;
     private UpdateMealsController updateMealsController;
 
     public Profile() {
@@ -43,24 +40,31 @@ public class Profile extends JPanel {
         setOpaque(false);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        // Initialize the popup menu
         profileDropDown = new JPopupMenu();
         profileDropDown.setBackground(Color.DARK_GRAY);
         profileDropDown.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         JMenuItem profileButton = new JMenuItem("Profile");
-
         this.favoriteButton = new JMenuItem("Favorite");
         mealPlanButton = new JMenuItem("Meal Plan");
         mealPlanButton.addActionListener(e -> {
             SessionUser sessionUser = SessionUser.getInstance();
-            updateMealsController.execute(sessionUser.getUser());
+            if (updateMealsController != null) {
+                updateMealsController.execute(sessionUser.getUser());
+            } else {
+                System.err.println("UpdateMealsController is not initialized.");
+            }
         });
-        
+
         this.groceryListButton = new JMenuItem("Grocery List");
         groceryListButton.addActionListener(e -> {
-            groceryListController.execute();
+            if (groceryListController != null) {
+                groceryListController.execute();
+            } else {
+                System.err.println("GroceryListController is not initialized.");
+            }
         });
+
         this.dietButton = new JMenuItem("Diet");
         JMenuItem logoutButton = new JMenuItem("Logout");
 
@@ -85,27 +89,18 @@ public class Profile extends JPanel {
         // Load existing dietary restrictions
         loadExistingDietaryRestrictions();
 
-        // Add Action Listener to Diet Button
-        dietButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showDietaryRestrictionsDialog();
-            }
-        });
+        dietButton.addActionListener(e -> showDietaryRestrictionsDialog());
 
-        // Add hover effect for the dropdown
         addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
                 circleColor = Color.DARK_GRAY;
                 repaint();
-                // Show the popup menu below the circle
                 profileDropDown.show(Profile.this, -70, getHeight());
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                // Check if mouse exits both the Profile and dropdown
                 Point mouseLocation = e.getLocationOnScreen();
                 SwingUtilities.convertPointFromScreen(mouseLocation, profileDropDown);
                 if (!profileDropDown.getBounds().contains(mouseLocation)) {
@@ -115,33 +110,18 @@ public class Profile extends JPanel {
                 }
             }
         });
-
-        profileDropDown.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent e) {
-                // Check if mouse is still near the menu bounds
-                Point mouseLocation = e.getLocationOnScreen();
-                SwingUtilities.convertPointFromScreen(mouseLocation, profileDropDown);
-
-                Rectangle extendedBounds = new Rectangle(-10, -10,
-                        profileDropDown.getWidth() + 20,
-                        profileDropDown.getHeight() + 20);
-
-                if (!extendedBounds.contains(mouseLocation)) {
-                    profileDropDown.setVisible(false);
-                }
-            }
-        });
     }
 
-    /**
-     * Initializes the Dietary Restrictions Use Case components.
-     */
     private void initializeDietaryRestrictions() {
-        //dietaryPresenter = new DietaryRestrictionPresenter(viewManagerModel, this);
-        //DietaryRestrictionDataAccessObject dietaryDataAccess = new DietaryRestrictionDataAccessObject();
-        //dietaryInteractor = new DietaryRestrictionInteractor(dietaryPresenter, dietaryDataAccess);
-        //dietaryController = new DietaryRestrictionController(dietaryInteractor);
+        try {
+            ViewManagerModel viewManagerModel = new ViewManagerModel();
+            dietaryPresenter = new DietaryRestrictionPresenter(viewManagerModel, this);
+            DietaryRestrictionDataAccessObject dietaryDataAccess = new DietaryRestrictionDataAccessObject();
+            dietaryInteractor = new DietaryRestrictionInteractor(dietaryPresenter, dietaryDataAccess);
+            dietaryController = new DietaryRestrictionController(dietaryInteractor);
+        } catch (Exception e) {
+            System.err.println("Failed to initialize dietary restrictions components: " + e.getMessage());
+        }
     }
 
     /**
@@ -149,9 +129,13 @@ public class Profile extends JPanel {
      */
     private void loadExistingDietaryRestrictions() {
         try {
-            CommonDietaryRestriction existingRestrictions = dietaryInteractor.getDietaryRestrictions();
-            if (existingRestrictions != null && existingRestrictions.getDiets() != null) {
-                existingDietaryRestrictions = existingRestrictions.getDiets();
+            if (dietaryInteractor != null) {
+                CommonDietaryRestriction existingRestrictions = dietaryInteractor.getDietaryRestrictions();
+                if (existingRestrictions != null && existingRestrictions.getDiets() != null) {
+                    existingDietaryRestrictions = existingRestrictions.getDiets();
+                }
+            } else {
+                System.err.println("DietaryRestrictionInteractor is not initialized.");
             }
         } catch (Exception e) {
             System.err.println("No existing dietary restrictions found or failed to load: " + e.getMessage());
@@ -163,18 +147,14 @@ public class Profile extends JPanel {
      * Displays the Dietary Restrictions selection dialog.
      */
     private void showDietaryRestrictionsDialog() {
-        // Define available diets
+        if (dietaryController == null) {
+            System.err.println("DietaryRestrictionController is not initialized.");
+            return;
+        }
+
         String[] availableDiets = {
-                "Gluten Free",
-                "Ketogenic",
-                "Vegetarian",
-                "Lacto-Vegetarian",
-                "Ovo-Vegetarian",
-                "Vegan",
-                "Pescetarian",
-                "Paleo",
-                "Primal",
-                "Whole30"
+                "Gluten Free", "Ketogenic", "Vegetarian", "Lacto-Vegetarian",
+                "Ovo-Vegetarian", "Vegan", "Pescetarian", "Paleo", "Primal", "Whole30"
         };
 
         // Create checkboxes for each diet
@@ -190,11 +170,8 @@ public class Profile extends JPanel {
         }
 
         int result = JOptionPane.showConfirmDialog(
-                this,
-                panel,
-                "Select Your Dietary Restrictions",
-                JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE
+                this, panel, "Select Your Dietary Restrictions",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
         );
 
         if (result == JOptionPane.OK_OPTION) {
@@ -260,5 +237,9 @@ public class Profile extends JPanel {
 
     public void setUpdateMealsController(UpdateMealsController updateMealsController) {
         this.updateMealsController = updateMealsController;
+    }
+
+    public void setDietaryRestrictionController(DietaryRestrictionController dietaryRestrictionController) {
+    this.dietaryController = dietaryRestrictionController;
     }
 }

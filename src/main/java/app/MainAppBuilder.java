@@ -2,6 +2,7 @@ package app;
 
 import data_access.*;
 import data_access.UserProfile.UserProfileDao;
+import data_access.dietaryrestrictions.DietaryRestrictionDataAccessObject;
 import data_access.grocery_list.GroceryListDataAccessObject;
 import data_access.grocery_list.GroceryListInMemoryDataAccessObject;
 import entity.CommonUserFactory;
@@ -9,6 +10,9 @@ import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.check_favorite.CheckFavoriteController;
 import interface_adapter.check_favorite.CheckFavoritePresenter;
+import interface_adapter.dietaryrestrictions.DietaryRestrictionController;
+import interface_adapter.dietaryrestrictions.DietaryRestrictionPresenter;
+import interface_adapter.dietaryrestrictions.DietaryRestrictionViewModel;
 import interface_adapter.display_favorites.DisplayFavoriteViewModel;
 import interface_adapter.display_recipe.DisplayRecipeController;
 import interface_adapter.display_recipe.DisplayRecipePresenter;
@@ -34,6 +38,7 @@ import interface_adapter.signup.SignupViewModel;
 import use_case.check_favorite.CheckFavoriteInputBoundary;
 import use_case.check_favorite.CheckFavoriteInteractor;
 import use_case.check_favorite.CheckFavoriteOutputBoundary;
+import use_case.dietaryrestrictions.DietaryRestrictionInteractor;
 import use_case.display_recipe.DisplayRecipeInputBoundary;
 import use_case.display_recipe.DisplayRecipeInteractor;
 import use_case.display_recipe.DisplayRecipeOutputBoundary;
@@ -96,6 +101,8 @@ public class MainAppBuilder {
     private DisplayRecipeViewModel displayRecipeViewModel;
     private DisplayFavoriteView displayFavoriteView;
     private DisplayFavoriteViewModel displayFavoriteViewModel;
+    private DietaryRestrictionViewModel dietaryRestrictionViewModel;
+    private DietaryRestrictionView dietaryRestrictionView;
     private GroceryListView groceryListView;
     private MealPlanView mealPlanView;
     private GroceryListViewModel groceryListViewModel;
@@ -163,7 +170,15 @@ public class MainAppBuilder {
         cardPanel.add(displayFavoriteView, displayFavoriteView.getViewName());
         return this;
     }
-    
+
+
+    public MainAppBuilder addDietaryRestrictionView() {
+        dietaryRestrictionViewModel = new DietaryRestrictionViewModel();
+        dietaryRestrictionView = new DietaryRestrictionView(dietaryRestrictionViewModel);
+        cardPanel.add(dietaryRestrictionView, dietaryRestrictionView.getViewName());
+        return this;
+    }
+
     public MainAppBuilder addMealPlanView() {
         mealPlanViewModel = new GenerateMealPlanViewModel();
         updateMealsViewModel = new UpdateMealsViewModel();
@@ -251,6 +266,23 @@ public class MainAppBuilder {
         searchView.setCheckFavoriteController(checkFavoriteController);
         return this;
     }
+
+    public MainAppBuilder addDietaryRestrictionUseCase() {
+        ViewManagerModel viewManagerModel = new ViewManagerModel();
+        final DietaryRestrictionPresenter dietaryRestrictionPresenter = new DietaryRestrictionPresenter(viewManagerModel, searchView);
+        final DietaryRestrictionDataAccessObject dietaryDataAccess = new DietaryRestrictionDataAccessObject();
+        final DietaryRestrictionInteractor dietaryInteractor = new DietaryRestrictionInteractor(
+                dietaryRestrictionPresenter,
+                dietaryDataAccess
+        );
+
+        final DietaryRestrictionController dietaryRestrictionController = new DietaryRestrictionController(dietaryInteractor);
+
+        searchView.getProfile().setDietaryRestrictionController(dietaryRestrictionController);
+        dietaryRestrictionView.setController(dietaryRestrictionController);
+        return this;
+    }
+
 
     public MainAppBuilder addMealPlanUseCase() {
         // create store meals use case

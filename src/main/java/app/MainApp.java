@@ -19,6 +19,7 @@ public class MainApp {
                                             .addSearchView()
                                             .addDisplayRecipeView()
                                             .addFavoriteView()
+                                            .addDietaryRestrictionView()
                                             .addMealPlanView()
                                             .addGroceryListView()
                                             .addSignupUseCase()
@@ -27,6 +28,7 @@ public class MainApp {
                                             .addDisplayRecipeUseCase()
                                             .addCheckFavoriteUseCase()
                                             .addMealPlanUseCase()
+                                            .addDietaryRestrictionUseCase()
                                             .addGroceryListUseCase()
                                             .build();
         application.setVisible(true);
