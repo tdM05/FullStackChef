@@ -35,6 +35,9 @@ public class GroceryListView extends JPanel implements PropertyChangeListener {
         this.groceryListViewModel = groceryListViewModel;
         this.groceryListViewModel.addPropertyChangeListener(this);
         this.returnButton = new JButton("Return");
+        returnButton.addActionListener(evt -> {
+            controller.switchToSearchView();
+        });
 /*        returnButton.addActionListener(evt -> {
             System.out.println("Return button pressed");
             final ViewManagerState state = new ViewManagerState(Constants.SEARCH_VIEW, null);

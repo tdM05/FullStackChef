@@ -21,4 +21,8 @@ public class GenerateMealPlanController {
             User user = SessionUser.getInstance().getUser();
             generateMealPlanUseCaseInteractor.execute(inputData, user);
         }
+
+    public void switchToSearchView() {
+            generateMealPlanUseCaseInteractor.switchToSearchView();
+    }
 }

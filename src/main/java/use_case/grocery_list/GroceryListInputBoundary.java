@@ -8,4 +8,6 @@ public interface GroceryListInputBoundary {
      * Executes the use case.
      */
     void execute();
+
+    void switchToSearchView();
 }

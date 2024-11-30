@@ -76,6 +76,9 @@ public class MealPlanView extends JPanel implements PropertyChangeListener {
         JPanel navigationPanel = new JPanel(new BorderLayout());
 
         JButton backButton = new JButton("Back");
+        backButton.addActionListener(evt -> {
+            groceryListController.switchToSearchView();
+        });
 //        JButton previousButton = new JButton("Previous");
 //        JButton nextButton = new JButton("Next");
 

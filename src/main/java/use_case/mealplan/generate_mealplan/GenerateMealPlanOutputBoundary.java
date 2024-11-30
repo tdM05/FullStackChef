@@ -18,5 +18,7 @@ public interface GenerateMealPlanOutputBoundary {
      * @param errorMessage A message describing the error that occurred.
      */
     void prepareFailView(String errorMessage);
+
+    void switchToSearchView();
 }
 

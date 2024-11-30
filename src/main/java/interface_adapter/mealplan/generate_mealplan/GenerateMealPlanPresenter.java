@@ -1,5 +1,6 @@
 package interface_adapter.mealplan.generate_mealplan;
 
+import data_access.Constants;
 import interface_adapter.ViewManagerModel;
 import use_case.mealplan.generate_mealplan.GenerateMealPlanOutputBoundary;
 import use_case.mealplan.generate_mealplan.GenerateMealPlanOutputData;
@@ -86,5 +87,10 @@ public class GenerateMealPlanPresenter implements GenerateMealPlanOutputBoundary
         // Update the view state in the ViewManagerModel
         viewManager.setState(viewModel.getViewName());
         System.out.println("View state updated in ViewManagerModel.");
+    }
+    @Override
+    public void switchToSearchView() {
+        viewManager.setState(Constants.SEARCH_VIEW);
+        viewManager.firePropertyChanged();
     }
 }
