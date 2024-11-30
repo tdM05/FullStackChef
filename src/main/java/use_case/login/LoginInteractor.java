@@ -1,5 +1,6 @@
 package use_case.login;
 
+import app.SessionUser;
 import entity.User;
 
 /**
@@ -31,7 +32,13 @@ public class LoginInteractor implements LoginInputBoundary {
             }
             else {
                 final User user = userDataAccessObject.get(loginInputData.getUsername());
+
                 userDataAccessObject.setCurrentUsername(user.getName());
+
+                // Set the SessionUser instance
+                SessionUser.getInstance().setUser(user);
+                System.out.println("SessionUser username: " + SessionUser.getInstance().getUser().getName());
+                System.out.println("SessionUser password: " + SessionUser.getInstance().getUser().getPassword());
 
                 final LoginOutputData loginOutputData = new LoginOutputData(user.getName(), false);
                 loginPresenter.prepareSuccessView(loginOutputData);

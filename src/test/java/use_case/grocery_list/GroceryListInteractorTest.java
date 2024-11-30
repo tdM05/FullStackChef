@@ -3,10 +3,9 @@ package use_case.grocery_list;
 import data_access.grocery_list.GroceryListDataAccessObject;
 import data_access.grocery_list.GroceryListException;
 import data_access.grocery_list.GroceryListInMemoryDataAccessObject;
-import entity.CommonIngredient;
 import entity.Ingredient;
-import entity.grocery_list.CommonIngredientWithConvertedUnits;
-import entity.grocery_list.IngredientWithConvertedUnits;
+import entity.CommonIngredientWithConvertedUnits;
+import entity.IngredientWithConvertedUnits;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.grocery_list.GroceryListPresenter;
 import interface_adapter.grocery_list.GroceryListViewModel;
@@ -14,9 +13,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.jupiter.api.BeforeAll;
-import use_case.grocery_list.GroceryListInteractor;
 
 import static org.junit.Assert.*;
 

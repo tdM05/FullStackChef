@@ -11,18 +11,18 @@ import java.io.IOException;
  */
 public class DisplayRecipeInteractor implements DisplayRecipeInputBoundary {
 
-    private final DisplayRecipeOutputBoundary presenter;
     private final DisplayRecipeDataAccessInterface dataAccess;
+    private final DisplayRecipeOutputBoundary presenter;
 
     /**
      * Constructs a DisplayRecipeInteractor with the specified presenter and data access interface.
      *
-     * @param presenter  the output boundary to present results
      * @param dataAccess the data access interface for recipe data
+     * @param presenter  the output boundary to present results
      */
-    public DisplayRecipeInteractor(DisplayRecipeOutputBoundary presenter, DisplayRecipeDataAccessInterface dataAccess) {
-        this.presenter = presenter;
+    public DisplayRecipeInteractor(DisplayRecipeDataAccessInterface dataAccess, DisplayRecipeOutputBoundary presenter) {
         this.dataAccess = dataAccess;
+        this.presenter = presenter;
     }
 
     /**
@@ -45,6 +45,14 @@ public class DisplayRecipeInteractor implements DisplayRecipeInputBoundary {
             System.out.println("Interactor: Exception occurred - " + ex.getMessage());
             presenter.prepareFailView("Failed to retrieve recipe: " + ex.getMessage());
         }
+    }
+
+    /**
+     * Switches to the Search View.
+     */
+    @Override
+    public void switchToSearchView() {
+        presenter.switchToSearchView();
     }
 
     /**
