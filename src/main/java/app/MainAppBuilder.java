@@ -80,7 +80,7 @@ public class MainAppBuilder {
     private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final RecipeDataAccessObject recipeDataAccessObject = new RecipeDataAccessObject();
     private final FavoriteDataAccessObject favoriteDataAccessObject = new FavoriteDataAccessObject();
-    private final GroceryListDataAccessInterface groceryListDataAccessObject = new GroceryListInMemoryDataAccessObject();
+    private final GroceryListDataAccessInterface groceryListDataAccessObject = new GroceryListDataAccessObject();
     private final GenerateMealPlanDataAccessInterface mealPlanDataAccessObject = new MealPlanDataAccessObject();
     private final StoreMealDataAccessInterface storeMealDataAccessObject = new UserProfileDao();
     private final UpdateMealsDataAccessInterface updateMealDataAccessObject = new UpdateMealsDataAccessObject();
