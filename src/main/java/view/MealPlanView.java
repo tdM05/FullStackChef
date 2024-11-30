@@ -260,7 +260,7 @@ public class MealPlanView extends JPanel implements PropertyChangeListener {
         panel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
         String dayAbbreviation = date.getDayOfWeek().toString().substring(0, 3); // e.g., MON, TUE
-        JLabel dateLabel = new JLabel(dayAbbreviation + " - " + date);
+        JLabel dateLabel = new JLabel(dayAbbreviation);
         dateLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(dateLabel);
 
