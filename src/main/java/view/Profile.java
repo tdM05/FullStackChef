@@ -1,11 +1,13 @@
 package view;
 
 //import data_access.dietaryrestrictions.DietaryRestrictionDataAccessObject;
+import app.SessionUser;
 import entity.CommonDietaryRestriction;
 import interface_adapter.ViewManagerModel;
 //import interface_adapter.ViewManagerState;
 import interface_adapter.dietaryrestrictions.DietaryRestrictionController;
 import interface_adapter.grocery_list.GroceryListController;
+import interface_adapter.mealplan.update_meals.UpdateMealsController;
 import use_case.dietaryrestrictions.DietaryRestrictionInteractor;
 import interface_adapter.dietaryrestrictions.DietaryRestrictionPresenter;
 
@@ -18,6 +20,7 @@ import java.util.List;
 
 // Custom Profile class
 public class Profile extends JPanel {
+    private final JMenuItem mealPlanButton;
     private Color circleColor = Color.GRAY;
     private JPopupMenu profileDropDown;
     private JMenuItem favoriteButton;
@@ -31,7 +34,11 @@ public class Profile extends JPanel {
     // Existing dietary restrictions
     private List<String> existingDietaryRestrictions = new ArrayList<>();
 
-    public Profile(GroceryListController groceryListController) {
+    // controllers
+    GroceryListController groceryListController;
+    private UpdateMealsController updateMealsController;
+
+    public Profile() {
         setPreferredSize(new Dimension(55, 55));
         setOpaque(false);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -44,16 +51,12 @@ public class Profile extends JPanel {
         JMenuItem profileButton = new JMenuItem("Profile");
 
         this.favoriteButton = new JMenuItem("Favorite");
-       /* favoriteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Favorite button clicked");
-                ViewManagerState state = new ViewManagerState(Constants.FAVORITE_VIEW, null);
-                viewManagerModel.setState(state);
-                viewManagerModel.firePropertyChanged();
-            }
-        });*/
-        JMenuItem mealPlanButton = new JMenuItem("Meal Plan");
+        mealPlanButton = new JMenuItem("Meal Plan");
+        mealPlanButton.addActionListener(e -> {
+            SessionUser sessionUser = SessionUser.getInstance();
+            updateMealsController.execute(sessionUser.getUser());
+        });
+        
         this.groceryListButton = new JMenuItem("Grocery List");
         groceryListButton.addActionListener(e -> {
             groceryListController.execute();
@@ -250,5 +253,12 @@ public class Profile extends JPanel {
         g2d.drawString(initials, textX, textY);
 
         g2d.dispose();
+    }
+    public void setGroceryListController(GroceryListController groceryListController) {
+        this.groceryListController = groceryListController;
+    }
+
+    public void setUpdateMealsController(UpdateMealsController updateMealsController) {
+        this.updateMealsController = updateMealsController;
     }
 }

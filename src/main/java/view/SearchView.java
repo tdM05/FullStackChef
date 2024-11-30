@@ -52,7 +52,7 @@ public class SearchView extends JPanel {
     private void loadScreen() {
 
         // Create the profile component
-        profile = new Profile(groceryListController);
+        profile = new Profile();
 
         // Instantiate the SearchBar
         searchBar = new SearchBar("Search for recipes...");
@@ -103,7 +103,9 @@ public class SearchView extends JPanel {
             }
         });
     }
-
+    public Profile getProfile() {
+        return profile;
+    }
     private void updateError() {
         String error = searchViewModel.getError();
         if (error != null && !error.isEmpty()) {
