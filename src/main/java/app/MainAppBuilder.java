@@ -3,6 +3,7 @@ package app;
 import data_access.*;
 import data_access.UserProfile.UserProfileDao;
 import data_access.grocery_list.GroceryListDataAccessObject;
+import data_access.grocery_list.GroceryListInMemoryDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
@@ -79,7 +80,7 @@ public class MainAppBuilder {
     private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final RecipeDataAccessObject recipeDataAccessObject = new RecipeDataAccessObject();
     private final FavoriteDataAccessObject favoriteDataAccessObject = new FavoriteDataAccessObject();
-    private final GroceryListDataAccessInterface groceryListDataAccessObject = new GroceryListDataAccessObject();
+    private final GroceryListDataAccessInterface groceryListDataAccessObject = new GroceryListInMemoryDataAccessObject();
     private final GenerateMealPlanDataAccessInterface mealPlanDataAccessObject = new MealPlanDataAccessObject();
     private final StoreMealDataAccessInterface storeMealDataAccessObject = new UserProfileDao();
     private final UpdateMealsDataAccessInterface updateMealDataAccessObject = new UpdateMealsDataAccessObject();
@@ -167,7 +168,7 @@ public class MainAppBuilder {
         mealPlanViewModel = new GenerateMealPlanViewModel();
         updateMealsViewModel = new UpdateMealsViewModel();
         mealPlanView = new MealPlanView(mealPlanViewModel, updateMealsViewModel);
-        mealPlanView.setSize(new Dimension(1200, 800));
+        mealPlanView.setPreferredSize(new Dimension(1200, 800));
         cardPanel.add(mealPlanView, mealPlanView.getViewName());
         return this;
     }
@@ -175,7 +176,7 @@ public class MainAppBuilder {
     public MainAppBuilder addGroceryListView() {
         groceryListViewModel = new GroceryListViewModel();
         groceryListView = new GroceryListView(groceryListViewModel);
-        groceryListView.setSize(new Dimension(1200, 800));
+        groceryListView.setPreferredSize(new Dimension(1200, 800));
 
         cardPanel.add(groceryListView, groceryListView.getViewName());
         return this;
@@ -268,6 +269,8 @@ public class MainAppBuilder {
         final UpdateMealsController updateMealsController = new UpdateMealsController(updateMealsInteractor);
         searchView.getProfile().setUpdateMealsController(updateMealsController);
 
+        GroceryListController groceryListController = new GroceryListController(new GroceryListInteractor(groceryListDataAccessObject, new GroceryListPresenter(viewManagerModel, searchViewModel, groceryListViewModel)));
+        mealPlanView.setGroceryListController(groceryListController);
         return this;
     }
 

@@ -111,4 +111,8 @@ public class GenerateMealPlanInteractor implements GenerateMealPlanInputBoundary
 
         return mealPlan;
     }
+    @Override
+    public void switchToSearchView() {
+        mealPlanPresenter.switchToSearchView();
+    }
 }

@@ -36,4 +36,9 @@ public class GroceryListPresenter implements GroceryListOutputBoundary {
         state.setError(error);
         groceryListViewModel.firePropertyChanged();
     }
+    @Override
+    public void switchToSearchView() {
+        viewManagerModel.setState(searchViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
+    }
 }

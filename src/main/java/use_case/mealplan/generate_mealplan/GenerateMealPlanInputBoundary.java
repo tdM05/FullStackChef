@@ -14,4 +14,6 @@ public interface GenerateMealPlanInputBoundary {
      * @param user The user for whom the meal plan is being generated.
      */
     void execute(GenerateMealPlanInputData inputData, User user);
+
+    void switchToSearchView();
 }
