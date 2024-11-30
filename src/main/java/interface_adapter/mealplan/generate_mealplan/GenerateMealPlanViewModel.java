@@ -1,5 +1,6 @@
 package interface_adapter.mealplan.generate_mealplan;
 
+import data_access.Constants;
 import interface_adapter.ViewModel;
 import use_case.mealplan.generate_mealplan.GenerateMealPlanRecipeDto;
 
@@ -18,7 +19,7 @@ public class GenerateMealPlanViewModel extends ViewModel<GenerateMealPlanState> 
     private String errorMessage;
 
     public GenerateMealPlanViewModel() {
-        super("generate meal plan");
+        super(Constants.MEAL_PLAN_VIEW);
         setState(new GenerateMealPlanState());
     }
 

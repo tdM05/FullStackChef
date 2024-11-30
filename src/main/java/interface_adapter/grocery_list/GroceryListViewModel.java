@@ -11,5 +11,4 @@ public class GroceryListViewModel extends ViewModel<GroceryListState> {
         super(Constants.GROCERY_LIST_VIEW);
         setState(new GroceryListState());
     }
-
 }
