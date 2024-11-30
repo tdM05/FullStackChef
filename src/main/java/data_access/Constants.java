@@ -5,7 +5,7 @@ package data_access;
  */
 public class Constants {
     // data access
-    public static final String API_KEY = "c3aae836029b4fb4972039164826b651";
+    public static final String API_KEY = "6c12c2fcd75b40569836eb71339e80be";
     public static final String STATUS_CODE_LABEL = "status_code";
     public static final int SUCCESS_CODE = 200;
     public static final String MESSAGE = "message";

@@ -12,8 +12,6 @@ public class CheckFavoriteInteractor implements CheckFavoriteInputBoundary {
     private final CheckFavoriteDataAccessInterface dataAccess;
     private final CheckFavoriteOutputBoundary presenter;
 
-    private final User user = SessionUser.getInstance().getUser();
-
     public CheckFavoriteInteractor(CheckFavoriteDataAccessInterface dataAccess, CheckFavoriteOutputBoundary presenter) {
         this.dataAccess = dataAccess;
         this.presenter = presenter;
@@ -21,14 +19,19 @@ public class CheckFavoriteInteractor implements CheckFavoriteInputBoundary {
 
     @Override
     public void execute(CheckFavoriteInputData checkFavoriteInputData) {
-        boolean isFavorite = isFavorite(checkFavoriteInputData.getRecipeId());
+        User user = SessionUser.getInstance().getUser();
+        System.out.println("User: " + user.getName());
+        boolean isFavorite = isFavorite(checkFavoriteInputData.getRecipeId(), user);
+        System.out.println("Is favorite: " + isFavorite);
+
         final CheckFavoriteOutputData outputData = new CheckFavoriteOutputData(isFavorite);
         presenter.prepareSuccessView(outputData);
 
     }
 
-    boolean isFavorite(int recipeId)  {
+    boolean isFavorite(int recipeId, User user) {
         List<Integer> favorites = dataAccess.getFavorites(user);
+        System.out.println("Favorites: " + favorites);
         return favorites.contains(recipeId);
     }
 }

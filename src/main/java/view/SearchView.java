@@ -5,6 +5,7 @@ import entity.Recipe;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.check_favorite.CheckFavoriteController;
 import interface_adapter.display_recipe.DisplayRecipeController;
+import interface_adapter.grocery_list.GroceryListController;
 import interface_adapter.search.SearchViewModel;
 import interface_adapter.search.SearchController;
 
@@ -36,6 +37,7 @@ public class SearchView extends JPanel {
     private SearchBar searchBar;
 
     private ViewManagerModel viewManagerModel;
+    private GroceryListController groceryListController;
 
     /**
      * Constructor for the SearchView.
@@ -50,7 +52,7 @@ public class SearchView extends JPanel {
     private void loadScreen() {
 
         // Create the profile component
-        profile = new Profile(this.viewManagerModel);
+        profile = new Profile(groceryListController);
 
         // Instantiate the SearchBar
         searchBar = new SearchBar("Search for recipes...");
@@ -136,7 +138,7 @@ public class SearchView extends JPanel {
         topPanel.add(searchPanel, BorderLayout.CENTER);
 
         // Create the recipes panel
-        RecipePanel recipesPanel = new RecipePanel(recipes,displayRecipeController,viewName);
+        RecipePanel recipesPanel = new RecipePanel(recipes, displayRecipeController, checkFavoriteController, viewName);
 
         // Add the recipes panel to the center panel
         centerPanel.setLayout(new BorderLayout());
@@ -162,4 +164,5 @@ public class SearchView extends JPanel {
     public void setCheckFavoriteController(CheckFavoriteController checkFavoriteController) {
         this.checkFavoriteController = checkFavoriteController;
     }
+
 }

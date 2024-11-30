@@ -12,6 +12,7 @@ import interface_adapter.display_favorites.DisplayFavoriteViewModel;
 import interface_adapter.display_recipe.DisplayRecipeController;
 import interface_adapter.display_recipe.DisplayRecipePresenter;
 import interface_adapter.display_recipe.DisplayRecipeViewModel;
+
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
@@ -27,6 +28,7 @@ import use_case.check_favorite.CheckFavoriteOutputBoundary;
 import use_case.display_recipe.DisplayRecipeInputBoundary;
 import use_case.display_recipe.DisplayRecipeInteractor;
 import use_case.display_recipe.DisplayRecipeOutputBoundary;
+
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -206,7 +208,6 @@ public class MainAppBuilder {
      * Adds the Favorite Use Case to the application.
      * @return this AppBuilder
      */
-
 
     /**
      * Builds the application.

@@ -1,7 +1,5 @@
 package view;
 
-import data_access.Constants;
-import interface_adapter.ViewManagerModel;
 import interface_adapter.display_recipe.DisplayRecipeController;
 import interface_adapter.display_recipe.DisplayRecipeViewModel;
 
@@ -48,6 +46,7 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
 
         favoriteButton= new FavoriteButton();
         favoriteButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         add(favoriteButton);
 
         // Add an ActionListener to respond to state changes
@@ -107,6 +106,15 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
         // Display ingredients and instructions as before
         ingredientsArea.setText(String.join("\n", viewModel.getIngredients()));
         instructionsArea.setText(String.join("\n", viewModel.getInstructions()));
+
+
+        if (viewModel.getIsFavorite()) {
+            System.out.println("Recipe is a favorite");
+            favoriteButton.setSelected(true);
+        } else {
+            System.out.println("Recipe is not a favorite");
+            favoriteButton.setSelected(false);
+        }
 
         // Display error if present
         errorLabel.setText(viewModel.getErrorMessage() != null ? viewModel.getErrorMessage() : "");
