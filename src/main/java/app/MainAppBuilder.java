@@ -1,8 +1,9 @@
 package app;
 
-import data_access.DBUserDataAccessObject;
-import data_access.FavoriteDataAccessObject;
-import data_access.RecipeDataAccessObject;
+import data_access.*;
+import data_access.UserProfile.UserProfileDao;
+import data_access.grocery_list.GroceryListDataAccessObject;
+import data_access.grocery_list.GroceryListInMemoryDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
@@ -12,9 +13,18 @@ import interface_adapter.display_favorites.DisplayFavoriteViewModel;
 import interface_adapter.display_recipe.DisplayRecipeController;
 import interface_adapter.display_recipe.DisplayRecipePresenter;
 import interface_adapter.display_recipe.DisplayRecipeViewModel;
+import interface_adapter.grocery_list.GroceryListController;
+import interface_adapter.grocery_list.GroceryListPresenter;
+import interface_adapter.grocery_list.GroceryListViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanController;
+import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanPresenter;
+import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanViewModel;
+import interface_adapter.mealplan.update_meals.UpdateMealsController;
+import interface_adapter.mealplan.update_meals.UpdateMealsPresenter;
+import interface_adapter.mealplan.update_meals.UpdateMealsViewModel;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchPresenter;
 import interface_adapter.search.SearchViewModel;
@@ -27,12 +37,24 @@ import use_case.check_favorite.CheckFavoriteOutputBoundary;
 import use_case.display_recipe.DisplayRecipeInputBoundary;
 import use_case.display_recipe.DisplayRecipeInteractor;
 import use_case.display_recipe.DisplayRecipeOutputBoundary;
+import use_case.grocery_list.*;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
+import use_case.mealplan.generate_mealplan.GenerateMealPlanDataAccessInterface;
+import use_case.mealplan.generate_mealplan.GenerateMealPlanInputBoundary;
+import use_case.mealplan.generate_mealplan.GenerateMealPlanInteractor;
+import use_case.mealplan.generate_mealplan.GenerateMealPlanOutputBoundary;
+import use_case.mealplan.update_meals.UpdateMealsDataAccessInterface;
+import use_case.mealplan.update_meals.UpdateMealsInputBoundary;
+import use_case.mealplan.update_meals.UpdateMealsInteractor;
+import use_case.mealplan.update_meals.UpdateMealsOutputBoundary;
 import use_case.search.SearchInputBoundary;
 import use_case.search.SearchInteractor;
 import use_case.search.SearchOutputBoundary;
+import use_case.set_meals.StoreMealDataAccessInterface;
+import use_case.set_meals.StoreMealInputBoundary;
+import use_case.set_meals.StoreMealInteractor;
 import use_case.signup.SignupOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
@@ -58,6 +80,11 @@ public class MainAppBuilder {
     private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final RecipeDataAccessObject recipeDataAccessObject = new RecipeDataAccessObject();
     private final FavoriteDataAccessObject favoriteDataAccessObject = new FavoriteDataAccessObject();
+    private final GroceryListDataAccessInterface groceryListDataAccessObject = new GroceryListInMemoryDataAccessObject();
+    private final GenerateMealPlanDataAccessInterface mealPlanDataAccessObject = new MealPlanDataAccessObject();
+    private final StoreMealDataAccessInterface storeMealDataAccessObject = new UserProfileDao();
+    private final UpdateMealsDataAccessInterface updateMealDataAccessObject = new UpdateMealsDataAccessObject();
+
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -69,6 +96,11 @@ public class MainAppBuilder {
     private DisplayRecipeViewModel displayRecipeViewModel;
     private DisplayFavoriteView displayFavoriteView;
     private DisplayFavoriteViewModel displayFavoriteViewModel;
+    private GroceryListView groceryListView;
+    private MealPlanView mealPlanView;
+    private GroceryListViewModel groceryListViewModel;
+    private GenerateMealPlanViewModel mealPlanViewModel;
+    private UpdateMealsViewModel updateMealsViewModel;
 
     public MainAppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -131,7 +163,24 @@ public class MainAppBuilder {
         cardPanel.add(displayFavoriteView, displayFavoriteView.getViewName());
         return this;
     }
+    
+    public MainAppBuilder addMealPlanView() {
+        mealPlanViewModel = new GenerateMealPlanViewModel();
+        updateMealsViewModel = new UpdateMealsViewModel();
+        mealPlanView = new MealPlanView(mealPlanViewModel, updateMealsViewModel);
+        mealPlanView.setPreferredSize(new Dimension(1200, 800));
+        cardPanel.add(mealPlanView, mealPlanView.getViewName());
+        return this;
+    }
 
+    public MainAppBuilder addGroceryListView() {
+        groceryListViewModel = new GroceryListViewModel();
+        groceryListView = new GroceryListView(groceryListViewModel);
+        groceryListView.setPreferredSize(new Dimension(1200, 800));
+
+        cardPanel.add(groceryListView, groceryListView.getViewName());
+        return this;
+    }
     /**
      * Adds the Signup Use Case to the application.
      * @return this AppBuilder
@@ -195,10 +244,33 @@ public class MainAppBuilder {
      */
     public MainAppBuilder addCheckFavoriteUseCase() {
         final CheckFavoriteOutputBoundary checkFavoriteOutputBoundary = new CheckFavoritePresenter(viewManagerModel, searchViewModel, displayRecipeViewModel);
-        final CheckFavoriteInputBoundary checkFavoriteInteractor = new CheckFavoriteInteractor(favoriteDataAccessObject, checkFavoriteOutputBoundary);
+        final CheckFavoriteInputBoundary checkFavoriteInteractor = new CheckFavoriteInteractor(
+                favoriteDataAccessObject, checkFavoriteOutputBoundary);
 
         final CheckFavoriteController checkFavoriteController = new CheckFavoriteController(checkFavoriteInteractor);
         searchView.setCheckFavoriteController(checkFavoriteController);
+        return this;
+    }
+
+    public MainAppBuilder addMealPlanUseCase() {
+        // create store meals use case
+        final StoreMealInputBoundary storeMealInteractor = new StoreMealInteractor(
+                storeMealDataAccessObject);
+        // create generatemeal use case
+        final GenerateMealPlanOutputBoundary mealPlanOutputBoundary = new GenerateMealPlanPresenter(viewManagerModel, mealPlanViewModel);
+        final GenerateMealPlanInputBoundary mealPlanInteractor = new GenerateMealPlanInteractor(
+                mealPlanOutputBoundary, mealPlanDataAccessObject, storeMealInteractor
+        );
+        // create updatemeals use case
+        final UpdateMealsOutputBoundary updateMealsOutputBoundary = new UpdateMealsPresenter(updateMealsViewModel, viewManagerModel);
+        final UpdateMealsInputBoundary updateMealsInteractor = new UpdateMealsInteractor(updateMealsOutputBoundary,
+                updateMealDataAccessObject);
+
+        final UpdateMealsController updateMealsController = new UpdateMealsController(updateMealsInteractor);
+        searchView.getProfile().setUpdateMealsController(updateMealsController);
+
+        GroceryListController groceryListController = new GroceryListController(new GroceryListInteractor(groceryListDataAccessObject, new GroceryListPresenter(viewManagerModel, searchViewModel, groceryListViewModel)));
+        mealPlanView.setGroceryListController(groceryListController);
         return this;
     }
 
@@ -207,6 +279,16 @@ public class MainAppBuilder {
      * @return this AppBuilder
      */
 
+    public MainAppBuilder addGroceryListUseCase() {
+        final GroceryListOutputBoundary groceryListOutputBoundary = new GroceryListPresenter(viewManagerModel, searchViewModel, groceryListViewModel);
+
+        final GroceryListInputBoundary groceryListInteractor = new GroceryListInteractor(groceryListDataAccessObject, groceryListOutputBoundary);
+
+        final GroceryListController groceryListController = new GroceryListController(groceryListInteractor);
+        searchView.getProfile().setGroceryListController(groceryListController);
+        groceryListView.setController(groceryListController);
+        return this;
+    }
 
     /**
      * Builds the application.

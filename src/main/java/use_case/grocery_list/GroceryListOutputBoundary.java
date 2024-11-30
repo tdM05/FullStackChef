@@ -12,4 +12,6 @@ public interface GroceryListOutputBoundary {
      */
 
     void prepareFailView(String errorMessage);
+
+    void switchToSearchView();
 }

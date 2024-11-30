@@ -19,11 +19,15 @@ public class MainApp {
                                             .addSearchView()
                                             .addDisplayRecipeView()
                                             .addFavoriteView()
+                                            .addMealPlanView()
+                                            .addGroceryListView()
                                             .addSignupUseCase()
                                             .addLoginUseCase()
                                             .addSearchUseCase()
                                             .addDisplayRecipeUseCase()
                                             .addCheckFavoriteUseCase()
+                                            .addMealPlanUseCase()
+                                            .addGroceryListUseCase()
                                             .build();
         application.setVisible(true);
         }

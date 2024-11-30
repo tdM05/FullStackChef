@@ -111,4 +111,8 @@ public class GroceryListInteractor implements GroceryListInputBoundary {
         }
         return res;
     }
+    @Override
+    public void switchToSearchView() {
+        presenter.switchToSearchView();
+    }
 }

@@ -19,4 +19,8 @@ public class GroceryListController {
     public void execute() {
         groceryListInputBoundary.execute();
     }
+
+    public void switchToSearchView() {
+        groceryListInputBoundary.switchToSearchView();
+    }
 }
