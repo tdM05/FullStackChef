@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.SessionUser;
 import data_access.Constants;
 import entity.CommonMeasurable;
 import entity.CommonPair;
@@ -39,11 +40,34 @@ public class GroceryListDataAccessObject implements GroceryListDataAccessInterfa
 
     @Override
     public List<Integer> getAllRecipeIds() {
-        // TODO get all recipe ids from the profile api.
+        //http://vm003.teach.cs.toronto.edu:20112/user?username=test_user
         final List<Integer> res = new ArrayList<>();
-        res.add(716429);
-        res.add(654959);
-        res.add(654959); // add a duplicate to test the simplification
+        SessionUser session = SessionUser.getInstance();
+        String url = String.format("http://vm003.teach.cs.toronto.edu:20112/user?username=%s", session.getUser().getName());
+        final Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+        try {
+            final Response response = client.newCall(request).execute();
+            final JSONObject responseBody = new JSONObject(response.body().string());
+            final int code = responseBody.getInt("status_code");
+            final String message = responseBody.getString(Constants.MESSAGE);
+            if (code != Constants.SUCCESS_CODE || !message.equals("User retrieved successfully")) {
+                return res;
+            }
+            final JSONObject user = responseBody.getJSONObject("user");
+            final JSONObject mealIds = user.getJSONObject("info").getJSONObject(Constants.MEAL_IDS);
+            for (String key : mealIds.keySet()) {
+                JSONArray ids = mealIds.getJSONArray(key);
+                for (int i = 0; i < ids.length(); i++) {
+                    res.add(ids.getInt(i));
+                }
+            }
+        }
+        catch (IOException | JSONException ex) {
+            return res;
+        }
         return res;
     }
 
@@ -109,11 +133,11 @@ public class GroceryListDataAccessObject implements GroceryListDataAccessInterfa
             final IngredientWithConvertedUnits tmp = new CommonIngredientWithConvertedUnits(name, value, unit);
 
             // We need to convert the units to standard units grams.
-            final Pair<Measurable<Float>, Boolean> standardUnits = convertToStandardUnits(name, value, unit);
-
-            tmp.setConvertedAmount(standardUnits.getFirst().getNumber());
-            tmp.setConvertedUnit(standardUnits.getFirst().getUnit());
-            tmp.setConvertStatus(standardUnits.getSecond());
+//            final Pair<Measurable<Float>, Boolean> standardUnits = convertToStandardUnits(name, value, unit);
+//
+//            tmp.setConvertedAmount(standardUnits.getFirst().getNumber());
+//            tmp.setConvertedUnit(standardUnits.getFirst().getUnit());
+//            tmp.setConvertStatus(standardUnits.getSecond());
             res.add(tmp);
         }
         return res;

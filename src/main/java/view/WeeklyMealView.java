@@ -303,6 +303,9 @@ public class WeeklyMealView extends JPanel implements PropertyChangeListener {
         this.groceryListController = groceryListController;
     }
 
+    public void setWeeklyMealController(WeeklyMealController controller) {
+        this.controller = controller;
+    }
     public String getViewName() {
         return Constants.MEAL_PLAN_VIEW;
     }

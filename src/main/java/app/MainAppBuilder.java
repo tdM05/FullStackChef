@@ -2,6 +2,7 @@ package app;
 
 import data_access.*;
 import data_access.UserProfile.UserProfileDao;
+import data_access.grocery_list.GroceryListDataAccessObject;
 import data_access.grocery_list.GroceryListInMemoryDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
@@ -18,6 +19,7 @@ import interface_adapter.grocery_list.GroceryListViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.mealplan.generate_mealplan.WeeklyMealController;
 import interface_adapter.mealplan.generate_mealplan.WeeklyMealPresenter;
 import interface_adapter.mealplan.generate_mealplan.WeeklyMealViewModel;
 import interface_adapter.mealplan.update_meals.UpdateMealsController;
@@ -78,7 +80,7 @@ public class MainAppBuilder {
     private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final RecipeDataAccessObject recipeDataAccessObject = new RecipeDataAccessObject();
     private final FavoriteDataAccessObject favoriteDataAccessObject = new FavoriteDataAccessObject();
-    private final GroceryListDataAccessInterface groceryListDataAccessObject = new GroceryListInMemoryDataAccessObject();
+    private final GroceryListDataAccessInterface groceryListDataAccessObject = new GroceryListDataAccessObject();
     private final WeeklyMealDataAccessInterface weeklyMealDataAccessObject = new WeeklyMealDataAccessObject();
     private final StoreMealDataAccessInterface storeMealDataAccessObject = new UserProfileDao();
     private final UpdateMealsDataAccessInterface updateMealDataAccessObject = new UpdateMealsDataAccessObject();
@@ -269,6 +271,9 @@ public class MainAppBuilder {
 
         GroceryListController groceryListController = new GroceryListController(new GroceryListInteractor(groceryListDataAccessObject, new GroceryListPresenter(viewManagerModel, searchViewModel, groceryListViewModel)));
         weeklyMealView.setGroceryListController(groceryListController);
+
+        WeeklyMealController weeklyMealController = new WeeklyMealController(weeklyMealInteractor);
+        weeklyMealView.setWeeklyMealController(weeklyMealController);
         return this;
     }
 
