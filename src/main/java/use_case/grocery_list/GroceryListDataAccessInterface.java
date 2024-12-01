@@ -2,24 +2,27 @@ package use_case.grocery_list;
 
 import java.util.List;
 
+import entity.Ingredient;
 import entity.IngredientWithConvertedUnits;
+import entity.User;
 
 /**
  * Interface for the GroceryList data access.
  */
 public interface GroceryListDataAccessInterface {
+
     /**
      * Get all ingredients from a list of recipe ids.
      *
      * @param ids The list of recipe IDs.
      * @return The list of ingredients.
      */
-    List<IngredientWithConvertedUnits> getAllIngredients(List<Integer> ids);
+    List<Ingredient> getAllIngredients(List<Integer> ids);
 
     /**
      * Get all recipe IDs for this week.
      *
      * @return The list of recipe IDs.
      */
-    List<Integer> getAllRecipeIds();
+    List<Integer> getAllRecipeIds(String username);
 }
