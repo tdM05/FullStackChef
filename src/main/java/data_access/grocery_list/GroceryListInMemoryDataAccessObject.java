@@ -1,7 +1,8 @@
 package data_access.grocery_list;
 
 import entity.CommonIngredientWithConvertedUnits;
-import entity.IngredientWithConvertedUnits;
+import entity.Ingredient;
+import entity.User;
 import use_case.grocery_list.GroceryListDataAccessInterface;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.List;
  * In memory data access object for the GroceryList.
  */
 public class GroceryListInMemoryDataAccessObject implements GroceryListDataAccessInterface {
-    private List<IngredientWithConvertedUnits> ingredients;
+    private List<Ingredient> ingredients;
 
     public GroceryListInMemoryDataAccessObject() {
         // This is default dummy data
@@ -19,18 +20,19 @@ public class GroceryListInMemoryDataAccessObject implements GroceryListDataAcces
         ingredients.add(new CommonIngredientWithConvertedUnits("name1", 1f, "grams"));
     }
 
-    public GroceryListInMemoryDataAccessObject(List<IngredientWithConvertedUnits> ingredients) {
+    public GroceryListInMemoryDataAccessObject(List<Ingredient> ingredients) {
         // This is default dummy data
         this.ingredients = ingredients;
     }
 
     @Override
-    public List<Integer> getAllRecipeIds() {
+    public List<Integer> getAllRecipeIds(String username) {
         return new ArrayList<>();
     }
 
+
     @Override
-    public List<IngredientWithConvertedUnits> getAllIngredients(List<Integer> ids) {
+    public List<Ingredient> getAllIngredients(List<Integer> ids) {
         return ingredients;
     }
 }
