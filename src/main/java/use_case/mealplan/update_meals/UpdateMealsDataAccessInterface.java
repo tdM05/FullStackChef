@@ -1,6 +1,6 @@
 package use_case.mealplan.update_meals;
 
-import use_case.mealplan.generate_mealplan.GenerateMealPlanRecipeDto;
+import use_case.mealplan.generate_mealplan.WeeklyMealRecipeDto;
 
 import java.util.List;
 import java.util.Map;
@@ -14,5 +14,5 @@ public interface UpdateMealsDataAccessInterface {
      * @param username the username of the user
      * @param password the password of the user
      */
-    Map<String, List<GenerateMealPlanRecipeDto>> getMeals(String username, String password);
+    Map<String, List<WeeklyMealRecipeDto>> getMeals(String username, String password);
 }
