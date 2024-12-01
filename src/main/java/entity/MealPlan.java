@@ -6,7 +6,7 @@ import java.util.List;
 /**:
  * The representation of a meal plan in our program
  */
-public interface MealPlan1 {
+public interface MealPlan {
     /**
      * Returns the recipes of the meal plan
      * @return recipes of the meal plan
