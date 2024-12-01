@@ -9,7 +9,7 @@ import java.util.List;
 public interface MealPlan {
     /**
      * Returns the recipes of the meal plan.
-     * @return recipes of the meal plan.
+     * @return recipes of the meal plan
      */
     List<Recipe> getRecipes();
 
