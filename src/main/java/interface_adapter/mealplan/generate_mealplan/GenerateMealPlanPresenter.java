@@ -94,3 +94,4 @@ public class GenerateMealPlanPresenter implements GenerateMealPlanOutputBoundary
         viewManager.firePropertyChanged();
     }
 }
+

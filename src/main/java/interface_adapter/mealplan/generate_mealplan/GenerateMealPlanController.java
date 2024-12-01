@@ -10,19 +10,19 @@ import use_case.mealplan.generate_mealplan.GenerateMealPlanInputData;
  */
 public class GenerateMealPlanController {
 
-        private final GenerateMealPlanInputBoundary generateMealPlanUseCaseInteractor;
+    private final GenerateMealPlanInputBoundary generateMealPlanUseCaseInteractor;
 
-        public GenerateMealPlanController(GenerateMealPlanInputBoundary generateMealPlanUseCaseInteractor) {
-            this.generateMealPlanUseCaseInteractor = generateMealPlanUseCaseInteractor;
-        }
+    public GenerateMealPlanController(GenerateMealPlanInputBoundary generateMealPlanUseCaseInteractor) {
+        this.generateMealPlanUseCaseInteractor = generateMealPlanUseCaseInteractor;
+    }
 
-        public void execute(String diet, String startDate) {
-            final GenerateMealPlanInputData inputData = new GenerateMealPlanInputData(diet, startDate);
-            User user = SessionUser.getInstance().getUser();
-            generateMealPlanUseCaseInteractor.execute(inputData, user);
-        }
+    public void execute(String diet, String startDate) {
+        final GenerateMealPlanInputData inputData = new GenerateMealPlanInputData(diet, startDate);
+        User user = SessionUser.getInstance().getUser();
+        generateMealPlanUseCaseInteractor.execute(inputData, user);
+    }
 
     public void switchToSearchView() {
-            generateMealPlanUseCaseInteractor.switchToSearchView();
+        generateMealPlanUseCaseInteractor.switchToSearchView();
     }
 }
