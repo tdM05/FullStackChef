@@ -1,7 +1,7 @@
 package use_case.mealplan.update_meals;
 
 import entity.User;
-import use_case.mealplan.generate_mealplan.GenerateMealPlanRecipeDto;
+import use_case.mealplan.generate_mealplan.WeeklyMealRecipeDto;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -22,7 +22,7 @@ public class UpdateMealsInteractor implements UpdateMealsInputBoundary {
     @Override
     public void execute(User user) {
         // we need to first get all the recipes ids from user api
-        Map<String, List<GenerateMealPlanRecipeDto>> userRecipes = dataAccess.getMeals(user.getName(), user.getPassword());
+        Map<String, List<WeeklyMealRecipeDto>> userRecipes = dataAccess.getMeals(user.getName(), user.getPassword());
 
         // then we convert from Map<String, List<GenerateMealPlanRecipeDto>> to Map<LocalDate, List<GenerateMealPlanRecipeDto>>
         final UpdateMealsOutputData outputData = convertToOutputData(userRecipes);
@@ -35,18 +35,18 @@ public class UpdateMealsInteractor implements UpdateMealsInputBoundary {
      * @param userRecipes
      * @return
      */
-    private UpdateMealsOutputData convertToOutputData(Map<String, List<GenerateMealPlanRecipeDto>> userRecipes) {
+    private UpdateMealsOutputData convertToOutputData(Map<String, List<WeeklyMealRecipeDto>> userRecipes) {
         // we need to first convert to  Map<LocalDate, List<GenerateMealPlanRecipeDto>>
         // Get the current week's Monday
         LocalDate currentMonday = LocalDate.now().with(DayOfWeek.MONDAY);
 
         // Create the new map
-        Map<LocalDate, List<GenerateMealPlanRecipeDto>> dateKeyedMap = new HashMap<>();
+        Map<LocalDate, List<WeeklyMealRecipeDto>> dateKeyedMap = new HashMap<>();
 
         // Iterate over the input map
-        for (Map.Entry<String, List<GenerateMealPlanRecipeDto>> entry : userRecipes.entrySet()) {
+        for (Map.Entry<String, List<WeeklyMealRecipeDto>> entry : userRecipes.entrySet()) {
             String dayName = entry.getKey().toLowerCase(Locale.ROOT);
-            List<GenerateMealPlanRecipeDto> recipes = entry.getValue();
+            List<WeeklyMealRecipeDto> recipes = entry.getValue();
 
             // Convert the day name to DayOfWeek
             DayOfWeek dayOfWeek = DayOfWeek.valueOf(dayName.toUpperCase(Locale.ROOT));

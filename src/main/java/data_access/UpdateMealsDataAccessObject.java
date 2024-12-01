@@ -6,7 +6,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import use_case.mealplan.generate_mealplan.GenerateMealPlanRecipeDto;
+import use_case.mealplan.generate_mealplan.WeeklyMealRecipeDto;
 import use_case.mealplan.update_meals.UpdateMealsDataAccessInterface;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class UpdateMealsDataAccessObject implements UpdateMealsDataAccessInterfa
         client = new OkHttpClient();
     }
     @Override
-    public Map<String, List<GenerateMealPlanRecipeDto>> getMeals(String username, String password) {
+    public Map<String, List<WeeklyMealRecipeDto>> getMeals(String username, String password) {
         // we need to get the ids from profile api
         // we get a Map<String, List<Integer>> from the profile api
         final Map<String, List<Integer>> mealIds = StringIntegerMap(username, password);
@@ -29,10 +29,10 @@ public class UpdateMealsDataAccessObject implements UpdateMealsDataAccessInterfa
         // We do this by going through each key one by one, and calling the spoonacular api in bulk for all ids
         // So we only need 7 api calls
         // in the end we parse the json and return a Map<String, List<GenerateMealPlanRecipeDto>>
-        Map<String, List<GenerateMealPlanRecipeDto>> res = new HashMap<>();
+        Map<String, List<WeeklyMealRecipeDto>> res = new HashMap<>();
         for (String key : mealIds.keySet()) {
             final List<Integer> recipeIds = mealIds.get(key);
-            final List<GenerateMealPlanRecipeDto> recipeDto = recipeIdsToDto(recipeIds);
+            final List<WeeklyMealRecipeDto> recipeDto = recipeIdsToDto(recipeIds);
             res.put(key, recipeDto);
         }
         return res;
@@ -86,7 +86,7 @@ public class UpdateMealsDataAccessObject implements UpdateMealsDataAccessInterfa
      * @return a list of GenerateMealPlanRecipeDto
      * @throws ProfileException
      */
-    private List<GenerateMealPlanRecipeDto> recipeIdsToDto(List<Integer> recipeIds) throws ProfileException{
+    private List<WeeklyMealRecipeDto> recipeIdsToDto(List<Integer> recipeIds) throws ProfileException{
         //https://api.spoonacular.com/recipes/informationBulk?ids=715538,716429
         // use the batch api endpoint
         String ids = "";
@@ -108,13 +108,13 @@ public class UpdateMealsDataAccessObject implements UpdateMealsDataAccessInterfa
         try {
             final Response response = client.newCall(request).execute();
             final JSONArray responseBody = new JSONArray(response.body().string());
-            final List<GenerateMealPlanRecipeDto> res = new ArrayList<>();
+            final List<WeeklyMealRecipeDto> res = new ArrayList<>();
             // loop through each recipe object and add to res
             for (int i = 0; i < responseBody.length(); i++) {
                 final JSONObject recipe = responseBody.getJSONObject(i);
                 final String title = recipe.getString("title");
                 final int id = recipe.getInt("id");
-                res.add(new GenerateMealPlanRecipeDto(id, title));
+                res.add(new WeeklyMealRecipeDto(id, title));
             }
             return res;
         }
