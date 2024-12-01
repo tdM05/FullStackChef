@@ -28,7 +28,7 @@ public class UpdateMealsDataAccessObject implements UpdateMealsDataAccessInterfa
         // then we need to convert these ids to meals using spoonacular api
         // We do this by going through each key one by one, and calling the spoonacular api in bulk for all ids
         // So we only need 7 api calls
-        // in the end we parse the json and return a Map<String, List<GenerateMealPlanRecipeDto>>
+        // in the end we parse the json and return a Map<String, List<WeeklyMealRecipeDto>>
         Map<String, List<WeeklyMealRecipeDto>> res = new HashMap<>();
         for (String key : mealIds.keySet()) {
             final List<Integer> recipeIds = mealIds.get(key);
@@ -83,7 +83,7 @@ public class UpdateMealsDataAccessObject implements UpdateMealsDataAccessInterfa
      * This converts List<Integer> to List<WeeklyMealRecipeDto>.
      * So it needs to call spoonacular api to get the recipe name too.
      * @param recipeIds a list of recipe ids
-     * @return a list of GenerateMealPlanRecipeDto
+     * @return a list of WeeklyMealRecipeDto
      * @throws ProfileException
      */
     private List<WeeklyMealRecipeDto> recipeIdsToDto(List<Integer> recipeIds) throws ProfileException{

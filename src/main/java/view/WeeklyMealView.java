@@ -234,7 +234,7 @@ public class WeeklyMealView extends JPanel implements PropertyChangeListener {
 //        }
 //        switch (evt.getPropertyName()) {
 //            case "mealPlan":
-//                final Map<LocalDate, List<GenerateMealPlanRecipeDto>> mealPlanData = (Map<LocalDate, List<GenerateMealPlanRecipeDto>>) evt.getNewValue();
+//                final Map<LocalDate, List<WeeklyMealRecipeDto>> mealPlanData = (Map<LocalDate, List<GenerateMealPlanRecipeDto>>) evt.getNewValue();
 //                updateMealPlan(mealPlanData);
 //                break;
 //            case "isLoading":
