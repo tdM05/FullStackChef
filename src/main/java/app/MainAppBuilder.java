@@ -18,8 +18,8 @@ import interface_adapter.grocery_list.GroceryListViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
-import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanPresenter;
-import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanViewModel;
+import interface_adapter.mealplan.generate_mealplan.WeeklyMealPresenter;
+import interface_adapter.mealplan.generate_mealplan.WeeklyMealViewModel;
 import interface_adapter.mealplan.update_meals.UpdateMealsController;
 import interface_adapter.mealplan.update_meals.UpdateMealsPresenter;
 import interface_adapter.mealplan.update_meals.UpdateMealsViewModel;
@@ -39,10 +39,10 @@ import use_case.grocery_list.*;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
-import use_case.mealplan.generate_mealplan.GenerateMealPlanDataAccessInterface;
-import use_case.mealplan.generate_mealplan.GenerateMealPlanInputBoundary;
-import use_case.mealplan.generate_mealplan.GenerateMealPlanInteractor;
-import use_case.mealplan.generate_mealplan.GenerateMealPlanOutputBoundary;
+import use_case.mealplan.generate_mealplan.WeeklyMealDataAccessInterface;
+import use_case.mealplan.generate_mealplan.WeeklyMealInputBoundary;
+import use_case.mealplan.generate_mealplan.WeeklyMealInteractor;
+import use_case.mealplan.generate_mealplan.WeeklyMealOutputBoundary;
 import use_case.mealplan.update_meals.UpdateMealsDataAccessInterface;
 import use_case.mealplan.update_meals.UpdateMealsInputBoundary;
 import use_case.mealplan.update_meals.UpdateMealsInteractor;
@@ -79,7 +79,7 @@ public class MainAppBuilder {
     private final RecipeDataAccessObject recipeDataAccessObject = new RecipeDataAccessObject();
     private final FavoriteDataAccessObject favoriteDataAccessObject = new FavoriteDataAccessObject();
     private final GroceryListDataAccessInterface groceryListDataAccessObject = new GroceryListInMemoryDataAccessObject();
-    private final GenerateMealPlanDataAccessInterface mealPlanDataAccessObject = new MealPlanDataAccessObject();
+    private final WeeklyMealDataAccessInterface weeklyMealDataAccessObject = new WeeklyMealDataAccessObject();
     private final StoreMealDataAccessInterface storeMealDataAccessObject = new UserProfileDao();
     private final UpdateMealsDataAccessInterface updateMealDataAccessObject = new UpdateMealsDataAccessObject();
 
@@ -95,9 +95,9 @@ public class MainAppBuilder {
     private DisplayFavoriteView displayFavoriteView;
     private DisplayFavoriteViewModel displayFavoriteViewModel;
     private GroceryListView groceryListView;
-    private MealPlanView mealPlanView;
+    private WeeklyMealView weeklyMealView;
     private GroceryListViewModel groceryListViewModel;
-    private GenerateMealPlanViewModel mealPlanViewModel;
+    private WeeklyMealViewModel weeklyMealViewModel;
     private UpdateMealsViewModel updateMealsViewModel;
 
     public MainAppBuilder() {
@@ -162,12 +162,12 @@ public class MainAppBuilder {
         return this;
     }
     
-    public MainAppBuilder addMealPlanView() {
-        mealPlanViewModel = new GenerateMealPlanViewModel();
+    public MainAppBuilder addWeeklyMealView() {
+        weeklyMealViewModel = new WeeklyMealViewModel();
         updateMealsViewModel = new UpdateMealsViewModel();
-        mealPlanView = new MealPlanView(mealPlanViewModel, updateMealsViewModel);
-        mealPlanView.setPreferredSize(new Dimension(1200, 800));
-        cardPanel.add(mealPlanView, mealPlanView.getViewName());
+        weeklyMealView = new WeeklyMealView(weeklyMealViewModel, updateMealsViewModel);
+        weeklyMealView.setPreferredSize(new Dimension(1200, 800));
+        cardPanel.add(weeklyMealView, weeklyMealView.getViewName());
         return this;
     }
 
@@ -250,14 +250,14 @@ public class MainAppBuilder {
         return this;
     }
 
-    public MainAppBuilder addMealPlanUseCase() {
+    public MainAppBuilder addWeeklyMealUseCase() {
         // create store meals use case
         final StoreMealInputBoundary storeMealInteractor = new StoreMealInteractor(
                 storeMealDataAccessObject);
         // create generatemeal use case
-        final GenerateMealPlanOutputBoundary mealPlanOutputBoundary = new GenerateMealPlanPresenter(viewManagerModel, mealPlanViewModel);
-        final GenerateMealPlanInputBoundary mealPlanInteractor = new GenerateMealPlanInteractor(
-                mealPlanOutputBoundary, mealPlanDataAccessObject, storeMealInteractor
+        final WeeklyMealOutputBoundary weeklyMealOutputBoundary = new WeeklyMealPresenter(viewManagerModel, weeklyMealViewModel);
+        final WeeklyMealInputBoundary weeklyMealInteractor = new WeeklyMealInteractor(
+                weeklyMealOutputBoundary, weeklyMealDataAccessObject, storeMealInteractor
         );
         // create updatemeals use case
         final UpdateMealsOutputBoundary updateMealsOutputBoundary = new UpdateMealsPresenter(updateMealsViewModel, viewManagerModel);
@@ -268,7 +268,7 @@ public class MainAppBuilder {
         searchView.getProfile().setUpdateMealsController(updateMealsController);
 
         GroceryListController groceryListController = new GroceryListController(new GroceryListInteractor(groceryListDataAccessObject, new GroceryListPresenter(viewManagerModel, searchViewModel, groceryListViewModel)));
-        mealPlanView.setGroceryListController(groceryListController);
+        weeklyMealView.setGroceryListController(groceryListController);
         return this;
     }
 
