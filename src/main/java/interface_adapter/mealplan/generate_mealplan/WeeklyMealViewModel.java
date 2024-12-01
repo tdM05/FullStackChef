@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * ViewModel for the Generate Meal Plan Use Case.
- * Holds the state and data required for rendering the meal plan view.
+ * ViewModel for the Weekly Meal Use Case.
+ * Holds the state and data required for rendering the weekly meal view.
  */
 public class WeeklyMealViewModel extends ViewModel<WeeklyMealState> {
 
@@ -26,9 +26,9 @@ public class WeeklyMealViewModel extends ViewModel<WeeklyMealState> {
     /**
      * Updates the meal plan data in the ViewModel.
      *
-     * @param mealPlan A map of dates to lists of recipe DTOs.
+     * @param weeklyMeal A map of dates to lists of recipe DTOs.
      */
-    public void updateMealPlan(Map<LocalDate, List<WeeklyMealRecipeDto>> mealPlan) {
+    public void updateMealPlan(Map<LocalDate, List<WeeklyMealRecipeDto>> weeklyMeal) {
         this.mealPlan = mealPlan;
         this.errorMessage = null;  // Clear any previous error message
         this.isLoading = false;   // Set loading to false after update
@@ -59,10 +59,10 @@ public class WeeklyMealViewModel extends ViewModel<WeeklyMealState> {
         firePropertyChanged("isLoading");
     }
 
-    // Getters for GenerateMealPlanView to retrieve updated values
+    // Getters for WeeklyMealView to retrieve updated values
 
     /**
-     * Retrieves the current meal plan data.
+     * Retrieves the current weekly meal data.
      *
      * @return A map of dates to lists of recipe DTOs, or null if an error occurred.
      */

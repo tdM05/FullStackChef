@@ -24,7 +24,7 @@ public class UpdateMealsInteractor implements UpdateMealsInputBoundary {
         // we need to first get all the recipes ids from user api
         Map<String, List<WeeklyMealRecipeDto>> userRecipes = dataAccess.getMeals(user.getName(), user.getPassword());
 
-        // then we convert from Map<String, List<GenerateMealPlanRecipeDto>> to Map<LocalDate, List<GenerateMealPlanRecipeDto>>
+        // then we convert from Map<String, List<WeeklyMealRecipeDto>> to Map<LocalDate, List<WeeklyMealRecipeDto>>
         final UpdateMealsOutputData outputData = convertToOutputData(userRecipes);
         presenter.prepareSuccessView(outputData);
     }

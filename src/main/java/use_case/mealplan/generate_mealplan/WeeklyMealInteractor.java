@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * The Interactor for the Generate Meal Plan Use Case.
+ * The Interactor for the Weekly Meal Use Case.
  *
  * This class handles the core business logic for generating a meal plan.
  * It fetches the meal plan data from the data access layer, processes the data,
@@ -27,7 +27,7 @@ public class WeeklyMealInteractor implements WeeklyMealInputBoundary {
     private final StoreMealInputBoundary storeMealUseCase;
 
     /**
-     * Constructs a GenerateMealPlanInteractor.
+     * Constructs a WeeklyMealInteractor.
      *
      * @param presenter  The output boundary to prepare views for the use case.
      * @param dataAccess The data access interface to interact with external data sources.
@@ -42,7 +42,7 @@ public class WeeklyMealInteractor implements WeeklyMealInputBoundary {
     }
 
     /**
-     * Executes the meal plan generation use case.
+     * Executes the weekly meal generation use case.
      *
      * This method fetches the weekly meal plan from the data access layer,
      * converts the day keys into LocalDate values, transforms the data into DTOs,
@@ -86,14 +86,14 @@ public class WeeklyMealInteractor implements WeeklyMealInputBoundary {
 
     /**
      * Converts the string keys in the raw meal plan to LocalDate values
-     * and transforms recipes into GenerateMealPlanRecipeDto objects.
+     * and transforms recipes into WeeklyMealRecipeDto objects.
      *
      * The start date is used as the base date, and subsequent days are calculated
      * by incrementing the date by the appropriate number of days.
      *
      * @param rawMealPlan The raw meal plan data with string day keys (e.g., "Monday").
      * @param startDate   The start date for the meal plan.
-     * @return A map where the keys are LocalDate values and the values are lists of GenerateMealPlanRecipeDto objects.
+     * @return A map where the keys are LocalDate values and the values are lists of WeeklyMealRecipeDto objects.
      */
     private Map<LocalDate, List<WeeklyMealRecipeDto>> convertKeysAndTransformRecipes(Map<String, List<Recipe>> rawMealPlan, LocalDate startDate) {
         Map<LocalDate, List<WeeklyMealRecipeDto>> mealPlan = new HashMap<>();
