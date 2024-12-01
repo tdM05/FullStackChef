@@ -142,33 +142,28 @@ public class WeeklyMealInteractorTest {
 
     @Test
     public void testSwitchToSearchView() {
-        // Mock ViewManagerModel
-        ViewManagerModel mockViewManager = new ViewManagerModel() {
-            private String state;
+        // Mock ViewManagerModel and Presenter
+        ViewManagerModel viewManagerModel = new ViewManagerModel();
+        WeeklyMealViewModel viewModel = new WeeklyMealViewModel();
+        WeeklyMealPresenter presenter = new WeeklyMealPresenter(viewManagerModel, viewModel);
 
+        // Mock dataAccess and storeMealUseCase
+        WeeklyMealDataAccessInterface dataAccess = new WeeklyMealDataAccessInterface() {
             @Override
-            public void setState(String newState) {
-                this.state = newState;
-            }
-
-            @Override
-            public void firePropertyChanged() {
-                assertNotNull("State should not be null before firing property change.", state);
-                assertEquals("State should be set to SEARCH_VIEW.", Constants.SEARCH_VIEW, state);
+            public Map<String, List<Recipe>> generateWeeklyMealPlan(String diet, String startDate) {
+                return new HashMap<>(); // Provide an empty map for simplicity
             }
         };
 
-        // Mock Presenter
-        WeeklyMealOutputBoundary presenter = new WeeklyMealPresenter(mockViewManager, new WeeklyMealViewModel()) {
+        StoreMealInputBoundary storeMealUseCase = new StoreMealInputBoundary() {
             @Override
-            public void switchToSearchView() {
-                mockViewManager.setState(Constants.SEARCH_VIEW);
-                mockViewManager.firePropertyChanged();
+            public void execute(StoreMealInputData inputData, User user) {
+                // Mock implementation for storeMealUseCase
             }
         };
 
-        // Execute switchToSearchView
-        presenter.switchToSearchView();
+        WeeklyMealInteractor interactor = new WeeklyMealInteractor(presenter, dataAccess, storeMealUseCase);
+        interactor.switchToSearchView();
+        assertEquals("searchView", viewManagerModel.getState());
     }
-
 }
