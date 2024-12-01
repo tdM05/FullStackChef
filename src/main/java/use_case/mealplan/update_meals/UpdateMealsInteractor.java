@@ -30,13 +30,13 @@ public class UpdateMealsInteractor implements UpdateMealsInputBoundary {
     }
 
     /**
-     * Converts from Map<String, List<GenerateMealPlanRecipeDto>> to Map<LocalDate, List<GenerateMealPlanRecipeDto>>.
+     * Converts from Map<String, List<WeeklyMealRecipeDto>> to Map<LocalDate, List<GenerateMealPlanRecipeDto>>.
      * Then it returns in with type OutputData
      * @param userRecipes
      * @return
      */
     private UpdateMealsOutputData convertToOutputData(Map<String, List<WeeklyMealRecipeDto>> userRecipes) {
-        // we need to first convert to  Map<LocalDate, List<GenerateMealPlanRecipeDto>>
+        // we need to first convert to  Map<LocalDate, List<WeeklyMealRecipeDto>>
         // Get the current week's Monday
         LocalDate currentMonday = LocalDate.now().with(DayOfWeek.MONDAY);
 

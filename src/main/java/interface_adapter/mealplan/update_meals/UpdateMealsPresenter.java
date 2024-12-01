@@ -1,7 +1,7 @@
 package interface_adapter.mealplan.update_meals;
 
 import interface_adapter.ViewManagerModel;
-import use_case.mealplan.generate_mealplan.GenerateMealPlanRecipeDto;
+import use_case.mealplan.generate_mealplan.WeeklyMealRecipeDto;
 import use_case.mealplan.update_meals.UpdateMealsOutputBoundary;
 import use_case.mealplan.update_meals.UpdateMealsOutputData;
 
@@ -17,7 +17,7 @@ public class UpdateMealsPresenter implements UpdateMealsOutputBoundary {
         this.viewManagerModel = viewManager;
     }
     public void prepareSuccessView(UpdateMealsOutputData outputData) {
-        Map<LocalDate, List<GenerateMealPlanRecipeDto>> mealPlan = outputData.getMealPlan();
+        Map<LocalDate, List<WeeklyMealRecipeDto>> mealPlan = outputData.getMealPlan();
         final UpdateMealsState state = viewModel.getState();
         state.setMealPlan(mealPlan);
         viewModel.firePropertyChanged();
