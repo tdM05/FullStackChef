@@ -3,7 +3,7 @@ package entity;
 import java.time.LocalDate;
 import java.util.List;
 
-public class CommonMealPlan1 implements MealPlan {
+public class CommonMealPlan1 implements MealPlanner {
     private final List<Recipe> recipes;
     private final LocalDate dates;
 
