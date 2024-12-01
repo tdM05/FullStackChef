@@ -6,7 +6,7 @@ import java.util.List;
 /**:
  * The representation of a meal plan in our program
  */
-public interface MealPlan {
+public interface MealPlanner {
     /**
      * Returns the recipes of the meal plan
      * @return recipes of the meal plan
@@ -19,3 +19,4 @@ public interface MealPlan {
      */
     LocalDate getDate();
 }
+
