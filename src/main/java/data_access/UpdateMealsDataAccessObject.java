@@ -80,7 +80,7 @@ public class UpdateMealsDataAccessObject implements UpdateMealsDataAccessInterfa
     }
 
     /**
-     * This converts List<Integer> to List<GenerateMealPlanRecipeDto>.
+     * This converts List<Integer> to List<WeeklyMealRecipeDto>.
      * So it needs to call spoonacular api to get the recipe name too.
      * @param recipeIds a list of recipe ids
      * @return a list of GenerateMealPlanRecipeDto
