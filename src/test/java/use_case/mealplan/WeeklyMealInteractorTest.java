@@ -1,6 +1,5 @@
 package use_case.mealplan;
 
-import data_access.Constants;
 import entity.CommonRecipe;
 import entity.CommonUser;
 import entity.Recipe;
@@ -8,7 +7,7 @@ import entity.User;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.mealplan.generate_mealplan.WeeklyMealPresenter;
 import interface_adapter.mealplan.generate_mealplan.WeeklyMealViewModel;
-import org.junit.Before; // Use JUnit 4's @Before for setup
+import org.junit.Before;
 import org.junit.Test;
 import use_case.mealplan.generate_mealplan.*;
 import use_case.set_meals.StoreMealInputBoundary;
@@ -22,9 +21,9 @@ import static org.junit.Assert.*;
 
 public class WeeklyMealInteractorTest {
 
-    private CommonUser testUser; // Declare testUser at the class level
+    private CommonUser testUser;
 
-    @Before // JUnit 4 setup annotation
+    @Before
     public void setup() {
         testUser = new CommonUser("giselle", "chromehearts"); // Initialize testUser
     }
@@ -89,13 +88,8 @@ public class WeeklyMealInteractorTest {
             }
         };
 
-        // Create interactor and execute test
         WeeklyMealInteractor interactor = new WeeklyMealInteractor(presenter, dao, storeMealUseCase);
-
-        // Mock input data
         WeeklyMealInputData inputData = new WeeklyMealInputData("vegan", "2024-11-25");
-
-        // Use the `testUser` instance instead of creating a new user
         interactor.execute(inputData, testUser);
     }
 
@@ -118,7 +112,6 @@ public class WeeklyMealInteractorTest {
             }
         };
 
-        // Mock StoreMealInputBoundary (no interaction here)
         StoreMealInputBoundary storeMealUseCase = new StoreMealInputBoundary() {
             @Override
             public void execute(StoreMealInputData inputData, User user) {
@@ -126,16 +119,9 @@ public class WeeklyMealInteractorTest {
             }
         };
 
-        // Create interactor and execute test
         WeeklyMealInteractor interactor = new WeeklyMealInteractor(presenter, dao, storeMealUseCase);
-
-        // Mock input data
         WeeklyMealInputData inputData = new WeeklyMealInputData("vegan", "2024-11-25");
-
-        // Mock user
         CommonUser mockUser = new CommonUser("testUser", "testPassword");
-
-        // Execute the use case
         interactor.execute(inputData, mockUser);
     }
 
@@ -151,7 +137,7 @@ public class WeeklyMealInteractorTest {
         WeeklyMealDataAccessInterface dataAccess = new WeeklyMealDataAccessInterface() {
             @Override
             public Map<String, List<Recipe>> generateWeeklyMealPlan(String diet, String startDate) {
-                return new HashMap<>(); // Provide an empty map for simplicity
+                return new HashMap<>();
             }
         };
 
