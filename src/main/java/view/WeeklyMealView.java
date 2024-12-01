@@ -46,7 +46,7 @@ public class WeeklyMealView extends JPanel implements PropertyChangeListener {
         this.viewModel.addPropertyChangeListener(this);
         this.updateMealsViewModel = updateMealsViewModel;
         this.updateMealsViewModel.addPropertyChangeListener(this);
-        this.startDate = LocalDate.now().with(java.time.DayOfWeek.MONDAY); // Start from the current week's Monday
+        this.startDate = LocalDate.now(); // Start from the current week's Monday
 
         setLayout(new BorderLayout());
 
@@ -114,7 +114,12 @@ public class WeeklyMealView extends JPanel implements PropertyChangeListener {
         generateGroceryListButton.addActionListener(e -> {
             groceryListController.execute();
         });
-        generateMealPlanButton.addActionListener(e -> showGenerateMealPlanPopup());
+        generateMealPlanButton.addActionListener(e -> {
+            LocalDate startDate = LocalDate.now();
+            if (controller != null) {
+                controller.execute("None", startDate.toString()); // Default diet for now
+            }
+        });
         actionPanel.add(generateGroceryListButton);
         actionPanel.add(generateMealPlanButton);
         bottomPanel.add(actionPanel, BorderLayout.SOUTH);
@@ -172,19 +177,19 @@ public class WeeklyMealView extends JPanel implements PropertyChangeListener {
         descriptionLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         popup.add(descriptionLabel, BorderLayout.NORTH);
 
-        // Create a date spinner
-        JPanel centerPanel = new JPanel(new FlowLayout());
-        JSpinner dateSpinner = new JSpinner(new SpinnerDateModel());
-        JSpinner.DateEditor editor = new JSpinner.DateEditor(dateSpinner, "yyyy-MM-dd");
-        dateSpinner.setEditor(editor);
-        centerPanel.add(dateSpinner);
-        popup.add(centerPanel, BorderLayout.CENTER);
+//        // Create a date spinner
+//        JPanel centerPanel = new JPanel(new FlowLayout());
+//        JSpinner dateSpinner = new JSpinner(new SpinnerDateModel());
+//        JSpinner.DateEditor editor = new JSpinner.DateEditor(dateSpinner, "yyyy-MM-dd");
+//        dateSpinner.setEditor(editor);
+//        centerPanel.add(dateSpinner);
+//        popup.add(centerPanel, BorderLayout.CENTER);
 
         JButton confirmButton = new JButton("Generate");
         confirmButton.addActionListener(e -> {
             // Get the selected date
-            Date selectedDate = (Date) dateSpinner.getValue();
-            LocalDate startDate = selectedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//            Date selectedDate = LocalDate.now();
+            LocalDate startDate = LocalDate.now();
             if (controller != null) {
                 controller.execute("None", startDate.toString()); // Default diet for now
             }

@@ -36,28 +36,24 @@ public class UpdateMealsInteractor implements UpdateMealsInputBoundary {
      * @return
      */
     private UpdateMealsOutputData convertToOutputData(Map<String, List<WeeklyMealRecipeDto>> userRecipes) {
-        // we need to first convert to  Map<LocalDate, List<WeeklyMealRecipeDto>>
-        // Get the current week's Monday
-        LocalDate currentMonday = LocalDate.now().with(DayOfWeek.MONDAY);
+// Get the current day's date (start point for keys)
+        LocalDate day = LocalDate.now();
 
-        // Create the new map
+// Create the new map
         Map<LocalDate, List<WeeklyMealRecipeDto>> dateKeyedMap = new HashMap<>();
 
-        // Iterate over the input map
+// Iterate over the input map
         for (Map.Entry<String, List<WeeklyMealRecipeDto>> entry : userRecipes.entrySet()) {
-            String dayName = entry.getKey().toLowerCase(Locale.ROOT);
             List<WeeklyMealRecipeDto> recipes = entry.getValue();
 
-            // Convert the day name to DayOfWeek
-            DayOfWeek dayOfWeek = DayOfWeek.valueOf(dayName.toUpperCase(Locale.ROOT));
+            // Add the entry to the map using the current 'day' as the key
+            dateKeyedMap.put(day, recipes);
 
-            // Calculate the corresponding LocalDate
-            LocalDate date = currentMonday.with(dayOfWeek);
-
-            // Add to the new map
-            dateKeyedMap.put(date, recipes);
+            // Increment 'day' by one
+            day = day.plusDays(1);
         }
-        // then we return it with type OutputData
+
+// Return the result wrapped in the output data type
         return new UpdateMealsOutputData(dateKeyedMap);
 
     }
