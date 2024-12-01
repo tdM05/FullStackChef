@@ -1,10 +1,15 @@
 package view;
 
+import app.SessionUser;
 import data_access.Constants;
+import entity.User;
+import interface_adapter.ViewManagerModel;
+import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.grocery_list.GroceryListController;
 import interface_adapter.mealplan.generate_mealplan.WeeklyMealController;
 import interface_adapter.mealplan.generate_mealplan.WeeklyMealState;
 import interface_adapter.mealplan.generate_mealplan.WeeklyMealViewModel;
+import interface_adapter.mealplan.update_meals.UpdateMealsController;
 import interface_adapter.mealplan.update_meals.UpdateMealsState;
 import interface_adapter.mealplan.update_meals.UpdateMealsViewModel;
 import use_case.mealplan.generate_mealplan.WeeklyMealRecipeDto;
@@ -36,7 +41,7 @@ public class WeeklyMealView extends JPanel implements PropertyChangeListener {
     private Map<LocalDate, List<WeeklyMealRecipeDto>> mealPlanData;
 
     public WeeklyMealView(WeeklyMealViewModel viewModel,
-                          UpdateMealsViewModel updateMealsViewModel) {
+                        UpdateMealsViewModel updateMealsViewModel) {
         this.viewModel = viewModel;
         this.viewModel.addPropertyChangeListener(this);
         this.updateMealsViewModel = updateMealsViewModel;
@@ -241,9 +246,14 @@ public class WeeklyMealView extends JPanel implements PropertyChangeListener {
 
     private void updateMealPlan(Map<LocalDate, List<WeeklyMealRecipeDto>> mealPlanData) {
         contentPanel.removeAll();
-        for (Map.Entry<LocalDate, List<WeeklyMealRecipeDto>> entry : mealPlanData.entrySet()) {
-            JPanel dayPanel = createDayPanel(entry.getKey(), entry.getValue());
+        LocalDate current = startDate;
+        for (int i = 0; i < 7; i++) {
+            List<WeeklyMealRecipeDto> recipes = mealPlanData != null && mealPlanData.containsKey(current)
+                    ? mealPlanData.get(current)
+                    : new ArrayList<>();
+            JPanel dayPanel = createDayPanel(current, recipes);
             contentPanel.add(dayPanel);
+            current = current.plusDays(1);
         }
         contentPanel.revalidate();
         contentPanel.repaint();
@@ -254,51 +264,40 @@ public class WeeklyMealView extends JPanel implements PropertyChangeListener {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
-        String dayAbbreviation = date.getDayOfWeek().toString().substring(0, 3); // e.g., MON, TUE
-        JLabel dateLabel = new JLabel(dayAbbreviation + " - " + date);
+        String day = date.getDayOfWeek().toString();
+        JLabel dateLabel = new JLabel(day, SwingConstants.CENTER);
         dateLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(dateLabel);
 
-        for (WeeklyMealRecipeDto recipe : recipes) {
+        for (int i = 0; i < recipes.size(); i++) {
+            WeeklyMealRecipeDto recipe = recipes.get(i);
             JPanel recipePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            JLabel recipeLabel = new JLabel(recipe.getTitle());
-            JButton removeButton = new JButton("-");
-            removeButton.addActionListener(e -> {
-                int result = JOptionPane.showConfirmDialog(this,
-                        "Are you sure you want to remove this recipe?",
-                        "Confirm Removal",
-                        JOptionPane.YES_NO_OPTION);
-                if (result == JOptionPane.YES_OPTION) {
-                    recipes.remove(recipe);
-                    updateMealPlan(viewModel.getMealPlan());
-                }
-            });
+            JTextArea recipeLabel = new JTextArea(recipe.getTitle());
+            recipeLabel.setLineWrap(true);
+            recipeLabel.setWrapStyleWord(true);
+            recipeLabel.setEditable(false);
+            recipeLabel.setOpaque(false);
+            recipeLabel.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
             recipePanel.add(recipeLabel);
-            recipePanel.add(removeButton);
             panel.add(recipePanel);
+
+            // Add a separator after each recipe except the last one
+            if (i < recipes.size() - 1) {
+                JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+                separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1)); // Full width, 1-pixel height
+                panel.add(separator);
+            }
         }
 
         return panel;
     }
 
+
+
     private void showLoadingSpinner(boolean show) {
         loadingSpinner.setVisible(show);
         contentPanel.setVisible(!show);
     }
-
-//    public static void main(String[] args) {
-//        SwingUtilities.invokeLater(() -> {
-//            GenerateMealPlanViewModel viewModel = new GenerateMealPlanViewModel();
-//            MealPlanView mealPlanView = new MealPlanView(viewModel);
-//
-//            JFrame frame = new JFrame("Meal Plan Viewer");
-//            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//            frame.setSize(1200, 800);
-//            frame.add(mealPlanView);
-//            frame.setVisible(true);
-//        });
-//    }
-
 
     public void setGroceryListController(GroceryListController groceryListController) {
         this.groceryListController = groceryListController;
@@ -308,4 +307,3 @@ public class WeeklyMealView extends JPanel implements PropertyChangeListener {
         return Constants.MEAL_PLAN_VIEW;
     }
 }
-
