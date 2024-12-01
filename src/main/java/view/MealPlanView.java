@@ -1,15 +1,10 @@
 package view;
 
-import app.SessionUser;
 import data_access.Constants;
-import entity.User;
-import interface_adapter.ViewManagerModel;
-import interface_adapter.change_password.ChangePasswordController;
 import interface_adapter.grocery_list.GroceryListController;
 import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanController;
 import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanState;
 import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanViewModel;
-import interface_adapter.mealplan.update_meals.UpdateMealsController;
 import interface_adapter.mealplan.update_meals.UpdateMealsState;
 import interface_adapter.mealplan.update_meals.UpdateMealsViewModel;
 import use_case.mealplan.generate_mealplan.GenerateMealPlanRecipeDto;

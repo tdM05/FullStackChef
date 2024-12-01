@@ -2,7 +2,6 @@ package app;
 
 import data_access.*;
 import data_access.UserProfile.UserProfileDao;
-import data_access.grocery_list.GroceryListDataAccessObject;
 import data_access.grocery_list.GroceryListInMemoryDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
@@ -19,7 +18,6 @@ import interface_adapter.grocery_list.GroceryListViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
-import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanController;
 import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanPresenter;
 import interface_adapter.mealplan.generate_mealplan.GenerateMealPlanViewModel;
 import interface_adapter.mealplan.update_meals.UpdateMealsController;
