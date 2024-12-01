@@ -1,5 +1,7 @@
 package view;
 
+import data_access.Constants;
+import interface_adapter.display_favorites.DisplayFavoriteController;
 import interface_adapter.display_recipe.DisplayRecipeController;
 import interface_adapter.display_recipe.DisplayRecipeViewModel;
 import interface_adapter.favorite.FavoriteController;
@@ -14,8 +16,9 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
 
     private final String viewName = "displayRecipeView";
 
-    private DisplayRecipeController displayRecipeController;
     private FavoriteController favoriteController;
+    private DisplayFavoriteController displayFavoriteController;
+    private DisplayRecipeController displayRecipeController;
 
     private final JLabel recipeTitleLabel = new JLabel();
     private final JLabel recipeImageLabel = new JLabel();
@@ -60,13 +63,15 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
         add(backButton);
 
         backButton.addActionListener(e -> {
+            if (displayRecipeViewModel.getPreviousViewName().equals(Constants.SEARCH_VIEW)) {
                 displayRecipeController.switchToSearchView();
+            }
+            else {
+                displayFavoriteController.execute();
+            }
+
 
         });
-    }
-
-    public void setDisplayRecipeController(DisplayRecipeController controller) {
-        this.displayRecipeController = controller;
     }
 
     @Override
@@ -112,11 +117,6 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
         errorLabel.setText(viewModel.getErrorMessage() != null ? viewModel.getErrorMessage() : "");
     }
 
-    public void loadRecipeDetails(int recipeId) {
-        if (displayRecipeController != null) {
-            displayRecipeController.execute(recipeId);
-        }
-    }
 
     public String getViewName() {
         return viewName;
@@ -124,5 +124,13 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
 
     public void setFavoriteController(FavoriteController favoriteController) {
         this.favoriteController = favoriteController;
+    }
+
+    public void setDisplayRecipeController(DisplayRecipeController controller) {
+        this.displayRecipeController = controller;
+    }
+
+    public void setDisplayFavoriteController(DisplayFavoriteController controller) {
+        this.displayFavoriteController = controller;
     }
 }

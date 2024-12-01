@@ -4,7 +4,9 @@ import app.SessionUser;
 import entity.CommonUser;
 import entity.Recipe;
 import entity.User;
+import org.json.JSONException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,18 +36,39 @@ public class DisplayFavoriteInteractor implements DisplayFavoriteInputBoundary {
 
         List<Integer> favorites = dataAccess.getFavorites(user);
 
+        System.out.println("Testing Display Favorite Interactor");
+        System.out.println(favorites);
+
         StringBuilder recipeIds = new StringBuilder();
         for (int favorite : favorites) {
             recipeIds.append(favorite).append(",");
         }
 
+        if (recipeIds.length() > 0) {
+            recipeIds.setLength(recipeIds.length() - 1);
+        }
+
         String recipeList = recipeIds.toString();
 
-        List<Recipe> recipes = dataAccess.getRecipes(recipeList);
+        System.out.println(recipeList);
 
-        final List<DisplayFavoriteOutputData> outputData = recipeToCommonRecipeOutputData(recipes);
-        presenter.prepareSuccessView(outputData);
+        try {
+            System.out.println("jrthjuytyrgehjyty5etrghjyht");
+            List<Recipe> recipes = dataAccess.getRecipes(recipeList);
+            System.out.println(recipes);
+            final List<DisplayFavoriteOutputData> outputData = recipeToCommonRecipeOutputData(recipes);
+            System.out.println(outputData);
+            presenter.prepareSuccessView(outputData);
+        }
+        catch (IOException | JSONException ex) {
+            presenter.prepareFailView("Failed to get recipes.");
+        }
 
+    }
+
+    @Override
+    public void switchToSearchView() {
+        presenter.switchToSearchView();
     }
 
     private List<DisplayFavoriteOutputData> recipeToCommonRecipeOutputData(List<Recipe> recipes) {

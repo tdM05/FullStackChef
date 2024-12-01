@@ -19,6 +19,7 @@ public class DisplayRecipeOutputData {
     private final NutritionalInfo nutritionalInfo;
     private final List<Instruction> instructions;
     private final boolean isFavorite;
+    private final String previousViewName;
 
     /**
      * Constructs a DisplayRecipeOutputData with the specified details.
@@ -34,7 +35,7 @@ public class DisplayRecipeOutputData {
      */
     public DisplayRecipeOutputData(int recipeId, String title, String image, String imageType,
                                    List<Ingredient> ingredients, NutritionalInfo nutritionalInfo,
-                                   List<Instruction> instructions, boolean isFavorite) {
+                                   List<Instruction> instructions, boolean isFavorite, String previousViewName) {
         this.recipeId = recipeId;
         this.title = title;
         this.image = image;
@@ -43,6 +44,7 @@ public class DisplayRecipeOutputData {
         this.nutritionalInfo = nutritionalInfo;
         this.instructions = instructions;
         this.isFavorite = isFavorite;
+        this.previousViewName = previousViewName;
     }
 
     // Getters for all fields
@@ -78,4 +80,10 @@ public class DisplayRecipeOutputData {
     public boolean isFavorite() {
         return isFavorite;
     }
+
+    public String getPreviousViewName() {
+        return previousViewName;
+    }
+
+
 }

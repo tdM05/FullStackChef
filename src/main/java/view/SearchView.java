@@ -4,6 +4,7 @@ import entity.CommonRecipe;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.check_favorite.CheckFavoriteController;
+import interface_adapter.display_favorites.DisplayFavoriteController;
 import interface_adapter.display_recipe.DisplayRecipeController;
 import interface_adapter.grocery_list.GroceryListController;
 import interface_adapter.search.SearchViewModel;
@@ -52,7 +53,7 @@ public class SearchView extends JPanel {
     private void loadScreen() {
 
         // Create the profile component
-        profile = new Profile(groceryListController);
+        profile = new Profile();
 
         // Instantiate the SearchBar
         searchBar = new SearchBar("Search for recipes...");
@@ -151,6 +152,10 @@ public class SearchView extends JPanel {
 
     public String getViewName() {
         return viewName;
+    }
+
+    public Profile getProfile() {
+        return profile;
     }
 
     public void setSearchController(SearchController controller) {

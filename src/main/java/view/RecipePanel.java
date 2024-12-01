@@ -93,13 +93,20 @@ public class RecipePanel extends JPanel {
         recipeCard.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (previousViewName == Constants.SEARCH_VIEW)
+                if (previousViewName.equals(Constants.SEARCH_VIEW))
                 {
-                    System.out.println("Recipe recipeCard clicked. Recipe ID: " + recipe.getRecipeId());
-                    displayRecipeController.execute(recipe.getRecipeId());
-                    checkFavoriteController.execute(recipe.getRecipeId());
+                    System.out.println("From Search View");
 
                 }
+                else if (previousViewName.equals(Constants.FAVORITE_VIEW))
+                {
+                    System.out.println("From Favorite View");
+
+                }
+
+                System.out.println("Recipe recipeCard clicked. Recipe ID: " + recipe.getRecipeId());
+                displayRecipeController.execute(recipe.getRecipeId(), previousViewName);
+                checkFavoriteController.execute(recipe.getRecipeId());
 
             }
         });

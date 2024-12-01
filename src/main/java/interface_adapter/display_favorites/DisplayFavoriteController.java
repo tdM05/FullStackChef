@@ -18,4 +18,11 @@ public class DisplayFavoriteController {
     public void execute() {
         displayFavoriteInteractor.execute();
     }
+
+    /**
+     * Executes the "switch to SearchView" Use Case.
+     */
+    public void switchToSearchView() {
+        displayFavoriteInteractor.switchToSearchView();
+    }
 }

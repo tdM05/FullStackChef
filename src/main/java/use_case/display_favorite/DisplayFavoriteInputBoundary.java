@@ -10,4 +10,9 @@ public interface DisplayFavoriteInputBoundary {
      */
     void execute();
 
+    /**
+     * Executes the "switch to SearchView" Use Case.
+     */
+    void switchToSearchView();
+
 }

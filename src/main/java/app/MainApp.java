@@ -25,6 +25,7 @@ public class MainApp {
                                             .addDisplayRecipeUseCase()
                                             .addCheckFavoriteUseCase()
                                             .addFavoriteUseCase()
+                                            .addDisplayFavoriteUseCase()
                                             .build();
         application.setVisible(true);
         }

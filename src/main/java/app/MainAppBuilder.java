@@ -8,6 +8,8 @@ import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.check_favorite.CheckFavoriteController;
 import interface_adapter.check_favorite.CheckFavoritePresenter;
+import interface_adapter.display_favorites.DisplayFavoriteController;
+import interface_adapter.display_favorites.DisplayFavoritePresenter;
 import interface_adapter.display_favorites.DisplayFavoriteViewModel;
 import interface_adapter.display_recipe.DisplayRecipeController;
 import interface_adapter.display_recipe.DisplayRecipePresenter;
@@ -27,6 +29,9 @@ import interface_adapter.signup.SignupViewModel;
 import use_case.check_favorite.CheckFavoriteInputBoundary;
 import use_case.check_favorite.CheckFavoriteInteractor;
 import use_case.check_favorite.CheckFavoriteOutputBoundary;
+import use_case.display_favorite.DisplayFavoriteInputBoundary;
+import use_case.display_favorite.DisplayFavoriteInteractor;
+import use_case.display_favorite.DisplayFavoriteOutputBoundary;
 import use_case.display_recipe.DisplayRecipeInputBoundary;
 import use_case.display_recipe.DisplayRecipeInteractor;
 import use_case.display_recipe.DisplayRecipeOutputBoundary;
@@ -136,6 +141,7 @@ public class MainAppBuilder {
     public MainAppBuilder addFavoriteView() {
         displayFavoriteViewModel = new DisplayFavoriteViewModel();
         displayFavoriteView = new DisplayFavoriteView(displayFavoriteViewModel);
+        displayFavoriteView.setPreferredSize(new Dimension(1200, 800));
         cardPanel.add(displayFavoriteView, displayFavoriteView.getViewName());
         return this;
     }
@@ -151,6 +157,7 @@ public class MainAppBuilder {
                 userDataAccessObject, signupOutputBoundary, userFactory);
 
         final SignupController controller = new SignupController(userSignupInteractor);
+        //Signup
         signupView.setSignupController(controller);
         return this;
     }
@@ -166,6 +173,7 @@ public class MainAppBuilder {
                 userDataAccessObject, loginOutputBoundary);
 
         final LoginController controller = new LoginController(userLoginInteractor);
+        //Login
         loginView.setLoginController(controller);
         return this;
     }
@@ -179,6 +187,7 @@ public class MainAppBuilder {
         final SearchInputBoundary searchInteractor = new SearchInteractor(recipeDataAccessObject, searchOutputBoundary);
 
         final SearchController searchController = new SearchController(searchInteractor);
+        //Search recipe
         searchView.setSearchController(searchController);
         return this;
     }
@@ -192,8 +201,12 @@ public class MainAppBuilder {
         final DisplayRecipeInputBoundary displayRecipeInteractor = new DisplayRecipeInteractor(recipeDataAccessObject, displayRecipeOutputBoundary);
 
         final DisplayRecipeController displayRecipeController = new DisplayRecipeController(displayRecipeInteractor);
+        //Display recipe from search view
         searchView.setDisplayRecipeController(displayRecipeController);
+        //Back button
         displayRecipeView.setDisplayRecipeController(displayRecipeController);
+        //Display recipe from favorite view
+        displayFavoriteView.setDisplayRecipeController(displayRecipeController);
         return this;
     }
 
@@ -206,7 +219,11 @@ public class MainAppBuilder {
         final CheckFavoriteInputBoundary checkFavoriteInteractor = new CheckFavoriteInteractor(favoriteDataAccessObject, checkFavoriteOutputBoundary);
 
         final CheckFavoriteController checkFavoriteController = new CheckFavoriteController(checkFavoriteInteractor);
+
+        // Check favorite button
         searchView.setCheckFavoriteController(checkFavoriteController);
+        // Check favorite button
+        displayFavoriteView.setCheckFavoriteController(checkFavoriteController);
         return this;
     }
 
@@ -219,7 +236,26 @@ public class MainAppBuilder {
         final FavoriteInputBoundary favoriteInteractor = new FavoriteInteractor(favoriteDataAccessObject, favoriteOutputBoundary);
 
         final FavoriteController favoriteController = new FavoriteController(favoriteInteractor);
+        // Toggle favorite button
         displayRecipeView.setFavoriteController(favoriteController);
+        return this;
+    }
+
+    /**
+     * Adds the DisplayFavorite Use Case to the application.
+     * @return this AppBuilder
+     */
+    public MainAppBuilder addDisplayFavoriteUseCase() {
+        final DisplayFavoriteOutputBoundary displayFavoriteOutputBoundary = new DisplayFavoritePresenter(viewManagerModel, searchViewModel, displayFavoriteViewModel);
+        final DisplayFavoriteInputBoundary displayFavoriteInteractor = new DisplayFavoriteInteractor(favoriteDataAccessObject, displayFavoriteOutputBoundary);
+
+        final DisplayFavoriteController displayFavoriteController = new DisplayFavoriteController(displayFavoriteInteractor);
+        // Display favorites from search view
+        searchView.getProfile().setDisplayFavoriteController(displayFavoriteController);
+        // Back button
+        displayFavoriteView.setDisplayFavoriteController(displayFavoriteController);
+        // Display favorites from display recipe view
+        displayRecipeView.setDisplayFavoriteController(displayFavoriteController);
         return this;
     }
 
@@ -228,7 +264,7 @@ public class MainAppBuilder {
      * @return the built application
      */
     public JFrame build() {
-        final JFrame application = new JFrame("Recipe App");
+        final JFrame application = new JFrame("FullStackChef");
         application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         application.add(cardPanel);
 

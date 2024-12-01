@@ -35,7 +35,7 @@ public class FavoriteDataAccessObject implements CheckFavoriteDataAccessInterfac
     private static final String MESSAGE = "message";
 
     private static final String API_KEY = Constants.API_KEY;
-    private static final String BASE_SEARCH_URL = "https://api.spoonacular.com/recipes/complexSearchinformationBulk?";
+    private static final String BASE_SEARCH_URL = "https://api.spoonacular.com/recipes/informationBulk?";
 
     private static final String RESULTS = "results";
     private static final String ID = "id";
@@ -141,8 +141,10 @@ public class FavoriteDataAccessObject implements CheckFavoriteDataAccessInterfac
 
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful() && response.body() != null) {
-                final JSONObject jsonResponse = new JSONObject(response.body().string());
-                final JSONArray results = jsonResponse.getJSONArray(RESULTS);
+                String responseString = response.body().string();
+                final JSONArray results = new JSONArray(responseString);
+
+                System.out.println(results.length());
 
                 // Clear previous search results
                 RECIPES.clear();
@@ -151,6 +153,7 @@ public class FavoriteDataAccessObject implements CheckFavoriteDataAccessInterfac
                 for (int i = 0; i < results.length(); i++) {
                     final JSONObject recipeJson = results.getJSONObject(i);
                     final int recipeID = recipeJson.getInt(ID);
+                    System.out.println(recipeID);
                     final String title = recipeJson.getString(TITLE);
                     final String image = recipeJson.getString(IMAGE);
                     final String imageType = recipeJson.optString(IMAGE_TYPE, "jpg");
@@ -158,6 +161,7 @@ public class FavoriteDataAccessObject implements CheckFavoriteDataAccessInterfac
                     // Fetch detailed information for each recipe
                     final Recipe recipe = new CommonRecipe(recipeID, title, image, imageType, null, null, null, false);
                     // Add to the list
+                    System.out.println(recipe);
                     RECIPES.add(recipe);
                 }
                 return RECIPES;
