@@ -16,9 +16,6 @@ public class DisplayFavoriteInteractor implements DisplayFavoriteInputBoundary {
     private final DisplayFavoriteDataAccessInterface dataAccess;
     private final DisplayFavoriteOutputBoundary presenter;
 
-    // The user is stored in the session.
-    //private final User user = SessionUser.getInstance().getUser();
-    private final User user = new CommonUser("jonathan_calver2", "abc123");
 
     public DisplayFavoriteInteractor(DisplayFavoriteDataAccessInterface dataAccess,
                                      DisplayFavoriteOutputBoundary presenter) {
@@ -28,6 +25,13 @@ public class DisplayFavoriteInteractor implements DisplayFavoriteInputBoundary {
 
     @Override
     public void execute() {
+        User user = SessionUser.getInstance().getUser();
+
+        if (user == null) {
+            presenter.prepareFailView("Error with retrieving user");
+            return;
+        }
+
         List<Integer> favorites = dataAccess.getFavorites(user);
 
         StringBuilder recipeIds = new StringBuilder();

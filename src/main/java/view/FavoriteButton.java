@@ -20,15 +20,6 @@ public class FavoriteButton extends JButton {
         // Set preferred size
         setPreferredSize(new Dimension(50, 50));
 
-        // Add a mouse listener to handle click events
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                toggleSelected();
-                // Fire an action event to notify listeners
-                fireActionPerformed();
-            }
-        });
     }
 
     private void toggleSelected() {
@@ -113,14 +104,4 @@ public class FavoriteButton extends JButton {
         repaint();
     }
 
-    // Methods to customize colors
-    public void setSelectedColor(Color selectedColor) {
-        this.selectedColor = selectedColor;
-        repaint();
-    }
-
-    public void setUnselectedColor(Color unselectedColor) {
-        this.unselectedColor = unselectedColor;
-        repaint();
-    }
 }

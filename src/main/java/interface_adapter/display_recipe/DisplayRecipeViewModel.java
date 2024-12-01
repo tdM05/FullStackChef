@@ -8,6 +8,7 @@ import java.util.List;
  */
 public class DisplayRecipeViewModel extends ViewModel<DisplayRecipeState> {
 
+    private int recipeId;
     private String title;
     private String imageUrl;
     private List<String> ingredients;
@@ -20,7 +21,8 @@ public class DisplayRecipeViewModel extends ViewModel<DisplayRecipeState> {
         setState(new DisplayRecipeState());
     }
 
-    public void updateRecipeDetails(String title, String imageUrl, List<String> ingredients, List<String> instructions) {
+    public void updateRecipeDetails(int recipeId, String title, String imageUrl, List<String> ingredients, List<String> instructions) {
+        this.recipeId = recipeId;
         this.title = title;
         this.imageUrl = imageUrl;
         this.ingredients = ingredients;
@@ -43,6 +45,7 @@ public class DisplayRecipeViewModel extends ViewModel<DisplayRecipeState> {
     }
 
     // Getters for DisplayRecipeView to retrieve updated values
+    public int getRecipeId() { return recipeId; }
     public String getTitle() { return title; }
     public String getImageUrl() { return imageUrl; }
     public List<String> getIngredients() { return ingredients; }

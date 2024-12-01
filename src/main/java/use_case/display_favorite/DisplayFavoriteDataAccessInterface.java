@@ -2,7 +2,9 @@ package use_case.display_favorite;
 
 import entity.Recipe;
 import entity.User;
+import org.json.JSONException;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -24,6 +26,6 @@ public interface DisplayFavoriteDataAccessInterface {
      * @param recipeId the list of recipe IDs to be retrieved
      * @return the list of recipes for the given recipe IDs
      */
-    List<Recipe> getRecipes(String recipeId);
+    List<Recipe> getRecipes(String recipeId) throws IOException, JSONException;
 
 }

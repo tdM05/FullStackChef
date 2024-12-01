@@ -39,6 +39,7 @@ public class DisplayRecipePresenter implements DisplayRecipeOutputBoundary {
 
         // Update ViewModel
         displayRecipeViewModel.updateRecipeDetails(
+                outputData.getRecipeId(),
                 outputData.getTitle(),
                 outputData.getImage(),
                 ingredientStrings,
