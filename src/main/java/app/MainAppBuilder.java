@@ -290,6 +290,31 @@ public class MainAppBuilder {
         return this;
     }
 
+    public MainAppBuilder addWeeklyMealUseCase() {
+        // create store meals use case
+        final StoreMealInputBoundary storeMealInteractor = new StoreMealInteractor(
+                storeMealDataAccessObject);
+        // create generatemeal use case
+        final WeeklyMealOutputBoundary weeklyMealOutputBoundary = new WeeklyMealPresenter(viewManagerModel, weeklyMealViewModel);
+        final WeeklyMealInputBoundary weeklyMealInteractor = new WeeklyMealInteractor(
+                weeklyMealOutputBoundary, weeklyMealDataAccessObject, storeMealInteractor
+        );
+        // create updatemeals use case
+        final UpdateMealsOutputBoundary updateMealsOutputBoundary = new UpdateMealsPresenter(updateMealsViewModel, viewManagerModel);
+        final UpdateMealsInputBoundary updateMealsInteractor = new UpdateMealsInteractor(updateMealsOutputBoundary,
+                updateMealDataAccessObject);
+
+        final UpdateMealsController updateMealsController = new UpdateMealsController(updateMealsInteractor);
+        searchView.getProfile().setUpdateMealsController(updateMealsController);
+
+        GroceryListController groceryListController = new GroceryListController(new GroceryListInteractor(groceryListDataAccessObject, new GroceryListPresenter(viewManagerModel, searchViewModel, groceryListViewModel)));
+        weeklyMealView.setGroceryListController(groceryListController);
+
+        WeeklyMealController weeklyMealController = new WeeklyMealController(weeklyMealInteractor);
+        weeklyMealView.setWeeklyMealController(weeklyMealController);
+        return this;
+    }
+
     public MainAppBuilder addDietaryRestrictionUseCase() {
         ViewManagerModel viewManagerModel = new ViewManagerModel();
         final DietaryRestrictionPresenter dietaryRestrictionPresenter = new DietaryRestrictionPresenter(viewManagerModel, searchView);

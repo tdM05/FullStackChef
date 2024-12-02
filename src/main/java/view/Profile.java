@@ -261,7 +261,9 @@ public class Profile extends JPanel {
     public void setUpdateMealsController(UpdateMealsController updateMealsController) {
         this.updateMealsController = updateMealsController;
     }
-
+    public void setDisplayFavoriteController(DisplayFavoriteController displayFavoriteController) {
+        this.displayFavoriteController = displayFavoriteController;
+    }
     public void setDietaryRestrictionController(DietaryRestrictionController dietaryRestrictionController) {
         this.dietaryController = dietaryRestrictionController;
     }
