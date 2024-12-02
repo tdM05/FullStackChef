@@ -8,10 +8,10 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.dietaryrestrictions.DietaryRestrictionController;
 import interface_adapter.display_favorites.DisplayFavoriteController;
 import interface_adapter.grocery_list.GroceryListController;
-import interface_adapter.grocery_list.GroceryListController;
+import interface_adapter.dietaryrestrictions.DietaryRestrictionPresenter;
 import interface_adapter.mealplan.update_meals.UpdateMealsController;
 import use_case.dietaryrestrictions.DietaryRestrictionInteractor;
-import interface_adapter.dietaryrestrictions.DietaryRestrictionPresenter;
+import data_access.dietaryrestrictions.DietaryRestrictionDataAccessObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -87,6 +87,13 @@ public class Profile extends JPanel {
             displayFavoriteController.execute();
         });
 
+        // Initialize Dietary Restrictions Use Case Components
+        initializeDietaryRestrictions();
+
+        // Load existing dietary restrictions
+        loadExistingDietaryRestrictions();
+
+        dietButton.addActionListener(e -> showDietaryRestrictionsDialog());
         // Add hover effect for the dropdown
         addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -126,6 +133,82 @@ public class Profile extends JPanel {
                 }
             }
         });
+    }
+
+    private void initializeDietaryRestrictions() {
+        try {
+            ViewManagerModel viewManagerModel = new ViewManagerModel();
+            dietaryPresenter = new DietaryRestrictionPresenter(viewManagerModel, this);
+            DietaryRestrictionDataAccessObject dietaryDataAccess = new DietaryRestrictionDataAccessObject();
+            dietaryInteractor = new DietaryRestrictionInteractor(dietaryPresenter, dietaryDataAccess);
+            dietaryController = new DietaryRestrictionController(dietaryInteractor);
+        } catch (Exception e) {
+            System.err.println("Failed to initialize dietary restrictions components: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Loads existing dietary restrictions from persistent storage.
+     */
+    private void loadExistingDietaryRestrictions() {
+        try {
+            if (dietaryInteractor != null) {
+                CommonDietaryRestriction existingRestrictions = dietaryInteractor.getDietaryRestrictions();
+                if (existingRestrictions != null && existingRestrictions.getDiets() != null) {
+                    existingDietaryRestrictions = existingRestrictions.getDiets();
+                }
+            } else {
+                System.err.println("DietaryRestrictionInteractor is not initialized.");
+            }
+        } catch (Exception e) {
+            System.err.println("No existing dietary restrictions found or failed to load: " + e.getMessage());
+            // existingDietaryRestrictions remains empty
+        }
+    }
+
+    /**
+     * Displays the Dietary Restrictions selection dialog.
+     */
+    private void showDietaryRestrictionsDialog() {
+        if (dietaryController == null) {
+            System.err.println("DietaryRestrictionController is not initialized.");
+            return;
+        }
+
+        String[] availableDiets = {
+                "Gluten Free", "Ketogenic", "Vegetarian", "Lacto-Vegetarian",
+                "Ovo-Vegetarian", "Vegan", "Pescetarian", "Paleo", "Primal", "Whole30"
+        };
+
+        // Create checkboxes for each diet
+        JCheckBox[] checkBoxes = new JCheckBox[availableDiets.length];
+        JPanel panel = new JPanel(new GridLayout(0, 1));
+        for (int i = 0; i < availableDiets.length; i++) {
+            checkBoxes[i] = new JCheckBox(availableDiets[i]);
+            // Pre-select if exists
+            if (existingDietaryRestrictions.contains(availableDiets[i])) {
+                checkBoxes[i].setSelected(true);
+            }
+            panel.add(checkBoxes[i]);
+        }
+
+        int result = JOptionPane.showConfirmDialog(
+                this, panel, "Select Your Dietary Restrictions",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (result == JOptionPane.OK_OPTION) {
+            List<String> selectedDiets = new ArrayList<>();
+            for (JCheckBox checkBox : checkBoxes) {
+                if (checkBox.isSelected()) {
+                    selectedDiets.add(checkBox.getText());
+                }
+            }
+            // Invoke the use case to set dietary restrictions
+            dietaryController.setDietaryRestrictions(selectedDiets);
+            // Update the existingDietaryRestrictions list
+            existingDietaryRestrictions = selectedDiets;
+        }
     }
 
     /**
@@ -178,7 +261,8 @@ public class Profile extends JPanel {
     public void setUpdateMealsController(UpdateMealsController updateMealsController) {
         this.updateMealsController = updateMealsController;
     }
-    public void setDisplayFavoriteController(DisplayFavoriteController displayFavoriteController) {
-        this.displayFavoriteController = displayFavoriteController;
+
+    public void setDietaryRestrictionController(DietaryRestrictionController dietaryRestrictionController) {
+        this.dietaryController = dietaryRestrictionController;
     }
 }

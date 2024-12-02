@@ -4,6 +4,7 @@ import entity.CommonRecipe;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.check_favorite.CheckFavoriteController;
+import interface_adapter.dietaryrestrictions.DietaryRestrictionController;
 import interface_adapter.display_favorites.DisplayFavoriteController;
 import interface_adapter.display_recipe.DisplayRecipeController;
 import interface_adapter.grocery_list.GroceryListController;
@@ -30,6 +31,7 @@ public class SearchView extends JPanel {
     private SearchController searchController;
     private DisplayRecipeController displayRecipeController;
     private CheckFavoriteController checkFavoriteController;
+    private DietaryRestrictionController dietaryController; // ADDE
 
     private JPanel topPanel;
     private JPanel centerPanel;
@@ -168,6 +170,9 @@ public class SearchView extends JPanel {
         this.checkFavoriteController = checkFavoriteController;
     }
 
+    public void setDietaryRestrictionController(DietaryRestrictionController dietaryRestrictionController) {
+        this.dietaryController = dietaryRestrictionController;
+    }
     public void setGroceryListController(GroceryListController groceryListController) {
         this.groceryListController = groceryListController;
     }

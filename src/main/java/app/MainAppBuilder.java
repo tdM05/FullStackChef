@@ -2,6 +2,7 @@ package app;
 
 import data_access.*;
 import data_access.UserProfile.UserProfileDao;
+import data_access.dietaryrestrictions.DietaryRestrictionDataAccessObject;
 import data_access.grocery_list.GroceryListDataAccessObject;
 import data_access.grocery_list.GroceryListInMemoryDataAccessObject;
 import entity.CommonUserFactory;
@@ -12,6 +13,9 @@ import interface_adapter.check_favorite.CheckFavoritePresenter;
 import interface_adapter.display_favorites.DisplayFavoriteController;
 import interface_adapter.display_favorites.DisplayFavoritePresenter;
 import interface_adapter.display_favorites.DisplayFavoriteViewModel;
+import interface_adapter.dietaryrestrictions.DietaryRestrictionController;
+import interface_adapter.dietaryrestrictions.DietaryRestrictionPresenter;
+import interface_adapter.dietaryrestrictions.DietaryRestrictionViewModel;
 import interface_adapter.display_recipe.DisplayRecipeController;
 import interface_adapter.display_recipe.DisplayRecipePresenter;
 import interface_adapter.display_recipe.DisplayRecipeViewModel;
@@ -39,6 +43,7 @@ import interface_adapter.signup.SignupViewModel;
 import use_case.check_favorite.CheckFavoriteInputBoundary;
 import use_case.check_favorite.CheckFavoriteInteractor;
 import use_case.check_favorite.CheckFavoriteOutputBoundary;
+import use_case.dietaryrestrictions.DietaryRestrictionInteractor;
 import use_case.display_favorite.DisplayFavoriteInputBoundary;
 import use_case.display_favorite.DisplayFavoriteInteractor;
 import use_case.display_favorite.DisplayFavoriteOutputBoundary;
@@ -109,6 +114,8 @@ public class MainAppBuilder {
     private DisplayRecipeViewModel displayRecipeViewModel;
     private DisplayFavoriteView displayFavoriteView;
     private DisplayFavoriteViewModel displayFavoriteViewModel;
+    private DietaryRestrictionViewModel dietaryRestrictionViewModel;
+    private DietaryRestrictionView dietaryRestrictionView;
     private GroceryListView groceryListView;
     private WeeklyMealView weeklyMealView;
     private GroceryListViewModel groceryListViewModel;
@@ -175,6 +182,14 @@ public class MainAppBuilder {
         displayFavoriteView = new DisplayFavoriteView(displayFavoriteViewModel);
         displayFavoriteView.setPreferredSize(new Dimension(1200, 800));
         cardPanel.add(displayFavoriteView, displayFavoriteView.getViewName());
+        return this;
+    }
+
+    public MainAppBuilder addDietaryRestrictionView() {
+        dietaryRestrictionViewModel = new DietaryRestrictionViewModel();
+        dietaryRestrictionView = new DietaryRestrictionView(dietaryRestrictionViewModel);
+        dietaryRestrictionView.setPreferredSize(new Dimension(1200, 800));
+        cardPanel.add(dietaryRestrictionView, dietaryRestrictionView.getViewName());
         return this;
     }
 
@@ -275,7 +290,24 @@ public class MainAppBuilder {
         return this;
     }
 
-    public MainAppBuilder addWeeklyMealUseCase() {
+    public MainAppBuilder addDietaryRestrictionUseCase() {
+        ViewManagerModel viewManagerModel = new ViewManagerModel();
+        final DietaryRestrictionPresenter dietaryRestrictionPresenter = new DietaryRestrictionPresenter(viewManagerModel, searchView);
+        final DietaryRestrictionDataAccessObject dietaryDataAccess = new DietaryRestrictionDataAccessObject();
+        final DietaryRestrictionInteractor dietaryInteractor = new DietaryRestrictionInteractor(
+                dietaryRestrictionPresenter,
+                dietaryDataAccess
+        );
+
+        final DietaryRestrictionController dietaryRestrictionController = new DietaryRestrictionController(dietaryInteractor);
+
+        searchView.getProfile().setDietaryRestrictionController(dietaryRestrictionController);
+        dietaryRestrictionView.setController(dietaryRestrictionController);
+        return this;
+    }
+
+
+    public MainAppBuilder addMealPlanUseCase() {
         // create store meals use case
         final StoreMealInputBoundary storeMealInteractor = new StoreMealInteractor(
                 storeMealDataAccessObject);
