@@ -4,6 +4,7 @@ import entity.CommonRecipe;
 import entity.Recipe;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.check_favorite.CheckFavoriteController;
+import interface_adapter.display_favorites.DisplayFavoriteController;
 import interface_adapter.display_recipe.DisplayRecipeController;
 import interface_adapter.grocery_list.GroceryListController;
 import interface_adapter.search.SearchViewModel;
@@ -140,7 +141,7 @@ public class SearchView extends JPanel {
         topPanel.add(searchPanel, BorderLayout.CENTER);
 
         // Create the recipes panel
-        RecipePanel recipesPanel = new RecipePanel(recipes,displayRecipeController,viewName);
+        RecipePanel recipesPanel = new RecipePanel(recipes, displayRecipeController, checkFavoriteController, viewName);
 
         // Add the recipes panel to the center panel
         centerPanel.setLayout(new BorderLayout());
@@ -166,7 +167,7 @@ public class SearchView extends JPanel {
     public void setCheckFavoriteController(CheckFavoriteController checkFavoriteController) {
         this.checkFavoriteController = checkFavoriteController;
     }
-    
+
     public void setGroceryListController(GroceryListController groceryListController) {
         this.groceryListController = groceryListController;
     }

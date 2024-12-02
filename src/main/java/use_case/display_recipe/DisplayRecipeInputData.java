@@ -6,14 +6,16 @@ package use_case.display_recipe;
  */
 public class DisplayRecipeInputData {
     private final int recipeId;
+    private final String previousViewName;
 
     /**
      * Constructs a new DisplayRecipeInputData with the specified recipe ID.
      *
      * @param recipeId the unique identifier of the recipe
      */
-    public DisplayRecipeInputData(int recipeId) {
+    public DisplayRecipeInputData(int recipeId, String previousViewName) {
         this.recipeId = recipeId;
+        this.previousViewName = previousViewName;
     }
 
     /**
@@ -23,5 +25,14 @@ public class DisplayRecipeInputData {
      */
     public int getRecipeId() {
         return recipeId;
+    }
+
+    /**
+     * Returns the name of the previous view.
+     *
+     * @return the previous view name
+     */
+    public String getPreviousViewName() {
+        return previousViewName;
     }
 }

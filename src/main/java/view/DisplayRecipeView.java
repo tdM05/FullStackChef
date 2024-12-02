@@ -1,14 +1,13 @@
 package view;
 
 import data_access.Constants;
-import interface_adapter.ViewManagerModel;
+import interface_adapter.display_favorites.DisplayFavoriteController;
 import interface_adapter.display_recipe.DisplayRecipeController;
 import interface_adapter.display_recipe.DisplayRecipeViewModel;
+import interface_adapter.favorite.FavoriteController;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URL;
@@ -17,7 +16,10 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
 
     private final String viewName = "displayRecipeView";
 
-    private DisplayRecipeController controller;
+    private FavoriteController favoriteController;
+    private DisplayFavoriteController displayFavoriteController;
+    private DisplayRecipeController displayRecipeController;
+
     private final JLabel recipeTitleLabel = new JLabel();
     private final JLabel recipeImageLabel = new JLabel();
     private final JTextArea ingredientsArea = new JTextArea(10, 30);
@@ -48,20 +50,12 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
 
         favoriteButton= new FavoriteButton();
         favoriteButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         add(favoriteButton);
 
         // Add an ActionListener to respond to state changes
-        favoriteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (favoriteButton.isSelected()) {
-                    System.out.println("Recipe favorited");
-                    // Add code to handle favoriting the recipe
-                } else {
-                    System.out.println("Recipe unfavorited");
-                    // Add code to handle unfavoriting the recipe
-                }
-            }
+        favoriteButton.addActionListener(e ->  {
+           favoriteController.execute(displayRecipeViewModel.getRecipeId());
         });
 
         final JButton backButton = new JButton("Back");
@@ -69,13 +63,15 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
         add(backButton);
 
         backButton.addActionListener(e -> {
-                controller.switchToSearchView();
+            if (displayRecipeViewModel.getPreviousViewName().equals(Constants.SEARCH_VIEW)) {
+                displayRecipeController.switchToSearchView();
+            }
+            else {
+                displayFavoriteController.execute();
+            }
+
 
         });
-    }
-
-    public void setDisplayRecipeController(DisplayRecipeController controller) {
-        this.controller = controller;
     }
 
     @Override
@@ -108,17 +104,33 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
         ingredientsArea.setText(String.join("\n", viewModel.getIngredients()));
         instructionsArea.setText(String.join("\n", viewModel.getInstructions()));
 
+
+        if (viewModel.getIsFavorite()) {
+            System.out.println("Recipe is a favorite");
+            favoriteButton.setSelected(true);
+        } else {
+            System.out.println("Recipe is not a favorite");
+            favoriteButton.setSelected(false);
+        }
+
         // Display error if present
         errorLabel.setText(viewModel.getErrorMessage() != null ? viewModel.getErrorMessage() : "");
     }
 
-    public void loadRecipeDetails(int recipeId) {
-        if (controller != null) {
-            controller.execute(recipeId);
-        }
-    }
 
     public String getViewName() {
         return viewName;
+    }
+
+    public void setFavoriteController(FavoriteController favoriteController) {
+        this.favoriteController = favoriteController;
+    }
+
+    public void setDisplayRecipeController(DisplayRecipeController controller) {
+        this.displayRecipeController = controller;
+    }
+
+    public void setDisplayFavoriteController(DisplayFavoriteController controller) {
+        this.displayFavoriteController = controller;
     }
 }

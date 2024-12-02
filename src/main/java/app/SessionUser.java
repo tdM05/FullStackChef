@@ -28,7 +28,4 @@ public class SessionUser {
         this.user = user;
     }
 
-    public void clearUser() {
-        this.user = null;
-    }
 }

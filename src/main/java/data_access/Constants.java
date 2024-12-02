@@ -5,7 +5,7 @@ package data_access;
  */
 public class Constants {
     // data access
-    public static final String API_KEY = "9df847fe19dc4188879e8b0c67ab76eb";
+    public static final String API_KEY = "1cc0283844a4418d90a319b9f6c14146";
     public static final String STATUS_CODE_LABEL = "status_code";
     public static final int SUCCESS_CODE = 200;
     public static final String MESSAGE = "message";
@@ -13,8 +13,8 @@ public class Constants {
     // page management
     public static final String SEARCH_VIEW = "searchView";
     public static final String DISPLAY_RECIPE_VIEW = "displayRecipeView";
-    public static final String GROCERY_LIST_VIEW = "groceryListView";
     public static final String FAVORITE_VIEW = "favoriteView";
+    public static final String GROCERY_LIST_VIEW = "groceryListView";
     public static final String LOGIN_VIEW = "loginView";
     public static final String SIGNUP_VIEW = "signupView";
 
