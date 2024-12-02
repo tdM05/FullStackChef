@@ -14,12 +14,17 @@ import interface_adapter.display_recipe.DisplayRecipePresenter;
 import interface_adapter.display_recipe.DisplayRecipeViewModel;
 import interface_adapter.user_profile.UserProfileViewModel;
 import interface_adapter.user_profile.change_password.ChangePasswordController;
+import interface_adapter.user_profile.change_password.LoggedInViewModel;
 import interface_adapter.user_profile.login.LoginController;
 import interface_adapter.user_profile.login.LoginPresenter;
 import interface_adapter.user_profile.login.LoginViewModel;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchPresenter;
 import interface_adapter.search.SearchViewModel;
+import interface_adapter.user_profile.logout.LogoutController;
+import interface_adapter.user_profile.logout.LogoutPresenter;
+import interface_adapter.user_profile.profile.ProfileController;
+import interface_adapter.user_profile.profile.ProfilePresenter;
 import interface_adapter.user_profile.setup.SetupController;
 import interface_adapter.user_profile.setup.SetupPresenter;
 import interface_adapter.user_profile.signup.SignupController;
@@ -39,6 +44,13 @@ import use_case.search.SearchInputBoundary;
 import use_case.search.SearchInteractor;
 import use_case.search.SearchOutputBoundary;
 import use_case.user_profile.login.LoginUserDataAccessInterface;
+import use_case.user_profile.logout.LogoutInputBoundary;
+import use_case.user_profile.logout.LogoutInteractor;
+import use_case.user_profile.logout.LogoutOutputBoundary;
+import use_case.user_profile.logout.LogoutUserDataAccessInterface;
+import use_case.user_profile.profile.ProfileInputBoundary;
+import use_case.user_profile.profile.ProfileInteractor;
+import use_case.user_profile.profile.ProfileOutputBoundary;
 import use_case.user_profile.signup.SignupOutputBoundary;
 import use_case.user_profile.signup.SignupInputBoundary;
 import use_case.user_profile.signup.SignupInteractor;
@@ -80,13 +92,13 @@ public class MainAppBuilder {
     private DisplayRecipeViewModel displayRecipeViewModel;
     private DisplayFavoriteView displayFavoriteView;
     private DisplayFavoriteViewModel displayFavoriteViewModel;
+    private UserProfileViewModel userProfileViewModel;
 
     private WelcomeView welcomeView;
     private SetupView setupView;
     private ChangePasswordView changePasswordView;
     private ChangeDisplayNameView changeDisplayNameView;
     private ProfileView profileView;
-    private UserProfileViewModel userProfileViewModel;
 
     public MainAppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -145,31 +157,25 @@ public class MainAppBuilder {
 
 
     public MainAppBuilder addProfileView() {
-        Profile profileView = new Profile(viewManagerModel);  // Pass viewManagerModel
-        cardPanel.add(profileView, "profileView");
+        UserProfileViewModel userProfileViewModel = new UserProfileViewModel();
+        ProfileView profileView = new ProfileView(userProfileViewModel, viewManagerModel);
+        cardPanel.add(profileView, profileView.getViewName());
         return this;
     }
-    
-//    viewManagerModel.addStateChangeListener((oldState, newState) -> {
-//        System.out.println("Switching from " + oldState + " to " + newState);
-//        switchToView(newState);
-//    });
 
     public MainAppBuilder addChangePasswordView() {
+        UserProfileViewModel userProfileViewModel = new UserProfileViewModel();
         ChangePasswordController changePasswordController = new ChangePasswordController(userDAO);
-        changePasswordView = new ChangePasswordView(userProfileViewModel, changePasswordController, viewManagerModel);
+        ChangePasswordView changePasswordView = new ChangePasswordView(userProfileViewModel, changePasswordController, viewManagerModel);
         cardPanel.add(changePasswordView, changePasswordView.getViewName());
         return this;
     }
 
-    // Will update later
-//    public MainAppBuilder addChangeDisplayNameView() {
-//        ChangeDisplayNameController changeDisplayNameController = new ChangeDisplayNameController(userDAO);
-//        changeDisplayNameView = new ChangeDisplayNameView(userProfileViewModel, changeDisplayNameController);
-//        cardPanel.add(changeDisplayNameView, "change display name view");
-//        return this;
-//    }
-
+    public MainAppBuilder addChangeDisplayNameView() {
+        changeDisplayNameView = new ChangeDisplayNameView(userProfileViewModel, viewManagerModel);
+        cardPanel.add(changeDisplayNameView, changeDisplayNameView.getViewName());
+        return this;
+    }
 
     private void switchToView(String viewName) {
         cardLayout.show(cardPanel, viewName);
@@ -253,24 +259,27 @@ public class MainAppBuilder {
     }
 
     public MainAppBuilder addProfileUseCase() {
-        // Create ProfilePresenter
-        ProfilePresenter profilePresenter = new ProfilePresenter(viewManagerModel, userProfileViewModel);
-
-        // Create ProfileInteractor (use case logic)
-        ProfileInteractor profileInteractor = new ProfileInteractor(userDAO, profilePresenter);
-
-        // Create ProfileController (the controller that bridges the UI and use case)
-        ProfileController profileController = new ProfileController(profileInteractor);
-
-        // Create ProfileView (UI view)
-        ProfileView profileView = new ProfileView(profileController, userProfileViewModel);
-
-        // Set the ProfileView in the builder's card panel
+        profileView = new ProfileView(userProfileViewModel, viewManagerModel);
+        final ProfileOutputBoundary profileOutputBoundary = new ProfilePresenter(viewManagerModel);
+        final ProfileInputBoundary profileInputBoundary = new ProfileInteractor(userDAO, profileOutputBoundary);
+        final ProfileController profileController = new ProfileController(profileInputBoundary, viewManagerModel);
+        searchView.getProfile().setProfileController(profileController);
         cardPanel.add(profileView, profileView.getViewName());
 
         return this;
     }
 
+    public MainAppBuilder addLogoutUseCase() {
+        profileView = new ProfileView(userProfileViewModel, viewManagerModel);
+        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(
+                new LoggedInViewModel(), viewManagerModel, loginViewModel);
+        final LogoutInputBoundary logoutInputBoundary = new LogoutInteractor(userDAO, logoutOutputBoundary);
+        final LogoutController logoutController = new LogoutController(logoutInputBoundary, viewManagerModel);
+        searchView.getProfile().setLogoutController(logoutController);
+        cardPanel.add(profileView, welcomeView.getViewName());
+
+        return this;
+    }
 
     /**
      * Adds the Search Use Case to the application.
@@ -328,11 +337,10 @@ public class MainAppBuilder {
         application.add(cardPanel);
 
         // Start with WelcomeView
-        switchToView(welcomeView.getViewName());
-        viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel, application);
+        viewManagerModel.setState("welcomeView");  // This ensures WelcomeView is loaded first
+        viewManagerModel.firePropertyChanged();  // Ensure the view is updated immediately
 
-        viewManagerModel.setState(welcomeView.getViewName());
-        viewManagerModel.firePropertyChanged();
+        viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel, application);
 
         application.setSize(new Dimension(380, 250));
         application.setResizable(true);

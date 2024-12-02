@@ -1,6 +1,8 @@
 package view;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.user_profile.logout.LogoutController;
+import interface_adapter.user_profile.profile.ProfileController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,10 +14,15 @@ import java.util.List;
 public class Profile extends JPanel {
     private Color circleColor = Color.GRAY;
     private JPopupMenu profileDropDown;
+    private JMenuItem profileButton;
+    private JMenuItem logoutButton;
     private JMenuItem favoriteButton;
     private JMenuItem groceryListButton;
     private JMenuItem dietButton;
     private ViewManagerModel viewManagerModel;
+
+    private ProfileController profileController;
+    private LogoutController logoutController;
 
     public Profile(ViewManagerModel viewManagerModel) {
         this.viewManagerModel = viewManagerModel;
@@ -28,9 +35,17 @@ public class Profile extends JPanel {
         profileDropDown.setBackground(Color.DARK_GRAY);
         profileDropDown.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        // Initialize only relevant buttons
-        JMenuItem profileButton = new JMenuItem("Profile");
-        JMenuItem logoutButton = new JMenuItem("Logout");
+        this.profileButton = new JMenuItem("Profile");
+        profileButton.addActionListener(e -> {
+            profileController.execute();
+        });
+
+        this.logoutButton = new JMenuItem("Logout");
+        this.logoutButton.addActionListener(e -> {
+            logoutController.execute();
+        });
+
+
         this.dietButton = new JMenuItem("Diet");
 
         // Customize buttons
@@ -44,12 +59,10 @@ public class Profile extends JPanel {
         profileDropDown.addSeparator();
         profileDropDown.add(logoutButton);
 
-        // Add ActionListeners for Profile and Logout buttons
-        addProfileLogoutListeners(profileButton, logoutButton);
-
         // Add ActionListener for Diet Button (Preserving existing functionality)
         addDietActionListener(dietButton);
 
+        this.
         // Add hover effect for the dropdown
         addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -102,29 +115,6 @@ public class Profile extends JPanel {
         item.setFont(new Font("SansSerif", Font.BOLD, 12));
         item.setOpaque(true);
         item.setPreferredSize(new Dimension(120, 40));
-    }
-
-    /**
-     * Adds ActionListeners for the Profile and Logout buttons.
-     */
-    private void addProfileLogoutListeners(JMenuItem profileButton, JMenuItem logoutButton) {
-        profileButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Navigating to Profile View"); // Debug log
-                viewManagerModel.setState("profileView");
-                viewManagerModel.firePropertyChanged();
-            }
-        });
-
-        logoutButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Navigating to Welcome View"); // Debug log
-                viewManagerModel.setState("welcomeView");
-                viewManagerModel.firePropertyChanged();
-            }
-        });
     }
 
     /**
@@ -215,5 +205,13 @@ public class Profile extends JPanel {
         g2d.drawString(initials, textX, textY);
 
         g2d.dispose();
+    }
+
+    public void setProfileController(ProfileController profileController) {
+        this.profileController = profileController;
+    }
+
+    public void setLogoutController(LogoutController logoutController) {
+        this.logoutController = logoutController;
     }
 }

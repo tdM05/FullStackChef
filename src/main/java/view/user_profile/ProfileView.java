@@ -1,7 +1,7 @@
 package view.user_profile;
 
-import interface_adapter.user_profile.UserProfileViewModel;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.user_profile.UserProfileViewModel;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
@@ -9,28 +9,38 @@ import java.beans.PropertyChangeEvent;
 public class ProfileView extends BaseView {
     private final String viewName = "profileView";
     private final UserProfileViewModel userProfileViewModel;
-    private final JLabel usernameLabel;
-    private final JLabel displayNameLabel;
-    private final JButton changePasswordButton;
-    private final JButton changeDisplayNameButton;
+
+    private final JLabel usernameLabel = new JLabel();
+    private final JLabel displayNameLabel = new JLabel();
+    private final JButton changePasswordButton = new JButton("Change Password");
+    private final JButton changeDisplayNameButton = new JButton("Change Display Name");
 
     public ProfileView(UserProfileViewModel userProfileViewModel, ViewManagerModel viewManagerModel) {
-        super("profile view", viewManagerModel);
+        super("profileView", viewManagerModel);
         this.userProfileViewModel = userProfileViewModel;
         this.userProfileViewModel.addPropertyChangeListener(this);
 
-        usernameLabel = new JLabel();
-        displayNameLabel = new JLabel();
-        changePasswordButton = new JButton("Change Password");
-        changeDisplayNameButton = new JButton("Change Display Name");
+        // Setup UI
+        setupUI();
 
-        changePasswordButton.addActionListener(evt -> navigateToChangePasswordView());
-        changeDisplayNameButton.addActionListener(evt -> navigateToChangeDisplayNameView());
+        // Button actions
+        changePasswordButton.addActionListener(e -> navigateToChangePasswordView());
+        changeDisplayNameButton.addActionListener(e -> navigateToChangeDisplayNameView());
+    }
 
+    private void setupUI() {
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        add(new JLabel("Profile and Settings"));
         add(usernameLabel);
         add(displayNameLabel);
-        add(changePasswordButton);
-        add(changeDisplayNameButton);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(changePasswordButton);
+        buttonPanel.add(changeDisplayNameButton);
+        add(buttonPanel);
+
+        refresh();
     }
 
     @Override
@@ -41,34 +51,19 @@ public class ProfileView extends BaseView {
 
     @Override
     protected void refresh() {
+        // Update the labels with the current state from UserProfileViewModel
         usernameLabel.setText("Username: " + userProfileViewModel.getState().getName());
         displayNameLabel.setText("Display Name: " + userProfileViewModel.getState().getDisplayName());
     }
 
     private void navigateToChangePasswordView() {
-        viewManagerModel.setState("change password");
+        viewManagerModel.setState("changePasswordView");
         viewManagerModel.firePropertyChanged();
     }
 
     private void navigateToChangeDisplayNameView() {
-        viewManagerModel.setState("change display name");
+        viewManagerModel.setState("changeDisplayNameView");
         viewManagerModel.firePropertyChanged();
-    }
-
-    public JButton getChangePasswordButton() {
-        return changePasswordButton;
-    }
-
-    public JButton getChangeDisplayNameButton() {
-        return changeDisplayNameButton;
-    }
-
-    public void addChangePasswordListener(Runnable listener) {
-        changePasswordButton.addActionListener(e -> listener.run());
-    }
-
-    public void addChangeDisplayNameListener(Runnable listener) {
-        changeDisplayNameButton.addActionListener(e -> listener.run());
     }
 
     @Override

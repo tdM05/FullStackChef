@@ -11,7 +11,17 @@ public class ChangeDisplayNameController {
         this.interactor = interactor;
     }
 
-    public void updateDisplayName(String username, String newDisplayName) throws DataAccessException {
+    public void execute(String username, String newDisplayName) {
+        try {
+            ChangeDisplayNameInputData inputData = new ChangeDisplayNameInputData(username, newDisplayName);
+            interactor.changeDisplayName(inputData);
+        } catch (DataAccessException e) {
+            // Handle exception (e.g., log or notify presenter)
+            System.err.println("Failed to change display name: " + e.getMessage());
+        }
+    }
+
+    private void updateDisplayName(String username, String newDisplayName) throws DataAccessException {
         ChangeDisplayNameInputData inputData = new ChangeDisplayNameInputData(username, newDisplayName);
         interactor.changeDisplayName(inputData);
     }

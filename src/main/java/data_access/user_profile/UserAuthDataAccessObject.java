@@ -11,6 +11,8 @@ import use_case.user_profile.change_password.ChangePasswordInputBoundary;
 import use_case.user_profile.change_password.ChangePasswordInputData;
 import use_case.user_profile.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.user_profile.login.LoginUserDataAccessInterface;
+import use_case.user_profile.logout.LogoutUserDataAccessInterface;
+import use_case.user_profile.profile.ProfileUserDataAccessInterface;
 import use_case.user_profile.signup.SignupUserDataAccessInterface;
 
 import java.io.IOException;
@@ -21,7 +23,9 @@ public class UserAuthDataAccessObject implements
         LoginUserDataAccessInterface,
         ChangePasswordUserDataAccessInterface,
         ChangePasswordInputBoundary,
-        ChangeDisplayNameUserDataAccessInterface {
+        ChangeDisplayNameUserDataAccessInterface,
+        ProfileUserDataAccessInterface,
+        LogoutUserDataAccessInterface {
     private static final String BASE_URL = "http://vm003.teach.cs.toronto.edu:20112";
     private static final OkHttpClient CLIENT = new OkHttpClient().newBuilder().build();
     private static final String CONTENT_TYPE_JSON = "application/json";

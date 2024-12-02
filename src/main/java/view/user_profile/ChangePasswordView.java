@@ -1,9 +1,8 @@
 package view.user_profile;
 
-import app.SessionUser;
+import interface_adapter.ViewManagerModel;
 import interface_adapter.user_profile.UserProfileViewModel;
 import interface_adapter.user_profile.change_password.ChangePasswordController;
-import interface_adapter.ViewManagerModel;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
@@ -12,33 +11,34 @@ public class ChangePasswordView extends BaseView {
     private final String viewName = "changePasswordView";
     private final UserProfileViewModel userProfileViewModel;
     private final ChangePasswordController controller;
-    private final JLabel usernameLabel;
-    private final JPasswordField newPasswordField;
-    private final JPasswordField repeatPasswordField;
-    private final JButton saveButton;
-    private final JButton cancelButton;
+
+    private final JLabel usernameLabel = new JLabel();
+    private final JPasswordField newPasswordField = new JPasswordField(20);
+    private final JPasswordField repeatPasswordField = new JPasswordField(20);
 
     public ChangePasswordView(UserProfileViewModel userProfileViewModel, ChangePasswordController controller, ViewManagerModel viewManagerModel) {
         super("changePasswordView", viewManagerModel);
         this.userProfileViewModel = userProfileViewModel;
         this.controller = controller;
 
-        usernameLabel = new JLabel();
-        newPasswordField = new JPasswordField(20);
-        repeatPasswordField = new JPasswordField(20);
-        saveButton = new JButton("Save");
-        cancelButton = new JButton("Cancel");
-
-        saveButton.addActionListener(evt -> updatePassword());
-        cancelButton.addActionListener(evt -> navigateToProfileView());
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         add(usernameLabel);
         add(new JLabel("New Password:"));
         add(newPasswordField);
         add(new JLabel("Repeat New Password:"));
         add(repeatPasswordField);
-        add(saveButton);
-        add(cancelButton);
+
+        JButton saveButton = new JButton("Save");
+        JButton cancelButton = new JButton("Cancel");
+
+        saveButton.addActionListener(e -> handleSave());
+        cancelButton.addActionListener(e -> navigateTo("profileView"));
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(saveButton);
+        buttonPanel.add(cancelButton);
+        add(buttonPanel);
     }
 
     @Override
@@ -52,31 +52,34 @@ public class ChangePasswordView extends BaseView {
         usernameLabel.setText("Username: " + userProfileViewModel.getState().getName());
     }
 
-    private void updatePassword() {
+    private void handleSave() {
         String newPassword = new String(newPasswordField.getPassword());
         String repeatPassword = new String(repeatPasswordField.getPassword());
-        if (!newPassword.equals(repeatPassword)) {
-            JOptionPane.showMessageDialog(this, "Passwords do not match!");
+
+        if (newPassword.isBlank() || repeatPassword.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Password fields cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        controller.execute(userProfileViewModel.getState().getName(), newPassword, repeatPassword);
-        navigateToProfileView();
+
+        if (!newPassword.equals(repeatPassword)) {
+            JOptionPane.showMessageDialog(this, "Passwords do not match!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            controller.execute(userProfileViewModel.getState().getName(), newPassword, repeatPassword);
+            JOptionPane.showMessageDialog(this, "Password updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            navigateTo("profileView");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-    private void navigateToProfileView() {
-        viewManagerModel.setState("profile view");
+    private void navigateTo(String viewName) {
+        viewManagerModel.setState(viewName);
         viewManagerModel.firePropertyChanged();
     }
 
-    public void addSaveListener(Runnable listener) {
-        saveButton.addActionListener(e -> listener.run());
-    }
-
-    public void addCancelListener(Runnable listener) {
-        cancelButton.addActionListener(e -> listener.run());
-    }
-
-    @Override
     public String getViewName() {
         return viewName;
     }

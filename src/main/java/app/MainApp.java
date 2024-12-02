@@ -20,6 +20,7 @@ public class MainApp {
                                         .addSetupView()
                                         .addProfileView()
                                         .addChangePasswordView()
+                                        .addChangeDisplayNameView()
                                         .addSearchView()
                                         .addDisplayRecipeView()
                                         .addFavoriteView()
@@ -28,6 +29,8 @@ public class MainApp {
                                         .addSearchUseCase()
                                         .addDisplayRecipeUseCase()
                                         .addCheckFavoriteUseCase()
+                                        .addProfileUseCase()
+                                        .addLogoutUseCase()
                                         .build();
         application.setVisible(true);
         }

@@ -1,5 +1,6 @@
 package view.user_profile;
 
+import interface_adapter.ViewManagerModel;
 import interface_adapter.user_profile.UserProfileViewModel;
 
 import javax.swing.*;
@@ -7,10 +8,13 @@ import javax.swing.*;
 public class ChangeDisplayNameView extends JPanel {
     private final String viewName = "changeDisplayNameView";
     private final JTextField displayNameField = new JTextField(20);
-    private Runnable saveListener;
-    private Runnable cancelListener;
+    private final ViewManagerModel viewManagerModel;
+    private final UserProfileViewModel userProfileViewModel;
 
-    public ChangeDisplayNameView(UserProfileViewModel userProfileViewModel) {
+    public ChangeDisplayNameView(UserProfileViewModel userProfileViewModel, ViewManagerModel viewManagerModel) {
+        this.userProfileViewModel = userProfileViewModel;
+        this.viewManagerModel = viewManagerModel;
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         JLabel usernameLabel = new JLabel("Username: " + userProfileViewModel.getState().getName());
@@ -22,15 +26,8 @@ public class ChangeDisplayNameView extends JPanel {
         JButton saveButton = new JButton("Save");
         JButton cancelButton = new JButton("Cancel");
 
-        saveButton.addActionListener(e -> {
-            userProfileViewModel.getState().setDisplayName(displayNameField.getText());
-            userProfileViewModel.firePropertyChanged();
-            if (saveListener != null) saveListener.run();
-        });
-
-        cancelButton.addActionListener(e -> {
-            if (cancelListener != null) cancelListener.run();
-        });
+        saveButton.addActionListener(e -> handleSave());
+        cancelButton.addActionListener(e -> navigateTo("profileView"));
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(saveButton);
@@ -38,11 +35,27 @@ public class ChangeDisplayNameView extends JPanel {
         add(buttonPanel);
     }
 
-    public void addSaveListener(Runnable listener) {
-        this.saveListener = listener;
+    private void handleSave() {
+        // Update display name in the user profile state
+        String newDisplayName = displayNameField.getText();
+        if (newDisplayName.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Display name cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        userProfileViewModel.getState().setDisplayName(newDisplayName);
+        userProfileViewModel.firePropertyChanged();
+
+        // Navigate back to ProfileView
+        navigateTo("profileView");
     }
 
-    public void addCancelListener(Runnable listener) {
-        this.cancelListener = listener;
+    private void navigateTo(String viewName) {
+        viewManagerModel.setState(viewName);
+        viewManagerModel.firePropertyChanged();
+    }
+
+    public String getViewName() {
+        return viewName;
     }
 }
