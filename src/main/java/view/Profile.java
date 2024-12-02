@@ -65,9 +65,6 @@ public class Profile extends JPanel {
         groceryListButton.addActionListener(e -> {
             groceryListController.execute();
         });
-
-        JMenuItem mealPlanButton = new JMenuItem("Meal Plan");
-        this.groceryListButton = new JMenuItem("Grocery List");
         this.dietButton = new JMenuItem("Diet");
         JMenuItem logoutButton = new JMenuItem("Logout");
 

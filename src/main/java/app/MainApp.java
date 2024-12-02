@@ -28,7 +28,7 @@ public class MainApp {
                                             .addCheckFavoriteUseCase()
                                             .addWeeklyMealUseCase()
                                             .addDisplayFavoriteUseCase()
-                .addFavoriteUseCase()
+                                            .addFavoriteUseCase()
                                             .addGroceryListUseCase()
                                             .build();
         application.setVisible(true);
