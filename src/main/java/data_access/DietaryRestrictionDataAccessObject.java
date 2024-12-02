@@ -6,6 +6,7 @@ import entity.CommonDietaryRestriction;
 import entity.User;
 import okhttp3.*;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -13,7 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The Data Access Object for Dietary Restrictions.
+ * Implementation of DietaryRestrictionDataAccessInterface.
+ * Handles saving and loading dietary restrictions for the user.
  */
 public class DietaryRestrictionDataAccessObject implements DietaryRestrictionDataAccessInterface {
 
@@ -35,7 +37,14 @@ public class DietaryRestrictionDataAccessObject implements DietaryRestrictionDat
         JSONObject requestBody = new JSONObject();
         requestBody.put("username", user.getName());
         requestBody.put("password", user.getPassword());
-        requestBody.put("dietaryRestrictions", new JSONArray(commonDietaryRestriction.getDiets()));
+
+        // Nest dietaryRestrictions inside 'info'
+        JSONObject info = new JSONObject();
+        info.put("dietaryRestrictions", new JSONArray(commonDietaryRestriction.getDiets()));
+        requestBody.put("info", info);
+
+        // Print the request body for debugging
+        System.out.println("Saving Dietary Restrictions Request Body: " + requestBody.toString());
 
         RequestBody body = RequestBody.create(requestBody.toString(), MediaType.parse(CONTENT_TYPE_JSON));
         Request request = new Request.Builder()
@@ -44,10 +53,18 @@ public class DietaryRestrictionDataAccessObject implements DietaryRestrictionDat
                 .addHeader("Content-Type", CONTENT_TYPE_JSON)
                 .build();
 
+        System.out.println("Sending PUT request to save dietary restrictions...");
+
         try (Response response = client.newCall(request).execute()) {
+            // Print the response code and message for debugging
+            System.out.println("Save Dietary Restrictions Response Code: " + response.code());
+            System.out.println("Save Dietary Restrictions Response Message: " + response.message());
+
             if (response.code() != SUCCESS_CODE) {
+                System.err.println("Failed to save dietary restrictions: " + response.message());
                 throw new IOException("Failed to save dietary restrictions: " + response.message());
             }
+            System.out.println("Dietary restrictions saved successfully for user: " + user.getName());
         }
     }
 
@@ -60,27 +77,53 @@ public class DietaryRestrictionDataAccessObject implements DietaryRestrictionDat
                 .addHeader("Content-Type", CONTENT_TYPE_JSON)
                 .build();
 
+        System.out.println("Sending GET request to load dietary restrictions...");
+
         try (Response response = client.newCall(request).execute()) {
-            if (response.code() == SUCCESS_CODE) {
-                JSONObject userJson = new JSONObject(response.body().string()).getJSONObject("user");
-                if (userJson.has("info") && userJson.getJSONObject("info").has("dietaryRestrictions")) {
-                    JSONArray restrictionsArray = userJson.getJSONObject("info").getJSONArray("dietaryRestrictions");
+            // Print the response code and message for debugging
+            System.out.println("Load Dietary Restrictions Response Code: " + response.code());
+            System.out.println("Load Dietary Restrictions Response Message: " + response.message());
+
+            if (response.code() == SUCCESS_CODE && response.body() != null) {
+                String responseBody = response.body().string();
+                System.out.println("Load Dietary Restrictions Response Body: " + responseBody);
+                JSONObject userJson = new JSONObject(responseBody).getJSONObject("user");
+                JSONObject infoJson = userJson.optJSONObject("info"); // Use optJSONObject to handle null
+
+                if (infoJson != null && infoJson.has("dietaryRestrictions")) {
+                    JSONArray restrictionsArray = infoJson.getJSONArray("dietaryRestrictions");
                     List<String> restrictions = new ArrayList<>();
                     for (int i = 0; i < restrictionsArray.length(); i++) {
                         restrictions.add(restrictionsArray.getString(i));
                     }
+                    System.out.println("Loaded dietary restrictions for user: " + user.getName() + " -> " + restrictions);
                     return new CommonDietaryRestriction(restrictions);
+                } else {
+                    System.out.println("No dietary restrictions found for user: " + user.getName());
                 }
             } else {
+                System.err.println("Failed to load dietary restrictions: " + response.message());
                 throw new IOException("Failed to load dietary restrictions: " + response.message());
             }
+        } catch (JSONException ex) {
+            System.err.println("Error parsing dietary restrictions: " + ex.getMessage());
+            throw new IOException("Error parsing dietary restrictions: " + ex.getMessage(), ex);
         }
+
+        // Return empty restrictions if not found or "info" is null
         return new CommonDietaryRestriction(new ArrayList<>());
     }
 
+    /**
+     * Retrieves the currently logged-in user.
+     *
+     * @return the User object
+     * @throws IOException if no user is logged in
+     */
     private User getCurrentUser() throws IOException {
         User user = SessionUser.getInstance().getUser();
         if (user == null) {
+            System.err.println("No user is logged in. Please log in to continue.");
             throw new IOException("No user is logged in. Please log in to continue.");
         }
         return user;

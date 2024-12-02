@@ -9,6 +9,7 @@ import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.check_favorite.CheckFavoriteController;
 import interface_adapter.check_favorite.CheckFavoritePresenter;
+import interface_adapter.dietaryrestrictions.DietaryRestrictionDataAccessInterface;
 import interface_adapter.display_favorites.DisplayFavoriteController;
 import interface_adapter.display_favorites.DisplayFavoritePresenter;
 import interface_adapter.display_favorites.DisplayFavoriteViewModel;
@@ -100,6 +101,7 @@ public class MainAppBuilder {
     private final WeeklyMealDataAccessInterface weeklyMealDataAccessObject = new WeeklyMealDataAccessObject();
     private final StoreMealDataAccessInterface storeMealDataAccessObject = new UserProfileDao();
     private final UpdateMealsDataAccessInterface updateMealDataAccessObject = new UpdateMealsDataAccessObject();
+    private final DietaryRestrictionDataAccessInterface dietaryDataAccessObject = new DietaryRestrictionDataAccessObject();
 
 
     private SignupView signupView;
@@ -245,12 +247,21 @@ public class MainAppBuilder {
      * @return this AppBuilder
      */
     public MainAppBuilder addSearchUseCase() {
+        // Instantiate the SearchPresenter with the SearchViewModel
         final SearchOutputBoundary searchOutputBoundary = new SearchPresenter(searchViewModel);
-        final SearchInputBoundary searchInteractor = new SearchInteractor(recipeDataAccessObject, searchOutputBoundary);
 
+        // Instantiate the SearchInteractor with all required dependencies
+        final SearchInputBoundary searchInteractor = new SearchInteractor(
+                recipeDataAccessObject,            // Implements SearchDataAccessInterface
+                dietaryDataAccessObject,          // Implements DietaryRestrictionDataAccessInterface
+                searchOutputBoundary              // Implements SearchOutputBoundary
+        );
+
+        // Instantiate the SearchController with the SearchInteractor
         final SearchController searchController = new SearchController(searchInteractor);
         //Search recipe
         searchView.setSearchController(searchController);
+
         return this;
     }
 

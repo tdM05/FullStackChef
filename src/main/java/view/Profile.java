@@ -1,10 +1,9 @@
 package view;
 
-//import data_access.DietaryRestrictionDataAccessObject;
+// Import statements
 import app.SessionUser;
 import entity.CommonDietaryRestriction;
 import interface_adapter.ViewManagerModel;
-//import interface_adapter.ViewManagerState;
 import interface_adapter.dietaryrestrictions.DietaryRestrictionController;
 import interface_adapter.display_favorites.DisplayFavoriteController;
 import interface_adapter.grocery_list.GroceryListController;
@@ -18,7 +17,9 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-// Custom Profile class
+/**
+ * Custom Profile class that manages user interactions including dietary restrictions.
+ */
 public class Profile extends JPanel {
     private final JMenuItem mealPlanButton;
     private Color circleColor = Color.GRAY;
@@ -26,6 +27,7 @@ public class Profile extends JPanel {
     private JMenuItem favoriteButton;
     private JMenuItem groceryListButton;
     private JMenuItem dietButton;
+
     // Dietary Restrictions Components
     private DietaryRestrictionPresenter dietaryPresenter;
     private DietaryRestrictionInteractor dietaryInteractor;
@@ -35,8 +37,9 @@ public class Profile extends JPanel {
 
     // Existing dietary restrictions
     private List<String> existingDietaryRestrictions = new ArrayList<>();
-    // controllers
-    GroceryListController groceryListController;
+
+    // Controllers
+    private GroceryListController groceryListController;
     private UpdateMealsController updateMealsController;
 
     public Profile() {
@@ -56,12 +59,22 @@ public class Profile extends JPanel {
         mealPlanButton = new JMenuItem("Meal Plan");
         mealPlanButton.addActionListener(e -> {
             SessionUser sessionUser = SessionUser.getInstance();
-            updateMealsController.execute(sessionUser.getUser());
+            if (updateMealsController != null) {
+                updateMealsController.execute(sessionUser.getUser());
+            } else {
+                JOptionPane.showMessageDialog(this, "Meal Plan Controller is not set.", "Error", JOptionPane.ERROR_MESSAGE);
+                System.err.println("MealPlanController is not set.");
+            }
         });
 
         this.groceryListButton = new JMenuItem("Grocery List");
         groceryListButton.addActionListener(e -> {
-            groceryListController.execute();
+            if (groceryListController != null) {
+                groceryListController.execute();
+            } else {
+                JOptionPane.showMessageDialog(this, "Grocery List Controller is not set.", "Error", JOptionPane.ERROR_MESSAGE);
+                System.err.println("GroceryListController is not set.");
+            }
         });
         this.dietButton = new JMenuItem("Diet");
         JMenuItem logoutButton = new JMenuItem("Logout");
@@ -82,14 +95,19 @@ public class Profile extends JPanel {
         profileDropDown.add(logoutButton);
 
         favoriteButton.addActionListener(e -> {
-            displayFavoriteController.execute();
+            if (displayFavoriteController != null) {
+                displayFavoriteController.execute();
+            } else {
+                JOptionPane.showMessageDialog(this, "Display Favorite Controller is not set.", "Error", JOptionPane.ERROR_MESSAGE);
+                System.err.println("DisplayFavoriteController is not set.");
+            }
         });
 
         // Initialize Dietary Restrictions Use Case Components
         initializeDietaryRestrictions();
 
-        // Load existing dietary restrictions
-        loadExistingDietaryRestrictions();
+        // Remove loadExistingDietaryRestrictions from constructor
+        // It will be called after login via loadDietaryRestrictionsAfterLogin()
 
         dietButton.addActionListener(e -> showDietaryRestrictionsDialog());
         // Add hover effect for the dropdown
@@ -133,6 +151,9 @@ public class Profile extends JPanel {
         });
     }
 
+    /**
+     * Initializes the dietary restrictions use case components.
+     */
     private void initializeDietaryRestrictions() {
         try {
             ViewManagerModel viewManagerModel = new ViewManagerModel();
@@ -140,9 +161,19 @@ public class Profile extends JPanel {
             DietaryRestrictionDataAccessObject dietaryDataAccess = new DietaryRestrictionDataAccessObject();
             dietaryInteractor = new DietaryRestrictionInteractor(dietaryPresenter, dietaryDataAccess);
             dietaryController = new DietaryRestrictionController(dietaryInteractor);
+            System.out.println("Initialized Dietary Restrictions components successfully.");
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Failed to initialize dietary restrictions components.", "Error", JOptionPane.ERROR_MESSAGE);
             System.err.println("Failed to initialize dietary restrictions components: " + e.getMessage());
         }
+    }
+
+    /**
+     * Loads existing dietary restrictions from persistent storage.
+     * Should be called after user logs in.
+     */
+    public void loadDietaryRestrictionsAfterLogin() {
+        loadExistingDietaryRestrictions();
     }
 
     /**
@@ -154,11 +185,16 @@ public class Profile extends JPanel {
                 CommonDietaryRestriction existingRestrictions = dietaryInteractor.getDietaryRestrictions();
                 if (existingRestrictions != null && existingRestrictions.getDiets() != null) {
                     existingDietaryRestrictions = existingRestrictions.getDiets();
+                    System.out.println("Loaded existing dietary restrictions: " + existingDietaryRestrictions);
+                } else {
+                    System.out.println("No dietary restrictions found for the user.");
                 }
             } else {
+                JOptionPane.showMessageDialog(this, "DietaryRestrictionInteractor is not initialized.", "Error", JOptionPane.ERROR_MESSAGE);
                 System.err.println("DietaryRestrictionInteractor is not initialized.");
             }
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Failed to load dietary restrictions: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             System.err.println("No existing dietary restrictions found or failed to load: " + e.getMessage());
             // existingDietaryRestrictions remains empty
         }
@@ -169,6 +205,7 @@ public class Profile extends JPanel {
      */
     private void showDietaryRestrictionsDialog() {
         if (dietaryController == null) {
+            JOptionPane.showMessageDialog(this, "Dietary Restriction Controller is not initialized.", "Error", JOptionPane.ERROR_MESSAGE);
             System.err.println("DietaryRestrictionController is not initialized.");
             return;
         }
@@ -183,8 +220,8 @@ public class Profile extends JPanel {
         JPanel panel = new JPanel(new GridLayout(0, 1));
         for (int i = 0; i < availableDiets.length; i++) {
             checkBoxes[i] = new JCheckBox(availableDiets[i]);
-            // Pre-select if exists
-            if (existingDietaryRestrictions.contains(availableDiets[i])) {
+            // Pre-select if exists (convert to lowercase for comparison)
+            if (existingDietaryRestrictions.contains(availableDiets[i].toLowerCase())) {
                 checkBoxes[i].setSelected(true);
             }
             panel.add(checkBoxes[i]);
@@ -199,13 +236,15 @@ public class Profile extends JPanel {
             List<String> selectedDiets = new ArrayList<>();
             for (JCheckBox checkBox : checkBoxes) {
                 if (checkBox.isSelected()) {
-                    selectedDiets.add(checkBox.getText());
+                    selectedDiets.add(checkBox.getText().toLowerCase()); // Ensure lowercase for API consistency
                 }
             }
             // Invoke the use case to set dietary restrictions
             dietaryController.setDietaryRestrictions(selectedDiets);
             // Update the existingDietaryRestrictions list
             existingDietaryRestrictions = selectedDiets;
+            JOptionPane.showMessageDialog(this, "Dietary restrictions saved successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            System.out.println("Dietary restrictions updated: " + selectedDiets);
         }
     }
 
@@ -252,6 +291,8 @@ public class Profile extends JPanel {
 
         g2d.dispose();
     }
+
+    // Setter methods for controllers
     public void setGroceryListController(GroceryListController groceryListController) {
         this.groceryListController = groceryListController;
     }
