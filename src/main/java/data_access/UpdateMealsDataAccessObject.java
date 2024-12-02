@@ -63,14 +63,16 @@ public class UpdateMealsDataAccessObject implements UpdateMealsDataAccessInterfa
             Map<String, List<Integer>> res = new HashMap<>();
             final JSONObject userJson = responseBody.getJSONObject("user");
             final JSONObject info = userJson.getJSONObject("info");
-            final JSONObject meals = info.getJSONObject(Constants.MEAL_IDS);
-            for (String key : meals.keySet()) {
-                final List<Integer> mealIds = new ArrayList<>();
-                final JSONArray mealIdsJson = meals.getJSONArray(key);
-                for (int i = 0; i < mealIdsJson.length(); i++) {
-                    mealIds.add(mealIdsJson.getInt(i));
+            if (info.has(Constants.MEAL_IDS)) {
+                final JSONObject meals = info.getJSONObject(Constants.MEAL_IDS);
+                for (String key : meals.keySet()) {
+                    final List<Integer> mealIds = new ArrayList<>();
+                    final JSONArray mealIdsJson = meals.getJSONArray(key);
+                    for (int i = 0; i < mealIdsJson.length(); i++) {
+                        mealIds.add(mealIdsJson.getInt(i));
+                    }
+                    res.put(key, mealIds);
                 }
-                res.put(key, mealIds);
             }
             return res;
         }
