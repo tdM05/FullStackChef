@@ -1,7 +1,8 @@
 package use_case.user_profile.signup;
 
-import entity.user_profile.User;
-import entity.user_profile.UserFactory;
+import entity.User;
+import entity.UserFactory;
+import use_case.DataAccessException;
 
 /**
  * The Signup Interactor.
@@ -11,36 +12,63 @@ public class SignupInteractor implements SignupInputBoundary {
     private final SignupOutputBoundary userPresenter;
     private final UserFactory userFactory;
 
-    public SignupInteractor(SignupUserDataAccessInterface signupUserDataAccessInterface,
+    public SignupInteractor(SignupUserDataAccessInterface signupDataAccessInterface,
                             SignupOutputBoundary signupOutputBoundary,
-                            UserFactory userFactory){
-        this.userDataAccessObject = signupUserDataAccessInterface;
+                            UserFactory userFactory) {
+        this.userDataAccessObject = signupDataAccessInterface;
         this.userPresenter = signupOutputBoundary;
         this.userFactory = userFactory;
     }
 
     @Override
-    public void execute(SignupInputData signupInputData){
-        // If username already exists (not unique)
-        if (userDataAccessObject.existsByName(signupInputData.getUsername())){
-            userPresenter.prepareFailView("Username already exists. Please choose other username.");
-        }
-        // If password not match with repetition
-        else if (!signupInputData.getPassword().equals(signupInputData.getRepeatPassword())) {
-            userPresenter.prepareFailView("Password don't match.");
-        }
-        // User created
-        else {
-            final User user = userFactory.create(signupInputData.getUsername(), signupInputData.getPassword());
-            userDataAccessObject.save(user);
+    public void execute(SignupInputData signupInputData) throws DataAccessException {
+        try {
+            validateInput(signupInputData);
 
-            final SignupOutputData signupOutputData = new SignupOutputData(user.getName(), false);
-            userPresenter.prepareSuccessView(signupOutputData);
+            User newUser = createUser(signupInputData);
+            saveUser(newUser);
+
+            prepareSuccessResponse(newUser);
+        } catch (IllegalArgumentException e) {
+            prepareFailureResponse(e.getMessage());
+        } catch (DataAccessException e) {
+            prepareFailureResponse("Failed to save user profile: " + e.getMessage());
         }
     }
 
+    private void validateInput(SignupInputData signupInputData) {
+        if (userDataAccessObject.existsByName(signupInputData.getUsername())) {
+            throw new IllegalArgumentException("User already exists.");
+        }
+
+        if (!signupInputData.getPassword().equals(signupInputData.getRepeatPassword())) {
+            throw new IllegalArgumentException("Passwords don't match.");
+        }
+
+        if (signupInputData.getPassword().isEmpty() || signupInputData.getUsername().isEmpty()) {
+            throw new IllegalArgumentException("Username and password cannot be empty.");
+        }
+    }
+
+    private User createUser(SignupInputData signupInputData) {
+        return userFactory.create(signupInputData.getUsername(), signupInputData.getPassword());
+    }
+
+    private void saveUser(User user) throws DataAccessException {
+        userDataAccessObject.save(user);
+    }
+
+    private void prepareSuccessResponse(User user) {
+        SignupOutputData signupOutputData = new SignupOutputData(user.getName(), false);
+        userPresenter.prepareSuccessView(signupOutputData);
+    }
+
+    private void prepareFailureResponse(String errorMessage) {
+        userPresenter.prepareFailView(errorMessage);
+    }
+
     @Override
-    public void switchToLoginview() {
+    public void switchToLoginView() {
         userPresenter.switchToLoginView();
     }
 }

@@ -5,6 +5,7 @@ import interface_adapter.user_profile.UserProfileViewModel;
 import javax.swing.*;
 
 public class ChangeDisplayNameView extends JPanel {
+    private final String viewName = "changeDisplayNameView";
     private final JTextField displayNameField = new JTextField(20);
     private Runnable saveListener;
     private Runnable cancelListener;

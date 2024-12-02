@@ -1,9 +1,10 @@
 package interface_adapter.user_profile.login;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.ViewManagerState;
-import interface_adapter.user_profile.change_password.LoggedInState;
-import interface_adapter.user_profile.change_password.LoggedInViewModel;
+import interface_adapter.search.SearchState;
+import interface_adapter.search.SearchViewModel;
+import interface_adapter.user_profile.login.LoginState;
+import interface_adapter.user_profile.login.LoginViewModel;
 import use_case.user_profile.login.LoginOutputBoundary;
 import use_case.user_profile.login.LoginOutputData;
 
@@ -11,29 +12,29 @@ import use_case.user_profile.login.LoginOutputData;
  * The Presenter for the Login Use Case.
  */
 public class LoginPresenter implements LoginOutputBoundary {
-    private final LoginViewModel loginViewModel;
-    private final LoggedInViewModel loggedInViewModel;
     private final ViewManagerModel viewManagerModel;
+    private final LoginViewModel loginViewModel;
+    private final SearchViewModel searchViewModel;
 
-    public LoginPresenter(LoginViewModel loginViewModel,
-                          LoggedInViewModel loggedInViewModel,
-                          ViewManagerModel viewManagerModel){
-        this.loginViewModel = loginViewModel;
-        this.loggedInViewModel = loggedInViewModel;
+    public LoginPresenter(ViewManagerModel viewManagerModel,LoginViewModel loginViewModel,
+                          SearchViewModel searchViewModel){
         this.viewManagerModel = viewManagerModel;
+        this.loginViewModel = loginViewModel;
+        this.searchViewModel = searchViewModel;
+
     }
 
     @Override
-    public void prepareSuccessView(LoginOutputData response) {
-        // On success, switch to logged in view
-        final LoggedInState loggedInState = new getState();
-        loggedInState.setUsername(response.getUsername());
-        this.loggedInViewModel.setState(loggedInState);
-        this.loggedInViewModel.firePropertyChanged();
+    public void prepareSuccessView(LoginOutputData response){
+        // On success, switch to the search view.
+        final SearchState searchState = searchViewModel.getState();
+        System.out.println(searchState);
+        this.searchViewModel.setState(searchState);
+        this.searchViewModel.firePropertyChanged();
 
-        ViewManagerState state = new ViewManagerState(loggedInViewModel.getViewName(), null);
-        this.viewManagerModel.setState(state);
+        this.viewManagerModel.setState(searchViewModel.getViewName());
         this.viewManagerModel.firePropertyChanged();
+
     }
 
     @Override
@@ -41,8 +42,5 @@ public class LoginPresenter implements LoginOutputBoundary {
         final LoginState loginState = loginViewModel.getState();
         loginState.setLoginError(error);
         loginViewModel.firePropertyChanged();
-    }
-
-    private static class getState extends LoggedInState {
     }
 }

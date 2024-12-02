@@ -2,12 +2,12 @@ package view.user_profile;
 
 import interface_adapter.user_profile.UserProfileViewModel;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.ViewManagerState;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 
 public class ProfileView extends BaseView {
+    private final String viewName = "profileView";
     private final UserProfileViewModel userProfileViewModel;
     private final JLabel usernameLabel;
     private final JLabel displayNameLabel;
@@ -46,12 +46,12 @@ public class ProfileView extends BaseView {
     }
 
     private void navigateToChangePasswordView() {
-        viewManagerModel.setState(new ViewManagerState("change password", null));
+        viewManagerModel.setState("change password");
         viewManagerModel.firePropertyChanged();
     }
 
     private void navigateToChangeDisplayNameView() {
-        viewManagerModel.setState(new ViewManagerState("change display name", null));
+        viewManagerModel.setState("change display name");
         viewManagerModel.firePropertyChanged();
     }
 
@@ -61,5 +61,18 @@ public class ProfileView extends BaseView {
 
     public JButton getChangeDisplayNameButton() {
         return changeDisplayNameButton;
+    }
+
+    public void addChangePasswordListener(Runnable listener) {
+        changePasswordButton.addActionListener(e -> listener.run());
+    }
+
+    public void addChangeDisplayNameListener(Runnable listener) {
+        changeDisplayNameButton.addActionListener(e -> listener.run());
+    }
+
+    @Override
+    public String getViewName() {
+        return viewName;
     }
 }

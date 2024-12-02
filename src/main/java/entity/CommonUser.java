@@ -1,7 +1,5 @@
 package entity;
 
-import entity.user_profile.User;
-
 import java.util.ArrayList;
 
 /**
@@ -10,19 +8,12 @@ import java.util.ArrayList;
 public class CommonUser implements User {
     private final String name;
     private String password;
-    private final Favorite favorite;
+    private String displayName;
 
     // Delete later because the notes application needs it for now but it will be deleted later so please ignore it
     public CommonUser(String name, String password) {
         this.name = name;
         this.password = password;
-        this.favorite = new CommonFavorite(new ArrayList<>());
-    }
-
-    public CommonUser(String name, String password, Favorite favorite) {
-        this.name = name;
-        this.password = password;
-        this.favorite = favorite;
     }
 
     @Override
@@ -47,7 +38,7 @@ public class CommonUser implements User {
      */
     @Override
     public String getDisplayName() {
-        return "";
+        return displayName;
     }
 
     /**
@@ -57,11 +48,16 @@ public class CommonUser implements User {
      */
     @Override
     public void setDisplayName(String displayName) {
-
+        this.displayName = displayName;
     }
 
+    /**
+     * Get the favorite recipes of the user.
+     *
+     * @return the favorite recipes of the user
+     */
     @Override
     public Favorite getFavorite() {
-        return favorite;
+        return null;
     }
 }

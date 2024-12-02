@@ -1,42 +1,45 @@
 package view.user_profile;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.ViewManagerState;
 import interface_adapter.user_profile.login.LoginController;
+import interface_adapter.user_profile.login.LoginState;
+import interface_adapter.user_profile.login.LoginViewModel;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class LoginView extends BaseView {
-    private final JTextField usernameField;
-    private final JPasswordField passwordField;
-    private final JLabel errorLabel;
-    private final JButton loginButton;
-    private final JButton signupButton;
-    private final JButton cancelButton;
+public class LoginView extends JPanel implements PropertyChangeListener {
+    private final String viewName = "loginView";
+    private final ViewManagerModel viewManagerModel;
+    private LoginController loginController;
+    private final LoginViewModel loginViewModel;
 
-    private final LoginController loginController;
+    private final JTextField usernameField = new JTextField(20);
+    private final JPasswordField passwordField = new JPasswordField(20);
+    private final JLabel errorLabel = createErrorLabel();
+    private final JButton loginButton = createButton("Login", this::authenticateUser);
+    private final JButton signupButton = createButton("Go to Signup", this::navigateToSignupView);
+    private final JButton cancelButton = createButton("Cancel", this::navigateToWelcomeView);
 
-    public LoginView(LoginController loginController, ViewManagerModel viewManagerModel) {
-        super("login view", viewManagerModel);
-
+    public LoginView(LoginController loginController, LoginViewModel loginViewModel, ViewManagerModel viewManagerModel) {
         this.loginController = loginController;
+        this.loginViewModel = loginViewModel;
+        this.viewManagerModel = viewManagerModel;
 
-        usernameField = new JTextField(20);
-        passwordField = new JPasswordField(20);
-        errorLabel = new JLabel();
-        errorLabel.setForeground(Color.RED);
+        this.loginViewModel.addPropertyChangeListener(this);
+        this.viewManagerModel.addPropertyChangeListener(this);
 
-        loginButton = new JButton("Login");
-        signupButton = new JButton("Signup");
-        cancelButton = new JButton("Cancel");
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setupComponents();
+        addDocumentListeners();
+    }
 
-        loginButton.addActionListener(evt -> authenticateUser());
-        signupButton.addActionListener(evt -> navigateToSignupView());
-        cancelButton.addActionListener(evt -> navigateToWelcomeView());
-
-        add(new JLabel("Login"));
+    private void setupComponents() {
+        add(createTitleLabel("Login Screen"));
         add(new JLabel("Username:"));
         add(usernameField);
         add(new JLabel("Password:"));
@@ -47,54 +50,104 @@ public class LoginView extends BaseView {
         add(cancelButton);
     }
 
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        super.propertyChange(evt);
-        refresh();
+    private JLabel createTitleLabel(String text) {
+        JLabel titleLabel = new JLabel(text);
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        return titleLabel;
     }
 
-    @Override
-    protected void refresh() {
-        errorLabel.setText("");
-        usernameField.setText("");
-        passwordField.setText("");
+    private JLabel createErrorLabel() {
+        JLabel label = new JLabel();
+        label.setForeground(Color.RED);
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        return label;
+    }
+
+    private JButton createButton(String text, Runnable action) {
+        JButton button = new JButton(text);
+        button.addActionListener(evt -> action.run());
+        return button;
+    }
+
+    private void addDocumentListeners() {
+        addFieldListener(usernameField, this::updateUsername);
+        addFieldListener(passwordField, this::updatePassword);
+    }
+
+    private void addFieldListener(JTextField field, Runnable updateState) {
+        field.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateState.run();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateState.run();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateState.run();
+            }
+        });
+    }
+
+    private void updateUsername() {
+        LoginState state = loginViewModel.getState();
+        state.setUsername(usernameField.getText());
+        loginViewModel.setState(state);
+    }
+
+    private void updatePassword() {
+        LoginState state = loginViewModel.getState();
+        state.setPassword(new String(passwordField.getPassword()));
+        loginViewModel.setState(state);
     }
 
     private void authenticateUser() {
-        String username = usernameField.getText();
-        String password = new String(passwordField.getPassword());
         try {
-            loginController.execute(username, password);
-            navigateToSearchView();
+            loginController.execute(
+                    loginViewModel.getState().getUsername(),
+                    loginViewModel.getState().getPassword()
+            );
+            viewManagerModel.setState("searchView");
         } catch (Exception e) {
-            errorLabel.setText(e.getMessage());
+            displayError(e.getMessage());
         }
     }
 
     private void navigateToSignupView() {
-        viewManagerModel.setState(new ViewManagerState("signup view", null));
-        viewManagerModel.firePropertyChanged();
+        viewManagerModel.setState("signupView");
     }
 
     private void navigateToWelcomeView() {
-        viewManagerModel.setState(new ViewManagerState("welcome view", null));
-        viewManagerModel.firePropertyChanged();
+        viewManagerModel.setState("welcomeView");
     }
 
-    private void navigateToSearchView() {
-        viewManagerModel.setState(new ViewManagerState("search view", null));
-        viewManagerModel.firePropertyChanged();
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("state".equals(evt.getPropertyName())) {
+            refresh();
+        }
     }
 
-    public String getUsername() {
-        return usernameField.getText();
-    }
-
-    public String getPassword() {
-        return new String(passwordField.getPassword());
+    private void refresh() {
+        LoginState state = loginViewModel.getState();
+        usernameField.setText(state.getUsername());
+        passwordField.setText(state.getPassword());
+        errorLabel.setText(state.getLoginError());
     }
 
     public void displayError(String message) {
         errorLabel.setText(message);
+    }
+
+    public String getViewName() {
+        return viewName;
+    }
+
+    public void setLoginController(LoginController controller) {
+        this.loginController = controller;
     }
 }

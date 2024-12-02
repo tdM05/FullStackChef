@@ -1,50 +1,97 @@
 package view.user_profile;
 
-import interface_adapter.ViewManagerModel;
-import interface_adapter.ViewManagerState;
 import interface_adapter.user_profile.signup.SignupController;
+import interface_adapter.ViewManagerModel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 
+import static interface_adapter.user_profile.signup.SignupViewModel.*;
+
 public class SignupView extends BaseView {
+    private final String viewName = "signupView";
     private final JTextField usernameField;
     private final JPasswordField passwordField;
     private final JPasswordField repeatPasswordField;
     private final JLabel errorLabel;
     private final JButton signupButton;
+    private final JButton toLoginButton;
     private final JButton cancelButton;
 
-    private final SignupController signupController;
+    private SignupController signupController;
 
     public SignupView(SignupController signupController, ViewManagerModel viewManagerModel) {
-        super("signup view", viewManagerModel);
-
+        super("signupView", viewManagerModel);
         this.signupController = signupController;
 
         usernameField = new JTextField(20);
         passwordField = new JPasswordField(20);
         repeatPasswordField = new JPasswordField(20);
-        errorLabel = new JLabel();
-        errorLabel.setForeground(Color.RED);
+        errorLabel = createErrorLabel();
 
-        signupButton = new JButton("Signup");
-        cancelButton = new JButton("Cancel");
+        signupButton = createButton(SIGNUP_BUTTON_LABEL, this::handleSignup);
+        toLoginButton = createButton(TO_LOGIN_BUTTON_LABEL, this::navigateToLoginView);
+        cancelButton = createButton(CANCEL_BUTTON_LABEL, this::navigateToWelcomeView);
 
-        signupButton.addActionListener(evt -> createUser());
-        cancelButton.addActionListener(evt -> navigateToWelcomeView());
+        setupLayout();
+    }
 
-        add(new JLabel("Signup"));
-        add(new JLabel("Username:"));
+    private JLabel createErrorLabel() {
+        JLabel label = new JLabel();
+        label.setForeground(Color.RED);
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        return label;
+    }
+
+    private JButton createButton(String text, Runnable action) {
+        JButton button = new JButton(text);
+        button.addActionListener(evt -> action.run());
+        return button;
+    }
+
+    private void setupLayout() {
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        add(new JLabel(TITLE_LABEL));
+        add(new JLabel(USERNAME_LABEL));
         add(usernameField);
-        add(new JLabel("Password:"));
+        add(new JLabel(PASSWORD_LABEL));
         add(passwordField);
-        add(new JLabel("Repeat Password:"));
+        add(new JLabel(REPEAT_PASSWORD_LABEL));
         add(repeatPasswordField);
         add(errorLabel);
         add(signupButton);
+        add(toLoginButton);
         add(cancelButton);
+    }
+
+    private void handleSignup() {
+        String username = usernameField.getText();
+        String password = new String(passwordField.getPassword());
+        String repeatPassword = new String(repeatPasswordField.getPassword());
+
+        if (!password.equals(repeatPassword)) {
+            displayError("Passwords do not match.");
+            return;
+        }
+
+        try {
+            signupController.execute(username, password, repeatPassword);
+
+            // Provide success feedback (optional popup)
+            JOptionPane.showMessageDialog(this,
+                    "Signup successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            displayError(e.getMessage());
+        }
+    }
+
+    private void navigateToLoginView() {
+        viewManagerModel.setState("loginView");
+    }
+
+    private void navigateToWelcomeView() {
+        viewManagerModel.setState("welcomeView");
     }
 
     @Override
@@ -55,38 +102,14 @@ public class SignupView extends BaseView {
 
     @Override
     protected void refresh() {
-        errorLabel.setText("");
         usernameField.setText("");
         passwordField.setText("");
         repeatPasswordField.setText("");
+        errorLabel.setText("");
     }
 
-    private void createUser() {
-        String username = usernameField.getText();
-        String password = new String(passwordField.getPassword());
-        String repeatPassword = new String(repeatPasswordField.getPassword());
-
-        if (!password.equals(repeatPassword)) {
-            errorLabel.setText("Passwords do not match.");
-            return;
-        }
-
-        try {
-            signupController.execute(username, password, repeatPassword);
-            navigateToSetupView();
-        } catch (Exception e) {
-            errorLabel.setText(e.getMessage());
-        }
-    }
-
-    private void navigateToWelcomeView() {
-        viewManagerModel.setState(new ViewManagerState("welcome view", null));
-        viewManagerModel.firePropertyChanged();
-    }
-
-    private void navigateToSetupView() {
-        viewManagerModel.setState(new ViewManagerState("setup view", null));
-        viewManagerModel.firePropertyChanged();
+    public void displayError(String message) {
+        errorLabel.setText(message);
     }
 
     public String getUsername() {
@@ -101,7 +124,11 @@ public class SignupView extends BaseView {
         return new String(repeatPasswordField.getPassword());
     }
 
-    public void displayError(String message) {
-        errorLabel.setText(message);
+    public String getViewName() {
+        return viewName;
+    }
+
+    public void setSignupController(SignupController controller) {
+        this.signupController = controller;
     }
 }

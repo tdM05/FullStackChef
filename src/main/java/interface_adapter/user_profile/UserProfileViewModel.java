@@ -1,7 +1,7 @@
 package interface_adapter.user_profile;
 
-import entity.user_profile.RegularUser;
-import entity.user_profile.UserProfile;
+import entity.RegularUser;
+import entity.UserProfile;
 import interface_adapter.ViewModel;
 
 public class UserProfileViewModel extends ViewModel<UserProfile> {

@@ -1,11 +1,55 @@
 package app;
 
-import entity.user_profile.UserFactory;
-
+import data_access.FavoriteDataAccessObject;
+import data_access.RecipeDataAccessObject;
+import data_access.user_profile.InMemoryGuestUserDataAccessObject;
+import data_access.user_profile.UserAuthDataAccessObject;
+import entity.*;
+import interface_adapter.ViewManagerModel;
+import interface_adapter.check_favorite.CheckFavoriteController;
+import interface_adapter.check_favorite.CheckFavoritePresenter;
+import interface_adapter.display_favorites.DisplayFavoriteViewModel;
+import interface_adapter.display_recipe.DisplayRecipeController;
+import interface_adapter.display_recipe.DisplayRecipePresenter;
+import interface_adapter.display_recipe.DisplayRecipeViewModel;
+import interface_adapter.user_profile.UserProfileViewModel;
+import interface_adapter.user_profile.change_password.ChangePasswordController;
+import interface_adapter.user_profile.login.LoginController;
+import interface_adapter.user_profile.login.LoginPresenter;
+import interface_adapter.user_profile.login.LoginViewModel;
+import interface_adapter.search.SearchController;
+import interface_adapter.search.SearchPresenter;
+import interface_adapter.search.SearchViewModel;
+import interface_adapter.user_profile.setup.SetupController;
+import interface_adapter.user_profile.setup.SetupPresenter;
+import interface_adapter.user_profile.signup.SignupController;
+import interface_adapter.user_profile.signup.SignupPresenter;
+import interface_adapter.user_profile.signup.SignupViewModel;
+import use_case.check_favorite.CheckFavoriteInputBoundary;
+import use_case.check_favorite.CheckFavoriteInteractor;
+import use_case.check_favorite.CheckFavoriteOutputBoundary;
+import use_case.display_recipe.DisplayRecipeInputBoundary;
+import use_case.display_recipe.DisplayRecipeInteractor;
+import use_case.display_recipe.DisplayRecipeOutputBoundary;
+import use_case.user_profile.change_password.ChangePasswordInputBoundary;
+import use_case.user_profile.login.LoginInputBoundary;
+import use_case.user_profile.login.LoginInteractor;
+import use_case.user_profile.login.LoginOutputBoundary;
+import use_case.search.SearchInputBoundary;
+import use_case.search.SearchInteractor;
+import use_case.search.SearchOutputBoundary;
+import use_case.user_profile.login.LoginUserDataAccessInterface;
+import use_case.user_profile.signup.SignupOutputBoundary;
+import use_case.user_profile.signup.SignupInputBoundary;
+import use_case.user_profile.signup.SignupInteractor;
+import use_case.user_profile.signup.SignupUserDataAccessInterface;
 import view.*;
+
+import view.user_profile.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
 
 /**
  * The AppBuilder class is responsible for putting together the pieces of
@@ -21,14 +65,258 @@ public class MainAppBuilder {
     private ViewManagerModel viewManagerModel = new ViewManagerModel();
     private ViewManager viewManager;
 
+    private final UserAuthDataAccessObject userDAO = new UserAuthDataAccessObject(userFactory);
+    private final InMemoryGuestUserDataAccessObject guestUserDAO = new InMemoryGuestUserDataAccessObject();
+    private final RecipeDataAccessObject recipeDataAccessObject = new RecipeDataAccessObject();
+    private final FavoriteDataAccessObject favoriteDataAccessObject = new FavoriteDataAccessObject();
+
+    private SignupView signupView;
+    private SignupViewModel signupViewModel;
+    private LoginView loginView;
+    private LoginViewModel loginViewModel;
+    private SearchView searchView;
+    private SearchViewModel searchViewModel;
+    private DisplayRecipeView displayRecipeView;
+    private DisplayRecipeViewModel displayRecipeViewModel;
+    private DisplayFavoriteView displayFavoriteView;
+    private DisplayFavoriteViewModel displayFavoriteViewModel;
+
+    private WelcomeView welcomeView;
+    private SetupView setupView;
+    private ChangePasswordView changePasswordView;
+    private ChangeDisplayNameView changeDisplayNameView;
+    private ProfileView profileView;
+    private UserProfileViewModel userProfileViewModel;
+
     public MainAppBuilder() {
         cardPanel.setLayout(cardLayout);
+    }
+
+    public MainAppBuilder addWelcomeView() {
+        welcomeView = new WelcomeView(viewManagerModel);
+        cardPanel.add(welcomeView, welcomeView.getViewName());
+        return this;
+
+    }
+
+    /**
+     * Adds the SignupView to the application.
+     * @return this AppBuilder
+     */
+    public MainAppBuilder addSignupView() {
+        signupViewModel = new SignupViewModel();
+
+        // Initialize SignupController with two arguments
+        SignupController signupController = new SignupController(
+                new SignupInteractor(userDAO,
+                        new SignupPresenter(viewManagerModel, signupViewModel), userFactory),
+                viewManagerModel  // Passing the second argument (ViewManagerModel)
+        );
+
+        signupView = new SignupView(signupController, viewManagerModel);
+        cardPanel.add(signupView, signupView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the LoginView to the application.
+     * @return this AppBuilder
+     */
+    public MainAppBuilder addLoginView() {
+        loginViewModel = new LoginViewModel();
+        LoginController loginController = new LoginController(
+                new LoginInteractor(userDAO,
+                        new LoginPresenter(viewManagerModel, loginViewModel, searchViewModel)));
+        loginView = new LoginView(loginController, loginViewModel, viewManagerModel);
+        cardPanel.add(loginView, loginView.getViewName());
+        return this;
+    }
+
+    public MainAppBuilder addSetupView() {
+        // Ensure UserProfileViewModel is instantiated
+        userProfileViewModel = new UserProfileViewModel();
+        SetupPresenter setupPresenter = new SetupPresenter(userProfileViewModel, viewManagerModel);
+        SetupController setupController = new SetupController(setupPresenter);
+        setupView = new SetupView(setupController, userProfileViewModel);
+
+        cardPanel.add(setupView, "setupView");
+        return this;
+    }
+
+
+    public MainAppBuilder addProfileView() {
+        Profile profileView = new Profile(viewManagerModel);  // Pass viewManagerModel
+        cardPanel.add(profileView, "profileView");
+        return this;
+    }
+    
+//    viewManagerModel.addStateChangeListener((oldState, newState) -> {
+//        System.out.println("Switching from " + oldState + " to " + newState);
+//        switchToView(newState);
+//    });
+
+    public MainAppBuilder addChangePasswordView() {
+        ChangePasswordController changePasswordController = new ChangePasswordController(userDAO);
+        changePasswordView = new ChangePasswordView(userProfileViewModel, changePasswordController, viewManagerModel);
+        cardPanel.add(changePasswordView, changePasswordView.getViewName());
+        return this;
+    }
+
+    // Will update later
+//    public MainAppBuilder addChangeDisplayNameView() {
+//        ChangeDisplayNameController changeDisplayNameController = new ChangeDisplayNameController(userDAO);
+//        changeDisplayNameView = new ChangeDisplayNameView(userProfileViewModel, changeDisplayNameController);
+//        cardPanel.add(changeDisplayNameView, "change display name view");
+//        return this;
+//    }
+
+
+    private void switchToView(String viewName) {
+        cardLayout.show(cardPanel, viewName);
+    }
+
+    private void switchToGuestMode() {
+        GuestUser guestUser = new GuestUser();
+        SessionUser.getInstance().setUser(guestUser);
+
+        UserProfile guestUserProfile = new UserProfile(guestUser, guestUser.getDisplayName());
+        userProfileViewModel.setState(guestUserProfile);
+        guestUserDAO.switchToGuestMode();
+
+        switchToView("searchView");
+    }
+
+    /**
+     * Adds the SearchView to the application.
+     * @return this AppBuilder
+     */
+    public MainAppBuilder addSearchView() {
+        searchViewModel = new SearchViewModel();
+        searchView = new SearchView(searchViewModel);
+        searchView.setPreferredSize(new Dimension(1200, 800));
+
+        cardPanel.add(searchView, searchView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the DisplayRecipeView to the application.
+     * @return this AppBuilder
+     */
+    public MainAppBuilder addDisplayRecipeView() {
+        displayRecipeViewModel = new DisplayRecipeViewModel();
+        displayRecipeView = new DisplayRecipeView(displayRecipeViewModel);
+        displayRecipeView.setPreferredSize(new Dimension(1200, 800));
+        cardPanel.add(displayRecipeView, displayRecipeView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the FavoriteView to the application.
+     * @return this AppBuilder
+     */
+    public MainAppBuilder addFavoriteView() {
+        displayFavoriteViewModel = new DisplayFavoriteViewModel();
+        displayFavoriteView = new DisplayFavoriteView(displayFavoriteViewModel);
+        cardPanel.add(displayFavoriteView, displayFavoriteView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the Signup Use Case to the application.
+     * @return this AppBuilder
+     */
+    public MainAppBuilder addSignupUseCase() {
+        final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel,
+                signupViewModel);
+        final SignupInputBoundary userSignupInteractor = new SignupInteractor(
+                userDAO, signupOutputBoundary, userFactory);
+
+        final SignupController controller = new SignupController(userSignupInteractor, viewManagerModel);
+        signupView.setSignupController(controller);
+        return this;
+    }
+
+    /**
+     * Adds the Login Use Case to the application.
+     * @return this AppBuilder
+     */
+    public MainAppBuilder addLoginUseCase() {
+        final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel, loginViewModel,
+                searchViewModel);
+        final LoginInputBoundary userLoginInteractor = new LoginInteractor(
+                userDAO, loginOutputBoundary);
+
+        final LoginController controller = new LoginController(userLoginInteractor);
+        loginView.setLoginController(controller);
+        return this;
+    }
+
+    public MainAppBuilder addProfileUseCase() {
+        // Create ProfilePresenter
+        ProfilePresenter profilePresenter = new ProfilePresenter(viewManagerModel, userProfileViewModel);
+
+        // Create ProfileInteractor (use case logic)
+        ProfileInteractor profileInteractor = new ProfileInteractor(userDAO, profilePresenter);
+
+        // Create ProfileController (the controller that bridges the UI and use case)
+        ProfileController profileController = new ProfileController(profileInteractor);
+
+        // Create ProfileView (UI view)
+        ProfileView profileView = new ProfileView(profileController, userProfileViewModel);
+
+        // Set the ProfileView in the builder's card panel
+        cardPanel.add(profileView, profileView.getViewName());
+
+        return this;
+    }
+
+
+    /**
+     * Adds the Search Use Case to the application.
+     * @return this AppBuilder
+     */
+    public MainAppBuilder addSearchUseCase() {
+        final SearchOutputBoundary searchOutputBoundary = new SearchPresenter(searchViewModel);
+        final SearchInputBoundary searchInteractor = new SearchInteractor(recipeDataAccessObject, searchOutputBoundary);
+
+        final SearchController searchController = new SearchController(searchInteractor);
+        searchView.setSearchController(searchController);
+        return this;
+    }
+
+    /**
+     * Adds the DisplayRecipe Use Case to the application.
+     * @return this AppBuilder
+     */
+    public MainAppBuilder addDisplayRecipeUseCase() {
+        final DisplayRecipeOutputBoundary displayRecipeOutputBoundary = new DisplayRecipePresenter(viewManagerModel, searchViewModel, displayRecipeViewModel);
+        final DisplayRecipeInputBoundary displayRecipeInteractor = new DisplayRecipeInteractor(recipeDataAccessObject, displayRecipeOutputBoundary);
+
+        final DisplayRecipeController displayRecipeController = new DisplayRecipeController(displayRecipeInteractor);
+        searchView.setDisplayRecipeController(displayRecipeController);
+        displayRecipeView.setDisplayRecipeController(displayRecipeController);
+        return this;
+    }
+
+    /**
+     * Adds the CheckFavorite Use Case to the application.
+     * @return this AppBuilder
+     */
+    public MainAppBuilder addCheckFavoriteUseCase() {
+        final CheckFavoriteOutputBoundary checkFavoriteOutputBoundary = new CheckFavoritePresenter(viewManagerModel, searchViewModel, displayRecipeViewModel);
+        final CheckFavoriteInputBoundary checkFavoriteInteractor = new CheckFavoriteInteractor(favoriteDataAccessObject, checkFavoriteOutputBoundary);
+
+        final CheckFavoriteController checkFavoriteController = new CheckFavoriteController(checkFavoriteInteractor);
+        searchView.setCheckFavoriteController(checkFavoriteController);
+        return this;
     }
 
     /**
      * Adds the Favorite Use Case to the application.
      * @return this AppBuilder
      */
+
 
     /**
      * Builds the application.
@@ -39,13 +327,15 @@ public class MainAppBuilder {
         application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         application.add(cardPanel);
 
+        // Start with WelcomeView
+        switchToView(welcomeView.getViewName());
         viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel, application);
 
-        viewManagerModel.setState(signupView.getViewName());
+        viewManagerModel.setState(welcomeView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         application.setSize(new Dimension(380, 250));
-        application.setResizable(false);
+        application.setResizable(true);
         application.setLocationRelativeTo(null);
 
         return application;

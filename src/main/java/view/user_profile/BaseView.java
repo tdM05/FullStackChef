@@ -1,7 +1,6 @@
 package view.user_profile;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.ViewManagerState;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,9 +26,9 @@ public abstract class BaseView extends JPanel implements PropertyChangeListener 
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getNewValue() instanceof ViewManagerState) {
-            final ViewManagerState state = (ViewManagerState) evt.getNewValue();
-            if (state.getViewName().equals(viewName)) {
+        if (evt.getNewValue() instanceof String) {
+            final String state = (String) evt.getNewValue();
+            if (state.equals(viewName)) {
                 refresh();
             }
         }
@@ -39,4 +38,8 @@ public abstract class BaseView extends JPanel implements PropertyChangeListener 
      * Refreshes the view with updated content.
      */
     protected abstract void refresh();
+
+    public String getViewName() {
+        return viewName;
+    }
 }

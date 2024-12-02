@@ -1,6 +1,7 @@
 package use_case.user_profile.signup;
 
-import entity.user_profile.User;
+import entity.User;
+import use_case.DataAccessException;
 
 /**
  * DAO for the Signup Use Case.
@@ -17,5 +18,5 @@ public interface SignupUserDataAccessInterface {
      * Saves the commonUser.
      * @param user the User to save
      */
-    void save(User user);
+    void save(User user) throws DataAccessException;
 }

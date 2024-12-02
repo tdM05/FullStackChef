@@ -1,6 +1,7 @@
 package use_case.user_profile.login;
 
-import entity.user_profile.User;
+import entity.User;
+import use_case.DataAccessException;
 
 /**
  * DAO for the Login Use Case.
@@ -17,7 +18,7 @@ public interface LoginUserDataAccessInterface {
      * Saves the commonUser.
      * @param user the commonUser to save
      */
-    void save(User user);
+    void save(User user) throws DataAccessException;
 
     /**
      * Returns the user with the given username.

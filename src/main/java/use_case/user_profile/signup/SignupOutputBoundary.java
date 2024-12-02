@@ -1,9 +1,10 @@
 package use_case.user_profile.signup;
 
 /**
- * Output Data for the Signup Use Case.
+ * The output boundary for the Signup Use Case.
  */
 public interface SignupOutputBoundary {
+
     /**
      * Prepares the success view for the Signup Use Case.
      * @param outputData the output data

@@ -1,12 +1,11 @@
 package view;
 
+import interface_adapter.ViewManagerModel;
+
+import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-
-import javax.swing.*;
-
-import interface_adapter.ViewManagerModel;
 
 /**
  * The View Manager for the program. It listens for property change events
@@ -22,7 +21,7 @@ public class ViewManager implements PropertyChangeListener {
         this.views = views;
         this.cardLayout = cardLayout;
         this.viewManagerModel = viewManagerModel;
-        this.viewManagerModel.addPropertyChangeListener(this);
+        this.viewManagerModel.addPropertyChangeListener(this);  // Listen to property changes
         this.applicationFrame = applicationFrame;
     }
 
@@ -30,6 +29,8 @@ public class ViewManager implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("state")) {
             final String viewModelName = (String) evt.getNewValue();
+            System.out.println("Changing view to: " + viewModelName); // Debug log
+
             cardLayout.show(views, viewModelName);
 
             // Get the currently visible component (the new view)

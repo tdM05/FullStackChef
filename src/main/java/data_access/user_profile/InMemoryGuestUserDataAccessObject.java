@@ -1,9 +1,8 @@
 package data_access.user_profile;
 
 import entity.*;
-import entity.user_profile.GuestUser;
-import entity.user_profile.RegularUser;
-import entity.user_profile.User;
+import entity.GuestUser;
+import entity.RegularUser;
 import use_case.user_profile.change_password.ChangePasswordUserDataAccessInterface;
 import use_case.user_profile.login.LoginUserDataAccessInterface;
 import use_case.user_profile.logout.LogoutUserDataAccessInterface;

@@ -1,6 +1,6 @@
 package data_access.user_profile;
 
-import entity.user_profile.UserProfile;
+import entity.UserProfile;
 import use_case.DataAccessException;
 
 public interface UserDataAccessObject {

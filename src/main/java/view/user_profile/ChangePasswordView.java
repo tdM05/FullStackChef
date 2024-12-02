@@ -1,14 +1,15 @@
 package view.user_profile;
 
+import app.SessionUser;
 import interface_adapter.user_profile.UserProfileViewModel;
 import interface_adapter.user_profile.change_password.ChangePasswordController;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.ViewManagerState;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 
 public class ChangePasswordView extends BaseView {
+    private final String viewName = "changePasswordView";
     private final UserProfileViewModel userProfileViewModel;
     private final ChangePasswordController controller;
     private final JLabel usernameLabel;
@@ -18,7 +19,7 @@ public class ChangePasswordView extends BaseView {
     private final JButton cancelButton;
 
     public ChangePasswordView(UserProfileViewModel userProfileViewModel, ChangePasswordController controller, ViewManagerModel viewManagerModel) {
-        super("change password", viewManagerModel);
+        super("changePasswordView", viewManagerModel);
         this.userProfileViewModel = userProfileViewModel;
         this.controller = controller;
 
@@ -63,7 +64,20 @@ public class ChangePasswordView extends BaseView {
     }
 
     private void navigateToProfileView() {
-        viewManagerModel.setState(new ViewManagerState("profile view", null));
+        viewManagerModel.setState("profile view");
         viewManagerModel.firePropertyChanged();
+    }
+
+    public void addSaveListener(Runnable listener) {
+        saveButton.addActionListener(e -> listener.run());
+    }
+
+    public void addCancelListener(Runnable listener) {
+        cancelButton.addActionListener(e -> listener.run());
+    }
+
+    @Override
+    public String getViewName() {
+        return viewName;
     }
 }
