@@ -60,7 +60,7 @@ public class StoreMealInteractor implements StoreMealInputBoundary {
      * @return The List of Integers.
      * @throws ProfileException if the JSONArray cannot be converted.
      */
-    private List<Integer> JSONArrayToList(JSONArray meals) throws ProfileException {
+    List<Integer> JSONArrayToList(JSONArray meals) throws ProfileException {
         final List<Integer> mealList = new java.util.ArrayList<>();
         for (int i = 0; i < meals.length(); i++) {
             try {
