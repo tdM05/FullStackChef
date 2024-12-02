@@ -1,5 +1,6 @@
 package interface_adapter.grocery_list;
 
+import data_access.Constants;
 import interface_adapter.ViewModel;
 
 /**
@@ -7,8 +8,7 @@ import interface_adapter.ViewModel;
  */
 public class GroceryListViewModel extends ViewModel<GroceryListState> {
     public GroceryListViewModel() {
-        super("grocery list");
+        super(Constants.GROCERY_LIST_VIEW);
         setState(new GroceryListState());
     }
-
 }

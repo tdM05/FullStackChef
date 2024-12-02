@@ -3,6 +3,7 @@ package use_case.grocery_list;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.SessionUser;
 import data_access.grocery_list.GroceryListException;
 import entity.CommonIngredient;
 import entity.Ingredient;
@@ -26,9 +27,9 @@ public class GroceryListInteractor implements GroceryListInputBoundary {
     public void execute() {
         try {
             // Get recipe ids from the profile api
-            final List<Integer> recipeIds = dataAccess.getAllRecipeIds();
+            final List<Integer> recipeIds = dataAccess.getAllRecipeIds(SessionUser.getInstance().getUser().getName());
             // Get ingredients from the recipe ids
-            final List<IngredientWithConvertedUnits> ingredients = dataAccess.getAllIngredients(recipeIds);
+            final List<Ingredient> ingredients = dataAccess.getAllIngredients(recipeIds);
             // Convert ingredients to strings
             final List<String> ingredientStrings = ingredientsToStrings(ingredients);
 
@@ -46,12 +47,10 @@ public class GroceryListInteractor implements GroceryListInputBoundary {
      * @param ingredients The list of ingredients.
      * @return The list of strings.
      */
-    List<String> ingredientsToStrings(List<IngredientWithConvertedUnits> ingredients) {
-        // We first need to simplify the ingredients and add duplicate names.
-        final List<Ingredient> simplifiedIngredients = simplifiedIngredients(ingredients);
-
+    List<String> ingredientsToStrings(List<Ingredient> ingredients) {
+        // We first need to simplify the ingredients and add duplicate names
         final List<String> res = new java.util.ArrayList<>();
-        for (Ingredient ingredient : simplifiedIngredients) {
+        for (Ingredient ingredient : ingredients) {
             final String name = ingredient.getName();
             final float value = ingredient.getAmount();
             final String unit = ingredient.getUnit();
@@ -60,55 +59,8 @@ public class GroceryListInteractor implements GroceryListInputBoundary {
         return res;
     }
 
-    /**
-     * Simplify the ingredients by adding the amounts of ingredients with the same name.
-     *
-     * @param ingredients The list of ingredients.
-     * @return The simplified list of ingredients.
-     */
-    List<Ingredient> simplifiedIngredients(List<IngredientWithConvertedUnits> ingredients) {
-        // Get ingredients with the same name and simplify
-        // We do this by creating a new list, and seing if a name is already in the list
-        final List<Ingredient> res = new ArrayList<>();
-        for (IngredientWithConvertedUnits ingredient : ingredients) {
-            // we need to check if this ingredient was converted successully
-            if (!ingredient.getConvertStatus()) {
-                boolean found = false;
-                for (Ingredient resIngredient : res) {
-                    if (resIngredient.getName().equals(ingredient.getName())) {
-                        // Here we assume the units are the same, which they should be
-                        resIngredient.setAmount(resIngredient.getAmount() + ingredient.getAmount());
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    // make sure we are returning the converted amount
-                    final Ingredient newIngredient = new CommonIngredient(ingredient.getName(),
-                            ingredient.getAmount(),
-                            ingredient.getUnit());
-                    res.add(newIngredient);
-                }
-            }
-            else {
-                boolean found = false;
-                for (Ingredient resIngredient : res) {
-                    if (resIngredient.getName().equals(ingredient.getName())) {
-                        // Here we assume the units are the same, which they should be
-                        resIngredient.setAmount(resIngredient.getAmount() + ingredient.getConvertedAmount());
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    // make sure we are returning the converted amount
-                    final Ingredient newIngredient = new CommonIngredient(ingredient.getName(),
-                            ingredient.getConvertedAmount(),
-                            ingredient.getConvertedUnit());
-                    res.add(newIngredient);
-                }
-            }
-        }
-        return res;
+    @Override
+    public void switchToSearchView() {
+        presenter.switchToSearchView();
     }
 }

@@ -3,14 +3,11 @@ package data_access.grocery_list;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import app.SessionUser;
 import data_access.Constants;
-import entity.CommonMeasurable;
-import entity.CommonPair;
-import entity.Measurable;
-import entity.Pair;
-import entity.CommonIngredientWithConvertedUnits;
-import entity.IngredientWithConvertedUnits;
+import entity.*;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -38,26 +35,74 @@ public class GroceryListDataAccessObject implements GroceryListDataAccessInterfa
     }
 
     @Override
-    public List<Integer> getAllRecipeIds() {
-        // TODO get all recipe ids from the profile api.
+    public List<Integer> getAllRecipeIds(String username) {
+        //http://vm003.teach.cs.toronto.edu:20112/user?username=test_user
         final List<Integer> res = new ArrayList<>();
-        res.add(716429);
-        res.add(654959);
-        res.add(654959); // add a duplicate to test the simplification
-        return res;
-    }
-
-    @Override
-    public List<IngredientWithConvertedUnits> getAllIngredients(List<Integer> ids) {
-        final List<IngredientWithConvertedUnits> res = new ArrayList<>();
-        for (int id : ids) {
-            final List<IngredientWithConvertedUnits> ingredient = getIngredientByRecipeId(id);
-            res.addAll(ingredient);
+        String url = String.format("http://vm003.teach.cs.toronto.edu:20112/user?username=%s", username);
+        final Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+        try {
+            final Response response = client.newCall(request).execute();
+            final JSONObject responseBody = new JSONObject(response.body().string());
+            final int code = responseBody.getInt("status_code");
+            final String message = responseBody.getString(Constants.MESSAGE);
+            if (code != Constants.SUCCESS_CODE || !message.equals("User retrieved successfully")) {
+                return res;
+            }
+            final JSONObject user = responseBody.getJSONObject("user");
+            final JSONObject mealIds = user.getJSONObject("info").getJSONObject(Constants.MEAL_IDS);
+            for (String key : mealIds.keySet()) {
+                JSONArray ids = mealIds.getJSONArray(key);
+                for (int i = 0; i < ids.length(); i++) {
+                    res.add(ids.getInt(i));
+                }
+            }
+        }
+        catch (IOException | JSONException ex) {
+            return res;
         }
         return res;
     }
 
-    private List<IngredientWithConvertedUnits> getIngredientByRecipeId(int id) {
+    @Override
+    public List<Ingredient> getAllIngredients(List<Integer> ids) {
+        //https://api.spoonacular.com/recipes/informationBulk
+        String idsString = ids.stream()
+                .map(String::valueOf) // Convert integers to strings
+                .collect(Collectors.joining(","));
+
+        final String url = "https://api.spoonacular.com/recipes/informationBulk?apiKey=" + API_KEY + "&ids=" + idsString;
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
+        try {
+            final Response response = client.newCall(request).execute();
+            final JSONArray responseBody = new JSONArray(response.body().string());
+            final List<Ingredient> res = new ArrayList<>();
+            for (int i = 0; i < responseBody.length(); i++) {
+                final JSONObject recipe = responseBody.getJSONObject(i);
+                final JSONArray ingredientsInRecipe = recipe.getJSONArray("extendedIngredients");
+
+                for (int j = 0; j < ingredientsInRecipe.length(); j++) {
+                    final JSONObject ingredient = ingredientsInRecipe.getJSONObject(j);
+                    final String unit = ingredient.getString("unit");
+                    final float amount = ingredient.getFloat("amount");
+                    final String name = ingredient.getString("name");
+                    final Ingredient tmp = new CommonIngredient(name, amount, unit);
+                    res.add(tmp);
+                }
+            }
+            return res;
+        }
+        catch (IOException | JSONException ex) {
+            return new ArrayList<>();
+        }
+    }
+
+    private List<Ingredient> getIngredientByRecipeId(int id) {
         final JSONObject json = getIngredientJsonById(id);
         return jsonToIngredients(json);
     }
@@ -92,28 +137,28 @@ public class GroceryListDataAccessObject implements GroceryListDataAccessInterfa
     }
 
     // This should already be implemented somewhere.
-    private List<IngredientWithConvertedUnits> jsonToIngredients(JSONObject json) {
+    private List<Ingredient> jsonToIngredients(JSONObject json) {
         // This part maybe goes into json parser maybe not
         // I've realized that it should only go into json parser if it is generic.
         // But this may be only used by this class.
-        final List<IngredientWithConvertedUnits> res = new ArrayList<>();
-        final JSONArray ingredients = json.getJSONArray("ingredients");
+        final List<Ingredient> res = new ArrayList<>();
+        final JSONArray ingredients = json.getJSONArray("extendedIngredients");
         // loop through each ingredient and add it to the result res
         for (int i = 0; i < ingredients.length(); i++) {
-            final JSONObject amount = ingredients.getJSONObject(i)
-                            .getJSONObject("amount")
+            final JSONObject metric = ingredients.getJSONObject(i)
+                            .getJSONObject("measures")
                             .getJSONObject("metric");
+            final int amount = metric.getInt("amount");
+            final String unit = metric.getString("unitLong");
             final String name = ingredients.getJSONObject(i).getString("name");
-            final String unit = amount.getString("unit");
-            final float value = amount.getFloat("value");
-            final IngredientWithConvertedUnits tmp = new CommonIngredientWithConvertedUnits(name, value, unit);
+            final Ingredient tmp = new CommonIngredient(name, amount, unit);
 
             // We need to convert the units to standard units grams.
-            final Pair<Measurable<Float>, Boolean> standardUnits = convertToStandardUnits(name, value, unit);
-
-            tmp.setConvertedAmount(standardUnits.getFirst().getNumber());
-            tmp.setConvertedUnit(standardUnits.getFirst().getUnit());
-            tmp.setConvertStatus(standardUnits.getSecond());
+//            final Pair<Measurable<Float>, Boolean> standardUnits = convertToStandardUnits(name, value, unit);
+//
+//            tmp.setConvertedAmount(standardUnits.getFirst().getNumber());
+//            tmp.setConvertedUnit(standardUnits.getFirst().getUnit());
+//            tmp.setConvertStatus(standardUnits.getSecond());
             res.add(tmp);
         }
         return res;

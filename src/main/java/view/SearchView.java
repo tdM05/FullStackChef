@@ -104,7 +104,9 @@ public class SearchView extends JPanel {
             }
         });
     }
-
+    public Profile getProfile() {
+        return profile;
+    }
     private void updateError() {
         String error = searchViewModel.getError();
         if (error != null && !error.isEmpty()) {
@@ -154,10 +156,6 @@ public class SearchView extends JPanel {
         return viewName;
     }
 
-    public Profile getProfile() {
-        return profile;
-    }
-
     public void setSearchController(SearchController controller) {
         this.searchController = controller;
     }
@@ -170,4 +168,7 @@ public class SearchView extends JPanel {
         this.checkFavoriteController = checkFavoriteController;
     }
 
+    public void setGroceryListController(GroceryListController groceryListController) {
+        this.groceryListController = groceryListController;
+    }
 }
