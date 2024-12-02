@@ -162,4 +162,8 @@ public class SearchView extends JPanel {
     public void setCheckFavoriteController(CheckFavoriteController checkFavoriteController) {
         this.checkFavoriteController = checkFavoriteController;
     }
+
+    public Profile getProfile() {
+        return profile;
+    }
 }

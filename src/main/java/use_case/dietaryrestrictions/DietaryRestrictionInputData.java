@@ -2,7 +2,8 @@
 
 package use_case.dietaryrestrictions;
 
-import entity.DietaryRestriction;
+import entity.CommonDietaryRestriction;
+
 import java.util.List;
 
 /**
@@ -14,5 +15,5 @@ public interface DietaryRestrictionInputData {
      *
      * @return the list of dietary restrictions
      */
-    List<DietaryRestriction> getDietaryRestrictions();
+    List<CommonDietaryRestriction> getDietaryRestrictions();
 }

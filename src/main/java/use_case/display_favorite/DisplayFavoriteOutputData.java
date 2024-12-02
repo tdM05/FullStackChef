@@ -1,9 +1,12 @@
 package use_case.display_favorite;
 
+/**
+ * The Output Data for the Display Favorite Use Case.
+ */
 public class DisplayFavoriteOutputData {
-    int recipeId;
-    String recipeName;
-    String imageUrl;
+    private int recipeId;
+    private String recipeName;
+    private String imageUrl;
 
     public DisplayFavoriteOutputData(int recipeId, String recipeName, String imageUrl) {
         this.recipeId = recipeId;

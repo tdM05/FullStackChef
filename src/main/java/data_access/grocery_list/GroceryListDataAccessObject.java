@@ -9,8 +9,8 @@ import entity.CommonMeasurable;
 import entity.CommonPair;
 import entity.Measurable;
 import entity.Pair;
-import entity.grocery_list.CommonIngredientWithConvertedUnits;
-import entity.grocery_list.IngredientWithConvertedUnits;
+import entity.CommonIngredientWithConvertedUnits;
+import entity.IngredientWithConvertedUnits;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -18,8 +18,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import use_case.grocery_list.GroceryListDataAccessInterface;
-
-
 
 /**
  * Data access object for the GroceryList.
@@ -39,7 +37,7 @@ public class GroceryListDataAccessObject implements GroceryListDataAccessInterfa
 
     @Override
     public List<Integer> getAllRecipeIds() {
-        // TODO get all recipe ids from the profile api.
+        // Should get all recipe ids from the profile api.
         final List<Integer> res = new ArrayList<>();
         res.add(716429);
         res.add(654959);

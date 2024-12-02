@@ -1,23 +1,29 @@
 package interface_adapter.user_profile.logout;
 
 import app.SessionUser;
-import interface_adapter.ViewManagerModel;
 import use_case.user_profile.logout.LogoutInputBoundary;
 import use_case.user_profile.logout.LogoutInputData;
 
+/**
+ * The controller for the Logout Use Case.
+ */
 public class LogoutController {
     private final LogoutInputBoundary interactor;
-    private final ViewManagerModel viewManagerModel;
 
-    public LogoutController(LogoutInputBoundary interactor, ViewManagerModel viewManagerModel) {
+    /**
+     * Constructs a LogoutController with the given use case interactor.
+     *
+     * @param interactor the use case interactor for logout
+     */
+    public LogoutController(LogoutInputBoundary interactor) {
         this.interactor = interactor;
-        this.viewManagerModel = viewManagerModel;
     }
 
+    /**
+     * Executes the Logout Use Case for the current session user.
+     */
     public void execute() {
-        interactor.execute(new LogoutInputData(SessionUser.getInstance().getUser().getName()));
-        viewManagerModel.setState("welcomeView");
-        viewManagerModel.firePropertyChanged();
+        String username = SessionUser.getInstance().getUser().getName();
+        interactor.execute(new LogoutInputData(username));
     }
-
 }

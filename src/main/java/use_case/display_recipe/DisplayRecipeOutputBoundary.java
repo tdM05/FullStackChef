@@ -18,4 +18,9 @@ public interface DisplayRecipeOutputBoundary {
      * @param errorMessage the error message explaining the failure
      */
     void prepareFailView(String errorMessage);
+
+    /**
+     * Switches to the Search View.
+     */
+    void switchToSearchView();
 }

@@ -9,9 +9,9 @@ public interface DisplayFavoriteOutputBoundary {
 
     /**
      * Prepares the success view for the Display Favorite Use Case.
-     * @param outputDataList the list of output data
+     * @param outputData the list of output data
      */
-    void prepareSuccessView(List<DisplayFavoriteOutputData> outputDataList);
+    void prepareSuccessView(List<DisplayFavoriteOutputData> outputData);
 
     /**
      * Prepares the failure view for the Display Favorite Use Case.

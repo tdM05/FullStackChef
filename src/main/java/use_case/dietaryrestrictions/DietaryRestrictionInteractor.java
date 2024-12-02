@@ -1,11 +1,7 @@
 package use_case.dietaryrestrictions;
 
-import data_access.DietaryRestrictionDataAccessInterface;
-import entity.DietaryRestriction;
-import use_case.dietaryrestrictions.DietaryRestrictionInputBoundary;
-import use_case.dietaryrestrictions.DietaryRestrictionRequestData;
-import use_case.dietaryrestrictions.DietaryRestrictionResponseData;
-import use_case.dietaryrestrictions.DietaryRestrictionOutputBoundary;
+import data_access.dietaryrestrictions.DietaryRestrictionDataAccessInterface;
+import entity.CommonDietaryRestriction;
 
 import java.io.IOException;
 
@@ -37,10 +33,10 @@ public class DietaryRestrictionInteractor implements DietaryRestrictionInputBoun
     @Override
     public void execute(DietaryRestrictionRequestData requestData) {
         try {
-            // Create DietaryRestriction entity with the selected diets
-            DietaryRestriction dietaryRestriction = new DietaryRestriction(requestData.getSelectedDiets());
+            // Create CommonDietaryRestriction entity with the selected diets
+            CommonDietaryRestriction commonDietaryRestriction = new CommonDietaryRestriction(requestData.getSelectedDiets());
             // Persist the dietary restrictions
-            dataAccess.saveDietaryRestrictions(dietaryRestriction);
+            dataAccess.saveDietaryRestrictions(commonDietaryRestriction);
             // Prepare success response
             DietaryRestrictionResponseData responseData = new DietaryRestrictionResponseData("Dietary restrictions updated successfully.");
             presenter.prepareSuccessView(responseData);
@@ -55,7 +51,7 @@ public class DietaryRestrictionInteractor implements DietaryRestrictionInputBoun
      * @return the dietary restrictions
      * @throws IOException if loading fails
      */
-    public DietaryRestriction getDietaryRestrictions() throws IOException {
+    public CommonDietaryRestriction getDietaryRestrictions() throws IOException {
         return dataAccess.loadDietaryRestrictions();
     }
 }

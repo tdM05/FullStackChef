@@ -41,8 +41,8 @@ public class Profile extends JPanel {
         });
 
         this.logoutButton = new JMenuItem("Logout");
-        this.logoutButton.addActionListener(e -> {
-            logoutController.execute();
+        logoutButton.addActionListener(e -> {
+            logoutController.execute(); // Perform logout operation
         });
 
 

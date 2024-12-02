@@ -1,27 +1,53 @@
 package use_case.display_favorite;
 
 import entity.CommonUser;
-import use_case.favorite_recipe.FavoriteRecipeDataAccessInterface;
+import entity.Recipe;
+import entity.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The interactor for the Display Favorite Use Case.
+ */
 public class DisplayFavoriteInteractor implements DisplayFavoriteInputBoundary {
 
-    private final FavoriteRecipeDataAccessInterface userDataAccessObject;
-    private final DisplayFavoriteOutputBoundary userPresenter;
+    private final DisplayFavoriteDataAccessInterface dataAccess;
+    private final DisplayFavoriteOutputBoundary presenter;
 
-    private final CommonUser user = new CommonUser("testing", "testing");
+    // The user is stored in the session.
+    //private final User user = SessionUser.getInstance().getUser();
+    private final User user = new CommonUser("jonathan_calver2", "abc123");
 
-    public DisplayFavoriteInteractor(FavoriteRecipeDataAccessInterface favoriteRecipeDataAccessInterface,
-                                     DisplayFavoriteOutputBoundary displayFavoriteOutputBoundary) {
-        this.userDataAccessObject = favoriteRecipeDataAccessInterface;
-        this.userPresenter = displayFavoriteOutputBoundary;
+    public DisplayFavoriteInteractor(DisplayFavoriteDataAccessInterface dataAccess,
+                                     DisplayFavoriteOutputBoundary presenter) {
+        this.dataAccess = dataAccess;
+        this.presenter = presenter;
     }
 
     @Override
     public void execute() {
+        List<Integer> favorites = dataAccess.getFavorites(user);
 
-        List<Integer> favorites = userDataAccessObject.getFavorites(user);
+        StringBuilder recipeIds = new StringBuilder();
+        for (int favorite : favorites) {
+            recipeIds.append(favorite).append(",");
+        }
 
+        String recipeList = recipeIds.toString();
+
+        List<Recipe> recipes = dataAccess.getRecipes(recipeList);
+
+        final List<DisplayFavoriteOutputData> outputData = recipeToCommonRecipeOutputData(recipes);
+        presenter.prepareSuccessView(outputData);
+
+    }
+
+    private List<DisplayFavoriteOutputData> recipeToCommonRecipeOutputData(List<Recipe> recipes) {
+        final List<DisplayFavoriteOutputData> outputData = new ArrayList<>();
+        for (Recipe recipe : recipes) {
+            outputData.add(new DisplayFavoriteOutputData(recipe.getRecipeId(), recipe.getTitle(), recipe.getImage()));
+        }
+        return outputData;
     }
 }

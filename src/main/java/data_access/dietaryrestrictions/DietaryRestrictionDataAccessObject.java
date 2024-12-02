@@ -1,7 +1,7 @@
 package data_access.dietaryrestrictions;
 
-import data_access.DietaryRestrictionDataAccessInterface;
-import entity.DietaryRestriction;
+import data_access.dietaryrestrictions.DietaryRestrictionDataAccessInterface;
+import entity.CommonDietaryRestriction;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -15,9 +15,9 @@ public class DietaryRestrictionDataAccessObject implements DietaryRestrictionDat
     private static final String FILE_PATH = "dietary_restrictions.txt";
 
     @Override
-    public void saveDietaryRestrictions(DietaryRestriction dietaryRestriction) throws IOException {
+    public void saveDietaryRestrictions(CommonDietaryRestriction commonDietaryRestriction) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
-            for (String diet : dietaryRestriction.getDiets()) {
+            for (String diet : commonDietaryRestriction.getDiets()) {
                 writer.write(diet);
                 writer.newLine();
             }
@@ -26,11 +26,11 @@ public class DietaryRestrictionDataAccessObject implements DietaryRestrictionDat
     }
 
     @Override
-    public DietaryRestriction loadDietaryRestrictions() throws IOException {
+    public CommonDietaryRestriction loadDietaryRestrictions() throws IOException {
         File file = new File(FILE_PATH);
         if (!file.exists()) {
             System.out.println("No dietary restrictions found. Returning empty list.");
-            return new DietaryRestriction(new ArrayList<>());
+            return new CommonDietaryRestriction(new ArrayList<>());
         }
 
         List<String> diets = new ArrayList<>();
@@ -41,6 +41,6 @@ public class DietaryRestrictionDataAccessObject implements DietaryRestrictionDat
             }
         }
         System.out.println("Dietary restrictions loaded successfully.");
-        return new DietaryRestriction(diets);
+        return new CommonDietaryRestriction(diets);
     }
 }

@@ -13,7 +13,10 @@ public class ChangeDisplayNamePresenter implements ChangeDisplayNameOutputBounda
 
     @Override
     public void presentUpdatedDisplayName(ChangeDisplayNameOutputData outputData) {
-        viewManagerModel.setState("profileView");
-        viewManagerModel.firePropertyChanged();
+        if (outputData.hasError()) {
+            System.err.println("Failed to update display name: " + outputData.getErrorMessage());
+        } else {
+            System.out.println("Successfully updated display name to: " + outputData.getNewDisplayName());
+        }
     }
 }

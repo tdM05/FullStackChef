@@ -271,10 +271,9 @@ public class MainAppBuilder {
 
     public MainAppBuilder addLogoutUseCase() {
         profileView = new ProfileView(userProfileViewModel, viewManagerModel);
-        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(
-                new LoggedInViewModel(), viewManagerModel, loginViewModel);
+        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(viewManagerModel);
         final LogoutInputBoundary logoutInputBoundary = new LogoutInteractor(userDAO, logoutOutputBoundary);
-        final LogoutController logoutController = new LogoutController(logoutInputBoundary, viewManagerModel);
+        final LogoutController logoutController = new LogoutController(logoutInputBoundary);
         searchView.getProfile().setLogoutController(logoutController);
         cardPanel.add(profileView, welcomeView.getViewName());
 
