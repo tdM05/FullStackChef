@@ -426,7 +426,7 @@ public class MainAppBuilder {
         viewManagerModel.firePropertyChanged();
 
         application.setSize(new Dimension(380, 250));
-        application.setResizable(false);
+        application.setResizable(true);
         application.setLocationRelativeTo(null);
 
         return application;
