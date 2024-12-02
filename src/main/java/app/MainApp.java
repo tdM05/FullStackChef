@@ -27,6 +27,8 @@ public class MainApp {
                                             .addDisplayRecipeUseCase()
                                             .addCheckFavoriteUseCase()
                                             .addWeeklyMealUseCase()
+                                            .addDisplayFavoriteUseCase()
+                .addFavoriteUseCase()
                                             .addGroceryListUseCase()
                                             .build();
         application.setVisible(true);

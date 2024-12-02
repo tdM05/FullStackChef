@@ -6,6 +6,8 @@ import entity.CommonDietaryRestriction;
 import interface_adapter.ViewManagerModel;
 //import interface_adapter.ViewManagerState;
 import interface_adapter.dietaryrestrictions.DietaryRestrictionController;
+import interface_adapter.display_favorites.DisplayFavoriteController;
+import interface_adapter.grocery_list.GroceryListController;
 import interface_adapter.grocery_list.GroceryListController;
 import interface_adapter.mealplan.update_meals.UpdateMealsController;
 import use_case.dietaryrestrictions.DietaryRestrictionInteractor;
@@ -31,9 +33,10 @@ public class Profile extends JPanel {
     private DietaryRestrictionInteractor dietaryInteractor;
     private DietaryRestrictionController dietaryController;
 
+    private DisplayFavoriteController displayFavoriteController;
+
     // Existing dietary restrictions
     private List<String> existingDietaryRestrictions = new ArrayList<>();
-
     // controllers
     GroceryListController groceryListController;
     private UpdateMealsController updateMealsController;
@@ -51,16 +54,20 @@ public class Profile extends JPanel {
         JMenuItem profileButton = new JMenuItem("Profile");
 
         this.favoriteButton = new JMenuItem("Favorite");
+
         mealPlanButton = new JMenuItem("Meal Plan");
         mealPlanButton.addActionListener(e -> {
             SessionUser sessionUser = SessionUser.getInstance();
             updateMealsController.execute(sessionUser.getUser());
         });
-        
+
         this.groceryListButton = new JMenuItem("Grocery List");
         groceryListButton.addActionListener(e -> {
             groceryListController.execute();
         });
+
+        JMenuItem mealPlanButton = new JMenuItem("Meal Plan");
+        this.groceryListButton = new JMenuItem("Grocery List");
         this.dietButton = new JMenuItem("Diet");
         JMenuItem logoutButton = new JMenuItem("Logout");
 
@@ -79,18 +86,8 @@ public class Profile extends JPanel {
         profileDropDown.addSeparator();
         profileDropDown.add(logoutButton);
 
-        // Initialize Dietary Restrictions Use Case Components
-        initializeDietaryRestrictions();
-
-        // Load existing dietary restrictions
-        loadExistingDietaryRestrictions();
-
-        // Add Action Listener to Diet Button
-        dietButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showDietaryRestrictionsDialog();
-            }
+        favoriteButton.addActionListener(e -> {
+            displayFavoriteController.execute();
         });
 
         // Add hover effect for the dropdown
@@ -132,83 +129,6 @@ public class Profile extends JPanel {
                 }
             }
         });
-    }
-
-    /**
-     * Initializes the Dietary Restrictions Use Case components.
-     */
-    private void initializeDietaryRestrictions() {
-        //dietaryPresenter = new DietaryRestrictionPresenter(viewManagerModel, this);
-        //DietaryRestrictionDataAccessObject dietaryDataAccess = new DietaryRestrictionDataAccessObject();
-        //dietaryInteractor = new DietaryRestrictionInteractor(dietaryPresenter, dietaryDataAccess);
-        //dietaryController = new DietaryRestrictionController(dietaryInteractor);
-    }
-
-    /**
-     * Loads existing dietary restrictions from persistent storage.
-     */
-    private void loadExistingDietaryRestrictions() {
-        try {
-            CommonDietaryRestriction existingRestrictions = dietaryInteractor.getDietaryRestrictions();
-            if (existingRestrictions != null && existingRestrictions.getDiets() != null) {
-                existingDietaryRestrictions = existingRestrictions.getDiets();
-            }
-        } catch (Exception e) {
-            System.err.println("No existing dietary restrictions found or failed to load: " + e.getMessage());
-            // existingDietaryRestrictions remains empty
-        }
-    }
-
-    /**
-     * Displays the Dietary Restrictions selection dialog.
-     */
-    private void showDietaryRestrictionsDialog() {
-        // Define available diets
-        String[] availableDiets = {
-                "Gluten Free",
-                "Ketogenic",
-                "Vegetarian",
-                "Lacto-Vegetarian",
-                "Ovo-Vegetarian",
-                "Vegan",
-                "Pescetarian",
-                "Paleo",
-                "Primal",
-                "Whole30"
-        };
-
-        // Create checkboxes for each diet
-        JCheckBox[] checkBoxes = new JCheckBox[availableDiets.length];
-        JPanel panel = new JPanel(new GridLayout(0, 1));
-        for (int i = 0; i < availableDiets.length; i++) {
-            checkBoxes[i] = new JCheckBox(availableDiets[i]);
-            // Pre-select if exists
-            if (existingDietaryRestrictions.contains(availableDiets[i])) {
-                checkBoxes[i].setSelected(true);
-            }
-            panel.add(checkBoxes[i]);
-        }
-
-        int result = JOptionPane.showConfirmDialog(
-                this,
-                panel,
-                "Select Your Dietary Restrictions",
-                JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE
-        );
-
-        if (result == JOptionPane.OK_OPTION) {
-            List<String> selectedDiets = new ArrayList<>();
-            for (JCheckBox checkBox : checkBoxes) {
-                if (checkBox.isSelected()) {
-                    selectedDiets.add(checkBox.getText());
-                }
-            }
-            // Invoke the use case to set dietary restrictions
-            dietaryController.setDietaryRestrictions(selectedDiets);
-            // Update the existingDietaryRestrictions list
-            existingDietaryRestrictions = selectedDiets;
-        }
     }
 
     /**
@@ -260,5 +180,8 @@ public class Profile extends JPanel {
 
     public void setUpdateMealsController(UpdateMealsController updateMealsController) {
         this.updateMealsController = updateMealsController;
+    }
+    public void setDisplayFavoriteController(DisplayFavoriteController displayFavoriteController) {
+        this.displayFavoriteController = displayFavoriteController;
     }
 }

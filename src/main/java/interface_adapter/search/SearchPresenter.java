@@ -25,7 +25,7 @@ public class SearchPresenter implements SearchOutputBoundary {
     public void prepareSuccessView(List<SearchOutputData> outputDataList) {
         // On success, update the view model with the search results.
         searchViewModel.setRecipes(outputDataList);
-        searchViewModel.firePropertyChanged("recipes");
+        searchViewModel.firePropertyChanged();
     }
 
     /**
@@ -37,6 +37,6 @@ public class SearchPresenter implements SearchOutputBoundary {
     public void prepareFailView(String errorMessage) {
         // On failure, update the view model with the error message.
         searchViewModel.setError(errorMessage);
-        searchViewModel.firePropertyChanged("error");
+        searchViewModel.firePropertyChanged();
     }
 }

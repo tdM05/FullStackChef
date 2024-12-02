@@ -12,9 +12,6 @@ public class FavoriteInteractor implements FavoriteInputBoundary {
     private final FavoriteDataAccessInterface dataAccess;
     private final FavoriteOutputBoundary presenter;
 
-    private final User user = SessionUser.getInstance().getUser();
-
-
     public FavoriteInteractor(FavoriteDataAccessInterface dataAccess,
                               FavoriteOutputBoundary presenter) {
         this.dataAccess = dataAccess;
@@ -23,17 +20,33 @@ public class FavoriteInteractor implements FavoriteInputBoundary {
 
     @Override
     public void execute(FavoriteInputData favoriteInputData) {
+        User user = SessionUser.getInstance().getUser();
+
+        if (user == null) {
+            presenter.prepareFailView("Error with retrieving user");
+            return;
+        }
+
         List<Integer> favorites = dataAccess.getFavorites(user);
 
+        System.out.println(favoriteInputData.getRecipeId());
+
         if (favorites.contains(favoriteInputData.getRecipeId())) {
-            favorites.remove(favoriteInputData.getRecipeId());
+            favorites.remove((Integer) favoriteInputData.getRecipeId());
         } else {
-            favorites.add(favoriteInputData.getRecipeId());
+            favorites.add(0,favoriteInputData.getRecipeId());
         }
+
+        System.out.println("Favorites: " + favorites);
 
         dataAccess.saveFavorites(user, favorites);
 
+        List <Integer> updatedFavorites = dataAccess.getFavorites(user);
+
+        System.out.println("Updated Favorites: " + updatedFavorites);
+
         final FavoriteOutputData outputData = new FavoriteOutputData(favorites.contains(favoriteInputData.getRecipeId()));
+
         presenter.prepareSuccessView(outputData);
     }
 

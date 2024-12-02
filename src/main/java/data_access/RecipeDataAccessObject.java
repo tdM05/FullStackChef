@@ -90,8 +90,7 @@ public class RecipeDataAccessObject implements DisplayRecipeDataAccessInterface,
                     final String imageType = recipeJson.optString(IMAGE_TYPE, "jpg"); // Default to "jpg" if not present
 
                     // Fetch detailed information for each recipe
-                    final Recipe recipe = fetchAndParseRecipe(recipeID, title, image, imageType);
-
+                    final Recipe recipe = new CommonRecipe(recipeID, title, image, imageType, null, null, null, false);
                     // Add to the list
                     RECIPES.add(recipe);
                 }

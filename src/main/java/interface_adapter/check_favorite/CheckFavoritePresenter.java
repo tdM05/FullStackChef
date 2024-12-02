@@ -28,7 +28,7 @@ public class CheckFavoritePresenter implements CheckFavoriteOutputBoundary {
         System.out.println("CheckFavoritePresenter updating ViewModel with favorite status");
 
         displayRecipeViewModel.updateFavoriteStatus(outputData.getFavorite());
-
+        System.out.println("DisplayRecipeViewModel favorite status: " + displayRecipeViewModel.getIsFavorite());
         final DisplayRecipeState displayRecipeState = displayRecipeViewModel.getState();
         this.displayRecipeViewModel.setState(displayRecipeState);
         this.displayRecipeViewModel.firePropertyChanged();
