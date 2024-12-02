@@ -6,6 +6,7 @@ import entity.UserFactory;
 import okhttp3.*;
 import org.json.JSONObject;
 import use_case.DataAccessException;
+import use_case.user_profile.change_display_name.ChangeDisplayNameUserDataAccessInterface;
 import use_case.user_profile.change_password.ChangePasswordInputBoundary;
 import use_case.user_profile.change_password.ChangePasswordInputData;
 import use_case.user_profile.change_password.ChangePasswordUserDataAccessInterface;
@@ -18,7 +19,9 @@ public class UserAuthDataAccessObject implements
         UserDataAccessObject,
         SignupUserDataAccessInterface,
         LoginUserDataAccessInterface,
-        ChangePasswordUserDataAccessInterface, ChangePasswordInputBoundary {
+        ChangePasswordUserDataAccessInterface,
+        ChangePasswordInputBoundary,
+        ChangeDisplayNameUserDataAccessInterface {
     private static final String BASE_URL = "http://vm003.teach.cs.toronto.edu:20112";
     private static final OkHttpClient CLIENT = new OkHttpClient().newBuilder().build();
     private static final String CONTENT_TYPE_JSON = "application/json";
@@ -241,5 +244,10 @@ public class UserAuthDataAccessObject implements
             user.setPassword(changePasswordInputData.getNewPassword());
             changePassword(user);
         }
+    }
+
+    @Override
+    public void changeDisplayName(UserProfile userProfile) throws DataAccessException {
+        saveUser(userProfile); // Reuse the saveUser logic
     }
 }
