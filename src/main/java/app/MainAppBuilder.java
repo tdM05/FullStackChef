@@ -2,9 +2,8 @@ package app;
 
 import data_access.*;
 import data_access.UserProfile.UserProfileDao;
-import data_access.dietaryrestrictions.DietaryRestrictionDataAccessObject;
+import data_access.DietaryRestrictionDataAccessObject;
 import data_access.grocery_list.GroceryListDataAccessObject;
-import data_access.grocery_list.GroceryListInMemoryDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
@@ -54,7 +53,6 @@ import use_case.display_recipe.DisplayRecipeOutputBoundary;
 import use_case.favorite.FavoriteInputBoundary;
 import use_case.favorite.FavoriteInteractor;
 import use_case.favorite.FavoriteOutputBoundary;
-import use_case.favorite.FavoriteOutputData;
 import use_case.grocery_list.*;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;

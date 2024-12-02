@@ -1,6 +1,6 @@
 package view;
 
-//import data_access.dietaryrestrictions.DietaryRestrictionDataAccessObject;
+//import data_access.DietaryRestrictionDataAccessObject;
 import app.SessionUser;
 import entity.CommonDietaryRestriction;
 import interface_adapter.ViewManagerModel;
@@ -11,12 +11,10 @@ import interface_adapter.grocery_list.GroceryListController;
 import interface_adapter.dietaryrestrictions.DietaryRestrictionPresenter;
 import interface_adapter.mealplan.update_meals.UpdateMealsController;
 import use_case.dietaryrestrictions.DietaryRestrictionInteractor;
-import data_access.dietaryrestrictions.DietaryRestrictionDataAccessObject;
+import data_access.DietaryRestrictionDataAccessObject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 

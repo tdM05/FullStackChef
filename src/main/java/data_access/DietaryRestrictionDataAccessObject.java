@@ -1,7 +1,6 @@
-package data_access.dietaryrestrictions;
+package data_access;
 
 import app.SessionUser;
-import data_access.Constants;
 import interface_adapter.dietaryrestrictions.DietaryRestrictionDataAccessInterface;
 import entity.CommonDietaryRestriction;
 import entity.User;
