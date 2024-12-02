@@ -250,11 +250,11 @@ public class MainAppBuilder {
         final DisplayFavoriteInputBoundary displayFavoriteInteractor = new DisplayFavoriteInteractor(favoriteDataAccessObject, displayFavoriteOutputBoundary);
 
         final DisplayFavoriteController displayFavoriteController = new DisplayFavoriteController(displayFavoriteInteractor);
-        // Display favorites from search view
+        // Display favorite view from search view
         searchView.getProfile().setDisplayFavoriteController(displayFavoriteController);
         // Back button
         displayFavoriteView.setDisplayFavoriteController(displayFavoriteController);
-        // Display favorites from display recipe view
+        // Display favorite view from display recipe view
         displayRecipeView.setDisplayFavoriteController(displayFavoriteController);
         return this;
     }
