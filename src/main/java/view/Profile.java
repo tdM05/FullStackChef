@@ -62,10 +62,6 @@ public class Profile extends JPanel {
         this.historyButton = new JMenuItem("History");
 
         this.logoutButton = new JMenuItem("Logout");
-        logoutButton.addActionListener(e -> {
-            System.out.println("Logout button clicked!"); // Debug log
-            logoutController.execute();
-        });
 
         customizeButton(profileButton);
         customizeButton(favoriteButton);

@@ -417,18 +417,6 @@ public class MainAppBuilder {
         return this;
     }
 
-    public MainAppBuilder addLogoutUseCase() {
-        // Use the existing ProfileView instance
-        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(viewManagerModel);
-        final LogoutInputBoundary logoutInputBoundary = new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
-        final LogoutController logoutController = new LogoutController(logoutInputBoundary, viewManagerModel);
-
-        // Set the LogoutController for the Profile component in the SearchView
-        searchView.getProfile().setLogoutController(logoutController);
-
-        // No need to add ProfileView again; ensure it has been added correctly elsewhere
-        return this;
-    }
     /**
      * Builds the application.
      * @return the built application
