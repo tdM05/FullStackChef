@@ -1,4 +1,4 @@
-package use_case.mealplan;
+package use_case.mealplan.generate_mealplan;
 
 import entity.CommonRecipe;
 import entity.CommonUser;
@@ -9,7 +9,6 @@ import interface_adapter.mealplan.generate_mealplan.WeeklyMealPresenter;
 import interface_adapter.mealplan.generate_mealplan.WeeklyMealViewModel;
 import org.junit.Before;
 import org.junit.Test;
-import use_case.mealplan.generate_mealplan.*;
 import use_case.set_meals.StoreMealInputBoundary;
 import use_case.set_meals.StoreMealInputData;
 

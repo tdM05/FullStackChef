@@ -1,4 +1,4 @@
-package use_case.update_meals;
+package use_case.mealplan.update_meals;
 
 import entity.CommonUser;
 import entity.User;
