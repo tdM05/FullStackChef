@@ -17,7 +17,7 @@ public class SearchInteractorTest {
      * Mocks a data access object and a presenter to validate the behavior of the interactor.
      */
     @Test
-    public void execute_withValidInput() {
+    public void testExecuteWithValidInput() {
         // Mock Data Access
         SearchDataAccessInterface dataAccess = new SearchDataAccessInterface() {
             @Override
@@ -57,7 +57,7 @@ public class SearchInteractorTest {
      * Tests the `execute` method when the data access throws an exception.
      */
     @Test
-    public void execute_withException() {
+    public void testExecuteWithException() {
         // Mock Data Access that throws an exception
         SearchDataAccessInterface dataAccess = new SearchDataAccessInterface() {
             @Override
