@@ -31,7 +31,7 @@ public class SearchInteractor implements SearchInputBoundary {
 
         final List<String> recipeList = splitString(searchString);
         try {
-            final List<Recipe> recipes = dataAccess.getRecipes(recipeList,6);
+            final List<Recipe> recipes = dataAccess.getRecipes(recipeList,25);
 
             final List<SearchOutputData> outputData = recipeToCommonRecipeOutputData(recipes);
             presenter.prepareSuccessView(outputData);

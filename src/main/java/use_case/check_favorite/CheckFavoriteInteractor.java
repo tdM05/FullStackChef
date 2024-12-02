@@ -19,7 +19,7 @@ public class CheckFavoriteInteractor implements CheckFavoriteInputBoundary {
 
     @Override
     public void execute(CheckFavoriteInputData checkFavoriteInputData) {
-        User user = SessionUser.getInstance().getUser();
+        User user = SessionUser.getInstance().getUser() ;
 
         if (user == null) {
             presenter.prepareFailView("Error with retrieving user");

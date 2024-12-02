@@ -33,6 +33,8 @@ public class CheckFavoritePresenter implements CheckFavoriteOutputBoundary {
         this.displayRecipeViewModel.setState(displayRecipeState);
         this.displayRecipeViewModel.firePropertyChanged();
 
+        System.out.println("Jungkook");
+        System.out.println("Recipe is not a favorite");
         this.viewManagerModel.setState(displayRecipeViewModel.getViewName());
         this.viewManagerModel.firePropertyChanged();
     }

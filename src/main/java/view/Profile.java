@@ -1,22 +1,14 @@
 package view;
 
-//import data_access.dietaryrestrictions.DietaryRestrictionDataAccessObject;
 import app.SessionUser;
-import entity.CommonDietaryRestriction;
-import interface_adapter.ViewManagerModel;
-//import interface_adapter.ViewManagerState;
-import interface_adapter.dietaryrestrictions.DietaryRestrictionController;
 import interface_adapter.display_favorites.DisplayFavoriteController;
-import interface_adapter.grocery_list.GroceryListController;
+import interface_adapter.display_history.DisplayHistoryController;
 import interface_adapter.grocery_list.GroceryListController;
 import interface_adapter.mealplan.update_meals.UpdateMealsController;
-import use_case.dietaryrestrictions.DietaryRestrictionInteractor;
-import interface_adapter.dietaryrestrictions.DietaryRestrictionPresenter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,13 +19,11 @@ public class Profile extends JPanel {
     private JPopupMenu profileDropDown;
     private JMenuItem favoriteButton;
     private JMenuItem groceryListButton;
-    private JMenuItem dietButton;
-    // Dietary Restrictions Components
-    private DietaryRestrictionPresenter dietaryPresenter;
-    private DietaryRestrictionInteractor dietaryInteractor;
-    private DietaryRestrictionController dietaryController;
+    private JMenuItem historyButton;
+
 
     private DisplayFavoriteController displayFavoriteController;
+    private DisplayHistoryController displayHistoryController;
 
     // Existing dietary restrictions
     private List<String> existingDietaryRestrictions = new ArrayList<>();
@@ -65,26 +55,32 @@ public class Profile extends JPanel {
         groceryListButton.addActionListener(e -> {
             groceryListController.execute();
         });
-        this.dietButton = new JMenuItem("Diet");
+
+        this.historyButton = new JMenuItem("History");
+
         JMenuItem logoutButton = new JMenuItem("Logout");
 
         customizeButton(profileButton);
         customizeButton(favoriteButton);
         customizeButton(mealPlanButton);
         customizeButton(groceryListButton);
-        customizeButton(dietButton);
+        customizeButton(historyButton);
         customizeButton(logoutButton);
 
         profileDropDown.add(profileButton);
         profileDropDown.add(favoriteButton);
         profileDropDown.add(mealPlanButton);
         profileDropDown.add(groceryListButton);
-        profileDropDown.add(dietButton);
+        profileDropDown.add(historyButton);
         profileDropDown.addSeparator();
         profileDropDown.add(logoutButton);
 
         favoriteButton.addActionListener(e -> {
             displayFavoriteController.execute();
+        });
+
+        historyButton.addActionListener(e -> {
+            displayHistoryController.execute();
         });
 
         // Add hover effect for the dropdown
@@ -178,7 +174,12 @@ public class Profile extends JPanel {
     public void setUpdateMealsController(UpdateMealsController updateMealsController) {
         this.updateMealsController = updateMealsController;
     }
+
     public void setDisplayFavoriteController(DisplayFavoriteController displayFavoriteController) {
         this.displayFavoriteController = displayFavoriteController;
+    }
+
+    public void setDisplayHistoryController(DisplayHistoryController displayHistoryController) {
+        this.displayHistoryController = displayHistoryController;
     }
 }

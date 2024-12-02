@@ -2,6 +2,7 @@ package view;
 
 import data_access.Constants;
 import interface_adapter.display_favorites.DisplayFavoriteController;
+import interface_adapter.display_history.DisplayHistoryController;
 import interface_adapter.display_recipe.DisplayRecipeController;
 import interface_adapter.display_recipe.DisplayRecipeViewModel;
 import interface_adapter.favorite.FavoriteController;
@@ -19,6 +20,7 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
     private FavoriteController favoriteController;
     private DisplayFavoriteController displayFavoriteController;
     private DisplayRecipeController displayRecipeController;
+    private DisplayHistoryController displayHistoryController;
 
     private final JLabel recipeTitleLabel = new JLabel();
     private final JLabel recipeImageLabel = new JLabel();
@@ -66,11 +68,12 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
             if (displayRecipeViewModel.getPreviousViewName().equals(Constants.SEARCH_VIEW)) {
                 displayRecipeController.switchToSearchView();
             }
-            else {
+            else if (displayRecipeViewModel.getPreviousViewName().equals(Constants.FAVORITE_VIEW)) {
                 displayFavoriteController.execute();
             }
-
-
+            else {
+                displayHistoryController.execute();
+            }
         });
     }
 
@@ -104,12 +107,15 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
         ingredientsArea.setText(String.join("\n", viewModel.getIngredients()));
         instructionsArea.setText(String.join("\n", viewModel.getInstructions()));
 
+       System.out.println("GOJO");
 
         if (viewModel.getIsFavorite()) {
             System.out.println("Recipe is a favorite");
+            System.out.println("Jungkook");
             favoriteButton.setSelected(true);
         } else {
             System.out.println("Recipe is not a favorite");
+            System.out.println("TAEHYUNG");
             favoriteButton.setSelected(false);
         }
 
@@ -132,5 +138,9 @@ public class DisplayRecipeView extends JPanel implements PropertyChangeListener 
 
     public void setDisplayFavoriteController(DisplayFavoriteController controller) {
         this.displayFavoriteController = controller;
+    }
+
+    public void setDisplayHistoryController(DisplayHistoryController controller) {
+        this.displayHistoryController = controller;
     }
 }

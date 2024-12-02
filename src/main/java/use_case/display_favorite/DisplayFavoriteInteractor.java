@@ -1,7 +1,6 @@
 package use_case.display_favorite;
 
 import app.SessionUser;
-import entity.CommonUser;
 import entity.Recipe;
 import entity.User;
 import org.json.JSONException;
@@ -34,10 +33,7 @@ public class DisplayFavoriteInteractor implements DisplayFavoriteInputBoundary {
             return;
         }
 
-        List<Integer> favorites = dataAccess.getFavorites(user);
-
-        System.out.println("Testing Display Favorite Interactor");
-        System.out.println(favorites);
+        final List<Integer> favorites = dataAccess.getFavorites(user);
 
         StringBuilder recipeIds = new StringBuilder();
         for (int favorite : favorites) {
@@ -50,14 +46,9 @@ public class DisplayFavoriteInteractor implements DisplayFavoriteInputBoundary {
 
         String recipeList = recipeIds.toString();
 
-        System.out.println(recipeList);
-
         try {
-            System.out.println("jrthjuytyrgehjyty5etrghjyht");
             List<Recipe> recipes = dataAccess.getRecipes(recipeList);
-            System.out.println(recipes);
             final List<DisplayFavoriteOutputData> outputData = recipeToCommonRecipeOutputData(recipes);
-            System.out.println(outputData);
             presenter.prepareSuccessView(outputData);
         }
         catch (IOException | JSONException ex) {
