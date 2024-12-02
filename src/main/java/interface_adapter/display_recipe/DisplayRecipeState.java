@@ -12,6 +12,7 @@ public class DisplayRecipeState {
     private List<String> ingredients;
     private List<String> instructions;
     private boolean isFavorite;
+    private String previousViewName;
     private String displayError;
 
     // Getters and Setters
@@ -47,9 +48,13 @@ public class DisplayRecipeState {
         this.instructions = instructions;
     }
 
-    public boolean getIsFavorite() { return isFavorite; }
+    public boolean getIsFavorite() {
+        return isFavorite;
+    }
 
-    public void setIsFavorite(boolean isFavorite) { this.isFavorite = isFavorite; }
+    public void setIsFavorite(boolean isFavorite) {
+        this.isFavorite = isFavorite;
+    }
 
     public String getDisplayError() {
         return displayError;
@@ -57,6 +62,14 @@ public class DisplayRecipeState {
 
     public void setDisplayError(String displayError) {
         this.displayError = displayError;
+    }
+
+    public String getPreviousViewName() {
+        return previousViewName;
+    }
+
+    public void setPreviousViewName(String previousViewName) {
+        this.previousViewName = previousViewName;
     }
 
     /**
@@ -77,5 +90,6 @@ public class DisplayRecipeState {
         this.instructions = null;
         this.displayError = null;
         this.isFavorite = false;
+        this.previousViewName = null;
     }
 }

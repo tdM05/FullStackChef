@@ -4,17 +4,17 @@ package use_case.mealplan.generate_mealplan;
  * The Input Data for the Generate Meal Plan Use Case.
  * Includes user-specified diet and start date.
  */
-public class GenerateMealPlanInputData {
+public class WeeklyMealInputData {
     private final String diet; // The diet type (e.g., vegetarian, keto, etc.)
     private final String startDate; // The start date for the weekly meal plan (format: YYYY-MM-DD)
 
     /**
-     * Constructs a GenerateMealPlanInputData object with the specified diet and start date.
+     * Constructs a WeeklyMealInputData object with the specified diet and start date.
      *
      * @param diet      The diet type (optional).
      * @param startDate The start date for the meal plan (required, format: YYYY-MM-DD).
      */
-    public GenerateMealPlanInputData(String diet, String startDate) {
+    public WeeklyMealInputData(String diet, String startDate) {
         this.diet = diet;
         this.startDate = startDate;
     }

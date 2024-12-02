@@ -38,7 +38,7 @@ public class DisplayRecipeInteractor implements DisplayRecipeInputBoundary {
             Recipe recipe = dataAccess.getRecipeById(inputData.getRecipeId());
             System.out.println("Interactor: Recipe retrieved successfully");
 
-            DisplayRecipeOutputData outputData = mapRecipeToOutputData(recipe);
+            DisplayRecipeOutputData outputData = mapRecipeToOutputData(recipe, inputData.getPreviousViewName());
             presenter.prepareSuccessView(outputData);
             System.out.println("Interactor: Presenter invoked for success view");
         } catch (IOException | JSONException ex) {
@@ -61,7 +61,7 @@ public class DisplayRecipeInteractor implements DisplayRecipeInputBoundary {
      * @param recipe the Recipe entity
      * @return the corresponding DisplayRecipeOutputData
      */
-    private DisplayRecipeOutputData mapRecipeToOutputData(Recipe recipe) {
+    private DisplayRecipeOutputData mapRecipeToOutputData(Recipe recipe, String previousViewName) {
         return new DisplayRecipeOutputData(
                 recipe.getRecipeId(),
                 recipe.getTitle(),
@@ -70,7 +70,8 @@ public class DisplayRecipeInteractor implements DisplayRecipeInputBoundary {
                 recipe.getIngredients(),
                 recipe.getNutritionalInfo(),
                 recipe.getInstructions(),
-                recipe.isFavorite()
+                recipe.isFavorite(),
+                previousViewName
         );
     }
 }

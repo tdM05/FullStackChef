@@ -5,17 +5,17 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The Output Data for the Generate Meal Plan Use Case.
+ * The Output Data for the Weekly Meal Use Case.
  */
-public class GenerateMealPlanOutputData {
-    private final Map<LocalDate, List<GenerateMealPlanRecipeDto>> mealPlan;
+public class WeeklyMealOutputData {
+    private final Map<LocalDate, List<WeeklyMealRecipeDto>> mealPlan;
 
     /**
-     * Constructs a GenerateMealPlanOutputData object.
+     * Constructs a WeeklyMealOutputData object.
      *
      * @param mealPlan A map where the key is the date and the value is a list of recipe DTOs for that date.
      */
-    public GenerateMealPlanOutputData(Map<LocalDate, List<GenerateMealPlanRecipeDto>> mealPlan) {
+    public WeeklyMealOutputData(Map<LocalDate, List<WeeklyMealRecipeDto>> mealPlan) {
         this.mealPlan = mealPlan;
     }
 
@@ -24,7 +24,7 @@ public class GenerateMealPlanOutputData {
      *
      * @return A map of dates to lists of recipe DTOs.
      */
-    public Map<LocalDate, List<GenerateMealPlanRecipeDto>> getMealPlan() {
+    public Map<LocalDate, List<WeeklyMealRecipeDto>> getMealPlan() {
         return mealPlan;
     }
 }

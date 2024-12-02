@@ -18,4 +18,9 @@ public interface DisplayFavoriteOutputBoundary {
      * @param errorMessage the explanation of the failure
      */
     void prepareFailView(String errorMessage);
+
+    /**
+     * Prepares the "switch to SearchView" Use Case.
+     */
+    void switchToSearchView();
 }

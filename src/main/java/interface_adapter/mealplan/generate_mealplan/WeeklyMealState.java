@@ -1,6 +1,6 @@
 package interface_adapter.mealplan.generate_mealplan;
 
-import use_case.mealplan.generate_mealplan.GenerateMealPlanRecipeDto;
+import use_case.mealplan.generate_mealplan.WeeklyMealRecipeDto;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -8,24 +8,24 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The State for the Generate Meal Plan.
+ * The State for the Weekly Meal.
  */
-public class GenerateMealPlanState {
-    private Map<LocalDate, List<GenerateMealPlanRecipeDto>> mealPlan;
+public class WeeklyMealState {
+    private Map<LocalDate, List<WeeklyMealRecipeDto>> mealPlan;
     private boolean isLoading;
     private String errorMessage;
 
-    public GenerateMealPlanState() {
+    public WeeklyMealState() {
         this.mealPlan = new HashMap<>();
         this.isLoading = false;
         this.errorMessage = null;
     }
 
-    public Map<LocalDate, List<GenerateMealPlanRecipeDto>> getMealPlan() {
+    public Map<LocalDate, List<WeeklyMealRecipeDto>> getMealPlan() {
         return mealPlan;
     }
 
-    public void setMealPlan(Map<LocalDate, List<GenerateMealPlanRecipeDto>> mealPlan) {
+    public void setMealPlan(Map<LocalDate, List<WeeklyMealRecipeDto>> mealPlan) {
         this.mealPlan = mealPlan;
     }
 

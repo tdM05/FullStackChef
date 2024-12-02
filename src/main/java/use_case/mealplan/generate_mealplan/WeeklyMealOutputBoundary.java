@@ -4,13 +4,13 @@ package use_case.mealplan.generate_mealplan;
  * The Output Boundary for the Generate Meal Plan Use Case.
  * Defines the methods to present the results to the user interface.
  */
-public interface GenerateMealPlanOutputBoundary {
+public interface WeeklyMealOutputBoundary {
     /**
      * Prepares the success view when the meal plan is generated successfully.
      *
      * @param outputData The output data containing the generated meal plan.
      */
-    void prepareSuccessView(GenerateMealPlanOutputData outputData);
+    void prepareSuccessView(WeeklyMealOutputData outputData);
 
     /**
      * Prepares the failure view when the meal plan generation fails.

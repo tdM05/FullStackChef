@@ -7,7 +7,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import use_case.mealplan.generate_mealplan.GenerateMealPlanDataAccessInterface;
+import use_case.mealplan.generate_mealplan.WeeklyMealDataAccessInterface;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,16 +19,16 @@ import java.util.Map;
  * A Data Access Object (DAO) implementation for fetching meal plans from the Spoonacular API.
  * This class handles API requests and parses responses into the application's entity model.
  */
-public class MealPlanDataAccessObject implements GenerateMealPlanDataAccessInterface {
+public class WeeklyMealDataAccessObject implements WeeklyMealDataAccessInterface {
 
     private static final String API_KEY = Constants.API_KEY;
     private static final String BASE_URL = "https://api.spoonacular.com/mealplanner/generate"; // Base URL for the Spoonacular API
     private final OkHttpClient client;
 
     /**
-     * Constructs a new MealPlanDataAccessObject with a default OkHttpClient.
+     * Constructs a new WeeklyMealDataAccessObject with a default OkHttpClient.
      */
-    public MealPlanDataAccessObject() {
+    public WeeklyMealDataAccessObject() {
         this.client = new OkHttpClient();
     }
 

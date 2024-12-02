@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The Data Access Interface for the Generate Meal Plan Use Case.
+ * The Data Access Interface for the Weekly Meal Use Case.
  * Defines the methods required for generating and managing meal plans.
  */
-public interface GenerateMealPlanDataAccessInterface {
+public interface WeeklyMealDataAccessInterface {
 
     /**
      * Generates a weekly meal plan from the Spoonacular API.
