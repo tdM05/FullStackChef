@@ -32,8 +32,6 @@ public class Profile extends JPanel {
     private DietaryRestrictionPresenter dietaryPresenter;
     private DietaryRestrictionInteractor dietaryInteractor;
     private DietaryRestrictionController dietaryController;
-    private Color circleColor = Color.GRAY;private JPopupMenu profileDropDown;
-
 
     private DisplayFavoriteController displayFavoriteController;
 

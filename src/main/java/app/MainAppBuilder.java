@@ -269,6 +269,9 @@ public class MainAppBuilder {
         searchView.setCheckFavoriteController(checkFavoriteController);
         // Check favorite button
         displayFavoriteView.setCheckFavoriteController(checkFavoriteController);
+
+        DisplayRecipeController displayRecipeController = new DisplayRecipeController(new DisplayRecipeInteractor(recipeDataAccessObject, new DisplayRecipePresenter(viewManagerModel, searchViewModel, displayRecipeViewModel)));
+        displayFavoriteView.setDisplayRecipeController(displayRecipeController);
         return this;
     }
 
