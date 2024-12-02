@@ -39,6 +39,7 @@ public class LoginInteractor implements LoginInputBoundary {
                 SessionUser.getInstance().setUser(user);
                 System.out.println("SessionUser username: " + SessionUser.getInstance().getUser().getName());
                 System.out.println("SessionUser password: " + SessionUser.getInstance().getUser().getPassword());
+                System.out.println("SessionUser Diets: " + SessionUser.getInstance().getUser().getDietaryRestrictions());
 
                 final LoginOutputData loginOutputData = new LoginOutputData(user.getName(), false);
                 loginPresenter.prepareSuccessView(loginOutputData);

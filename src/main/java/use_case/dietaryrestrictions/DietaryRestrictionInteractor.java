@@ -37,9 +37,9 @@ public class DietaryRestrictionInteractor implements DietaryRestrictionInputBoun
             CommonDietaryRestriction commonDietaryRestriction = new CommonDietaryRestriction(requestData.getSelectedDiets());
             // Persist the dietary restrictions
             dataAccess.saveDietaryRestrictions(commonDietaryRestriction);
-            // Prepare success response
-            DietaryRestrictionResponseData responseData = new DietaryRestrictionResponseData("Dietary restrictions updated successfully.");
-            presenter.prepareSuccessView(responseData);
+
+            // After saving, prepare a success response with the updated dietary restrictions
+            presenter.prepareSuccessView(new DietaryRestrictionResponseData("Dietary restrictions saved successfully.", requestData.getSelectedDiets()));
         } catch (IOException e) {
             presenter.prepareFailView("Failed to update dietary restrictions: " + e.getMessage());
         }
@@ -52,6 +52,11 @@ public class DietaryRestrictionInteractor implements DietaryRestrictionInputBoun
      * @throws IOException if loading fails
      */
     public CommonDietaryRestriction getDietaryRestrictions() throws IOException {
-        return dataAccess.loadDietaryRestrictions();
+        CommonDietaryRestriction restrictions = dataAccess.loadDietaryRestrictions();
+        if (restrictions.getDiets() != null && !restrictions.getDiets().isEmpty()) {
+            // Notify the presenter with the loaded dietary restrictions
+            presenter.prepareSuccessView(new DietaryRestrictionResponseData("Dietary restrictions loaded successfully.", restrictions.getDiets()));
+        }
+        return restrictions;
     }
 }

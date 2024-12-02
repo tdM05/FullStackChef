@@ -1,6 +1,5 @@
 package view;
 
-// Import statements
 import app.SessionUser;
 import entity.CommonDietaryRestriction;
 import interface_adapter.ViewManagerModel;
@@ -14,6 +13,7 @@ import data_access.DietaryRestrictionDataAccessObject;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +27,7 @@ public class Profile extends JPanel {
     private JMenuItem favoriteButton;
     private JMenuItem groceryListButton;
     private JMenuItem dietButton;
+    private JMenuItem logoutButton;
 
     // Dietary Restrictions Components
     private DietaryRestrictionPresenter dietaryPresenter;
@@ -76,8 +77,9 @@ public class Profile extends JPanel {
                 System.err.println("GroceryListController is not set.");
             }
         });
+
         this.dietButton = new JMenuItem("Diet");
-        JMenuItem logoutButton = new JMenuItem("Logout");
+        logoutButton = new JMenuItem("Logout");
 
         customizeButton(profileButton);
         customizeButton(favoriteButton);
@@ -106,14 +108,14 @@ public class Profile extends JPanel {
         // Initialize Dietary Restrictions Use Case Components
         initializeDietaryRestrictions();
 
-        // Remove loadExistingDietaryRestrictions from constructor
-        // It will be called after login via loadDietaryRestrictionsAfterLogin()
+        // Load existing dietary restrictions will be triggered externally after login
 
         dietButton.addActionListener(e -> showDietaryRestrictionsDialog());
+
         // Add hover effect for the dropdown
-        addMouseListener(new java.awt.event.MouseAdapter() {
+        addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseEntered(java.awt.event.MouseEvent e) {
+            public void mouseEntered(MouseEvent e) {
                 circleColor = Color.DARK_GRAY;
                 repaint();
                 // Show the popup menu below the circle
@@ -121,7 +123,7 @@ public class Profile extends JPanel {
             }
 
             @Override
-            public void mouseExited(java.awt.event.MouseEvent e) {
+            public void mouseExited(MouseEvent e) {
                 // Check if mouse exits both the Profile and dropdown
                 Point mouseLocation = e.getLocationOnScreen();
                 SwingUtilities.convertPointFromScreen(mouseLocation, profileDropDown);
@@ -133,9 +135,9 @@ public class Profile extends JPanel {
             }
         });
 
-        profileDropDown.addMouseListener(new java.awt.event.MouseAdapter() {
+        profileDropDown.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseExited(java.awt.event.MouseEvent e) {
+            public void mouseExited(MouseEvent e) {
                 // Check if mouse is still near the menu bounds
                 Point mouseLocation = e.getLocationOnScreen();
                 SwingUtilities.convertPointFromScreen(mouseLocation, profileDropDown);
@@ -156,10 +158,14 @@ public class Profile extends JPanel {
      */
     private void initializeDietaryRestrictions() {
         try {
+            // Initialize with the main ViewManagerModel
             ViewManagerModel viewManagerModel = new ViewManagerModel();
             dietaryPresenter = new DietaryRestrictionPresenter(viewManagerModel, this);
             DietaryRestrictionDataAccessObject dietaryDataAccess = new DietaryRestrictionDataAccessObject();
-            dietaryInteractor = new DietaryRestrictionInteractor(dietaryPresenter, dietaryDataAccess);
+            dietaryInteractor = new DietaryRestrictionInteractor(
+                    dietaryPresenter,
+                    dietaryDataAccess
+            );
             dietaryController = new DietaryRestrictionController(dietaryInteractor);
             System.out.println("Initialized Dietary Restrictions components successfully.");
         } catch (Exception e) {
@@ -169,8 +175,7 @@ public class Profile extends JPanel {
     }
 
     /**
-     * Loads existing dietary restrictions from persistent storage.
-     * Should be called after user logs in.
+     * Loads dietary restrictions after user logs in.
      */
     public void loadDietaryRestrictionsAfterLogin() {
         loadExistingDietaryRestrictions();
@@ -243,9 +248,18 @@ public class Profile extends JPanel {
             dietaryController.setDietaryRestrictions(selectedDiets);
             // Update the existingDietaryRestrictions list
             existingDietaryRestrictions = selectedDiets;
-            JOptionPane.showMessageDialog(this, "Dietary restrictions saved successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
             System.out.println("Dietary restrictions updated: " + selectedDiets);
         }
+    }
+
+    /**
+     * Updates the existing dietary restrictions list.
+     *
+     * @param selectedDiets the list of selected dietary restrictions
+     */
+    public void updateExistingDietaryRestrictions(List<String> selectedDiets) {
+        this.existingDietaryRestrictions = selectedDiets;
+        System.out.println("Profile updated with dietary restrictions: " + selectedDiets);
     }
 
     /**
@@ -293,16 +307,39 @@ public class Profile extends JPanel {
     }
 
     // Setter methods for controllers
+
+    /**
+     * Sets the GroceryListController.
+     *
+     * @param groceryListController the GroceryListController to set
+     */
     public void setGroceryListController(GroceryListController groceryListController) {
         this.groceryListController = groceryListController;
     }
 
+    /**
+     * Sets the UpdateMealsController.
+     *
+     * @param updateMealsController the UpdateMealsController to set
+     */
     public void setUpdateMealsController(UpdateMealsController updateMealsController) {
         this.updateMealsController = updateMealsController;
     }
+
+    /**
+     * Sets the DisplayFavoriteController.
+     *
+     * @param displayFavoriteController the DisplayFavoriteController to set
+     */
     public void setDisplayFavoriteController(DisplayFavoriteController displayFavoriteController) {
         this.displayFavoriteController = displayFavoriteController;
     }
+
+    /**
+     * Sets the DietaryRestrictionController.
+     *
+     * @param dietaryRestrictionController the DietaryRestrictionController to set
+     */
     public void setDietaryRestrictionController(DietaryRestrictionController dietaryRestrictionController) {
         this.dietaryController = dietaryRestrictionController;
     }
