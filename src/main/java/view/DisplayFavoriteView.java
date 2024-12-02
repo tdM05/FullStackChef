@@ -7,6 +7,7 @@ import interface_adapter.display_favorites.DisplayFavoriteState;
 import interface_adapter.display_favorites.DisplayFavoriteViewModel;
 import entity.Recipe;
 import interface_adapter.display_recipe.DisplayRecipeController;
+import interface_adapter.history.HistoryController;
 import use_case.display_favorite.DisplayFavoriteOutputData;
 
 import javax.swing.*;
@@ -22,6 +23,7 @@ public class DisplayFavoriteView extends JPanel implements PropertyChangeListene
     private DisplayRecipeController displayRecipeController;
     private DisplayFavoriteController displayFavoriteController;
     private CheckFavoriteController checkFavoriteController;
+    private HistoryController historyController;
     private DisplayFavoriteViewModel viewModel;
 
     // Components that need to be updated
@@ -87,7 +89,7 @@ public class DisplayFavoriteView extends JPanel implements PropertyChangeListene
         }
 
         // Create RecipePanel with favorite recipes
-        recipePanel = new RecipePanel(recipes, displayRecipeController, checkFavoriteController, viewName);
+        recipePanel = new RecipePanel(recipes, displayRecipeController, checkFavoriteController, historyController, viewName);
 
         // Add RecipePanel to the tabbed pane
         tabbedPane.addTab("Recipes", recipePanel);
@@ -128,5 +130,9 @@ public class DisplayFavoriteView extends JPanel implements PropertyChangeListene
 
     public void setCheckFavoriteController(CheckFavoriteController checkFavoriteController) {
         this.checkFavoriteController = checkFavoriteController;
+    }
+
+    public void setHistoryController(HistoryController historyController) {
+        this.historyController = historyController;
     }
 }

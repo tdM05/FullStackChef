@@ -57,7 +57,7 @@ public class FavoriteDataAccessObject implements CheckFavoriteDataAccessInterfac
 
     @Override
     public List<Integer> getFavorites(User user) throws FavoriteException {
-        final String username = user.getName();
+        final String username = user.getName() + "---favorites";
 
         final Request request = new Request.Builder()
                 .url(String.format("http://vm003.teach.cs.toronto.edu:20112/user?username=%s", username))
@@ -97,7 +97,7 @@ public class FavoriteDataAccessObject implements CheckFavoriteDataAccessInterfac
 
         final MediaType mediaType = MediaType.parse(CONTENT_TYPE_JSON);
         final JSONObject requestBody = new JSONObject();
-        requestBody.put(USERNAME, user.getName());
+        requestBody.put(USERNAME, user.getName() + "---favorites");
         requestBody.put(PASSWORD, user.getPassword());
 
         // Convert favorites list to JSON array

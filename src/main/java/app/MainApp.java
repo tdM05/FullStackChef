@@ -21,6 +21,7 @@ public class MainApp {
                                             .addFavoriteView()
                                             .addWeeklyMealView()
                                             .addGroceryListView()
+                                            .addHistoryView()
                                             .addSignupUseCase()
                                             .addLoginUseCase()
                                             .addSearchUseCase()
@@ -30,6 +31,8 @@ public class MainApp {
                                             .addDisplayFavoriteUseCase()
                                             .addFavoriteUseCase()
                                             .addGroceryListUseCase()
+                                            .addHistoryUseCase()
+                                            .addDisplayHistoryUseCase()
                                             .build();
         application.setVisible(true);
         }

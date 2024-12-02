@@ -3,7 +3,6 @@ package app;
 import data_access.*;
 import data_access.UserProfile.UserProfileDao;
 import data_access.grocery_list.GroceryListDataAccessObject;
-import data_access.grocery_list.GroceryListInMemoryDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
@@ -12,6 +11,9 @@ import interface_adapter.check_favorite.CheckFavoritePresenter;
 import interface_adapter.display_favorites.DisplayFavoriteController;
 import interface_adapter.display_favorites.DisplayFavoritePresenter;
 import interface_adapter.display_favorites.DisplayFavoriteViewModel;
+import interface_adapter.display_history.DisplayHistoryController;
+import interface_adapter.display_history.DisplayHistoryPresenter;
+import interface_adapter.display_history.DisplayHistoryViewModel;
 import interface_adapter.display_recipe.DisplayRecipeController;
 import interface_adapter.display_recipe.DisplayRecipePresenter;
 import interface_adapter.display_recipe.DisplayRecipeViewModel;
@@ -21,6 +23,8 @@ import interface_adapter.grocery_list.GroceryListViewModel;
 
 import interface_adapter.favorite.FavoriteController;
 import interface_adapter.favorite.FavoritePresenter;
+import interface_adapter.history.HistoryController;
+import interface_adapter.history.HistoryPresenter;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
@@ -42,6 +46,9 @@ import use_case.check_favorite.CheckFavoriteOutputBoundary;
 import use_case.display_favorite.DisplayFavoriteInputBoundary;
 import use_case.display_favorite.DisplayFavoriteInteractor;
 import use_case.display_favorite.DisplayFavoriteOutputBoundary;
+import use_case.display_history.DisplayHistoryInputBoundary;
+import use_case.display_history.DisplayHistoryInteractor;
+import use_case.display_history.DisplayHistoryOutputBoundary;
 import use_case.display_recipe.DisplayRecipeInputBoundary;
 import use_case.display_recipe.DisplayRecipeInteractor;
 import use_case.display_recipe.DisplayRecipeOutputBoundary;
@@ -49,8 +56,10 @@ import use_case.display_recipe.DisplayRecipeOutputBoundary;
 import use_case.favorite.FavoriteInputBoundary;
 import use_case.favorite.FavoriteInteractor;
 import use_case.favorite.FavoriteOutputBoundary;
-import use_case.favorite.FavoriteOutputData;
 import use_case.grocery_list.*;
+import use_case.history.HistoryInputBoundary;
+import use_case.history.HistoryInteractor;
+import use_case.history.HistoryOutputBoundary;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -96,6 +105,7 @@ public class MainAppBuilder {
     private final GroceryListDataAccessInterface groceryListDataAccessObject = new GroceryListDataAccessObject();
     private final WeeklyMealDataAccessInterface weeklyMealDataAccessObject = new WeeklyMealDataAccessObject();
     private final StoreMealDataAccessInterface storeMealDataAccessObject = new UserProfileDao();
+    private final HistoryDataAccessObject historyDataAccessObject = new HistoryDataAccessObject();
     private final UpdateMealsDataAccessInterface updateMealDataAccessObject = new UpdateMealsDataAccessObject();
 
 
@@ -114,6 +124,8 @@ public class MainAppBuilder {
     private GroceryListViewModel groceryListViewModel;
     private WeeklyMealViewModel weeklyMealViewModel;
     private UpdateMealsViewModel updateMealsViewModel;
+    private DisplayHistoryViewModel displayHistoryViewModel;
+    private DisplayHistoryView displayHistoryView;
 
     public MainAppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -195,6 +207,15 @@ public class MainAppBuilder {
         cardPanel.add(groceryListView, groceryListView.getViewName());
         return this;
     }
+
+    public MainAppBuilder addHistoryView(){
+        displayHistoryViewModel = new DisplayHistoryViewModel();
+        displayHistoryView = new DisplayHistoryView(displayHistoryViewModel);
+        displayHistoryView.setPreferredSize(new Dimension(1200, 800));
+
+        cardPanel.add(displayHistoryView, displayHistoryView.getViewName());
+        return this;
+    }
     /**
      * Adds the Signup Use Case to the application.
      * @return this AppBuilder
@@ -250,7 +271,13 @@ public class MainAppBuilder {
         final DisplayRecipeInputBoundary displayRecipeInteractor = new DisplayRecipeInteractor(recipeDataAccessObject, displayRecipeOutputBoundary);
 
         final DisplayRecipeController displayRecipeController = new DisplayRecipeController(displayRecipeInteractor);
+        // Display recipe view from search view
         searchView.setDisplayRecipeController(displayRecipeController);
+        // Display recipe view from history view
+        displayHistoryView.setDisplayRecipeController(displayRecipeController);
+        // Display recipe view from favorite view
+        displayFavoriteView.setDisplayRecipeController(displayRecipeController);
+        // Back button
         displayRecipeView.setDisplayRecipeController(displayRecipeController);
         return this;
     }
@@ -265,16 +292,20 @@ public class MainAppBuilder {
 
         final CheckFavoriteController checkFavoriteController = new CheckFavoriteController(checkFavoriteInteractor);
 
-        // Check favorite button
+        // Check favorite button from search view
         searchView.setCheckFavoriteController(checkFavoriteController);
-        // Check favorite button
+        // Check favorite button from history view
+        displayHistoryView.setCheckFavoriteController(checkFavoriteController);
+        // Check favorite button from favorite view
         displayFavoriteView.setCheckFavoriteController(checkFavoriteController);
 
-        DisplayRecipeController displayRecipeController = new DisplayRecipeController(new DisplayRecipeInteractor(recipeDataAccessObject, new DisplayRecipePresenter(viewManagerModel, searchViewModel, displayRecipeViewModel)));
-        displayFavoriteView.setDisplayRecipeController(displayRecipeController);
         return this;
     }
 
+    /**
+     * Adds the DisplayHistory Use Case to the application.
+     * @return this AppBuilder
+     */
     public MainAppBuilder addWeeklyMealUseCase() {
         // create store meals use case
         final StoreMealInputBoundary storeMealInteractor = new StoreMealInteractor(
@@ -309,6 +340,7 @@ public class MainAppBuilder {
         final FavoriteInputBoundary favoriteInteractor = new FavoriteInteractor(favoriteDataAccessObject, favoriteOutputBoundary);
 
         final FavoriteController favoriteController = new FavoriteController(favoriteInteractor);
+
         // Toggle favorite button
         displayRecipeView.setFavoriteController(favoriteController);
         return this;
@@ -330,6 +362,11 @@ public class MainAppBuilder {
         displayRecipeView.setDisplayFavoriteController(displayFavoriteController);
         return this;
     }
+
+   /**
+     * Adds the DisplayHistory Use Case to the application.
+     * @return this AppBuilder
+     */
     public MainAppBuilder addGroceryListUseCase() {
         final GroceryListOutputBoundary groceryListOutputBoundary = new GroceryListPresenter(viewManagerModel, searchViewModel, groceryListViewModel);
 
@@ -341,7 +378,39 @@ public class MainAppBuilder {
         return this;
     }
 
+    /**
+     * Adds the DisplayHistory Use Case to the application.
+     * @return this AppBuilder
+     */
+    public MainAppBuilder addHistoryUseCase(){
+        final HistoryOutputBoundary historyOutputBoundary = new HistoryPresenter(displayRecipeViewModel);
+        final HistoryInputBoundary historyInteractor = new HistoryInteractor(historyDataAccessObject, historyOutputBoundary);
 
+        final HistoryController historyController = new HistoryController(historyInteractor);
+
+        // Add History from search view
+        searchView.setHistoryController(historyController);
+        // Add History from history recipe view
+        displayHistoryView.setHistoryController(historyController);
+        //
+        displayFavoriteView.setHistoryController(historyController);
+
+        return this;
+    }
+
+    public MainAppBuilder addDisplayHistoryUseCase() {
+        final DisplayHistoryOutputBoundary displayHistoryOutputBoundary = new DisplayHistoryPresenter(viewManagerModel, searchViewModel, displayHistoryViewModel);
+        final DisplayHistoryInputBoundary displayHistoryInteractor = new DisplayHistoryInteractor(historyDataAccessObject, displayHistoryOutputBoundary);
+        final DisplayHistoryController displayHistoryController = new DisplayHistoryController(displayHistoryInteractor);
+
+        // Display history view from search view
+        searchView.getProfile().setDisplayHistoryController(displayHistoryController);
+        // Back button from display recipe view
+        displayRecipeView.setDisplayHistoryController(displayHistoryController);
+        //
+        displayHistoryView.setDisplayHistoryController(displayHistoryController);
+        return this;
+    }
     /**
      * Builds the application.
      * @return the built application

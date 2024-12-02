@@ -4,6 +4,7 @@ import data_access.Constants;
 import entity.Recipe;
 import interface_adapter.check_favorite.CheckFavoriteController;
 import interface_adapter.display_recipe.DisplayRecipeController;
+import interface_adapter.history.HistoryController;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -20,13 +21,16 @@ public class RecipePanel extends JPanel {
     private final List<Recipe> recipes;
     private final DisplayRecipeController displayRecipeController;
     private final CheckFavoriteController checkFavoriteController;
+    private final HistoryController historyController;
     private final String previousViewName;
 
-    public RecipePanel(List<Recipe> recipes, DisplayRecipeController displayRecipeController, CheckFavoriteController checkFavoriteController, String previousViewName) {
+    public RecipePanel(List<Recipe> recipes, DisplayRecipeController displayRecipeController, CheckFavoriteController checkFavoriteController, HistoryController historyController, String previousViewName) {
         this.recipes = recipes;
         this.displayRecipeController = displayRecipeController;
         this.checkFavoriteController = checkFavoriteController;
+        this.historyController = historyController;
         this.previousViewName = previousViewName;
+
         initialize();
     }
 
@@ -103,10 +107,16 @@ public class RecipePanel extends JPanel {
                     System.out.println("From Favorite View");
 
                 }
+                else if (previousViewName.equals(Constants.HISTORY_VIEW))
+                {
+                    System.out.println("From History View");
+
+                }
 
                 System.out.println("Recipe recipeCard clicked. Recipe ID: " + recipe.getRecipeId());
                 displayRecipeController.execute(recipe.getRecipeId(), previousViewName);
                 checkFavoriteController.execute(recipe.getRecipeId());
+                historyController.execute(recipe.getRecipeId());
 
             }
         });

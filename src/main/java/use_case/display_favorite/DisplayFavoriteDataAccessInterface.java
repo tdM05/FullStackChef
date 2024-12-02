@@ -3,6 +3,7 @@ package use_case.display_favorite;
 import entity.Recipe;
 import entity.User;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
