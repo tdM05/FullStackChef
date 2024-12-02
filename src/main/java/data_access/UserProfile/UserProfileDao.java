@@ -191,7 +191,7 @@ public class UserProfileDao implements StoreMealDataAccessInterface {
                 // if the user has meals, we get and return a user with meal
                 user.setMealIDs(mealIds);
             }
-            // TODO change this since it is temporary for testing
+
             // we should check if they have favorites and dietary restrictions
             // and do something similar to the if statement above
             user.setFavorite(new CommonFavorite(new ArrayList<>()));

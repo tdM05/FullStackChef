@@ -2,16 +2,20 @@ package app;
 
 import data_access.*;
 import data_access.UserProfile.UserProfileDao;
+import data_access.DietaryRestrictionDataAccessObject;
 import data_access.grocery_list.GroceryListDataAccessObject;
-import data_access.grocery_list.GroceryListInMemoryDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.check_favorite.CheckFavoriteController;
 import interface_adapter.check_favorite.CheckFavoritePresenter;
+import interface_adapter.dietaryrestrictions.DietaryRestrictionDataAccessInterface;
 import interface_adapter.display_favorites.DisplayFavoriteController;
 import interface_adapter.display_favorites.DisplayFavoritePresenter;
 import interface_adapter.display_favorites.DisplayFavoriteViewModel;
+import interface_adapter.dietaryrestrictions.DietaryRestrictionController;
+import interface_adapter.dietaryrestrictions.DietaryRestrictionPresenter;
+import interface_adapter.dietaryrestrictions.DietaryRestrictionViewModel;
 import interface_adapter.display_recipe.DisplayRecipeController;
 import interface_adapter.display_recipe.DisplayRecipePresenter;
 import interface_adapter.display_recipe.DisplayRecipeViewModel;
@@ -39,6 +43,7 @@ import interface_adapter.signup.SignupViewModel;
 import use_case.check_favorite.CheckFavoriteInputBoundary;
 import use_case.check_favorite.CheckFavoriteInteractor;
 import use_case.check_favorite.CheckFavoriteOutputBoundary;
+import use_case.dietaryrestrictions.DietaryRestrictionInteractor;
 import use_case.display_favorite.DisplayFavoriteInputBoundary;
 import use_case.display_favorite.DisplayFavoriteInteractor;
 import use_case.display_favorite.DisplayFavoriteOutputBoundary;
@@ -49,7 +54,6 @@ import use_case.display_recipe.DisplayRecipeOutputBoundary;
 import use_case.favorite.FavoriteInputBoundary;
 import use_case.favorite.FavoriteInteractor;
 import use_case.favorite.FavoriteOutputBoundary;
-import use_case.favorite.FavoriteOutputData;
 import use_case.grocery_list.*;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
@@ -97,6 +101,7 @@ public class MainAppBuilder {
     private final WeeklyMealDataAccessInterface weeklyMealDataAccessObject = new WeeklyMealDataAccessObject();
     private final StoreMealDataAccessInterface storeMealDataAccessObject = new UserProfileDao();
     private final UpdateMealsDataAccessInterface updateMealDataAccessObject = new UpdateMealsDataAccessObject();
+    private final DietaryRestrictionDataAccessInterface dietaryDataAccessObject = new DietaryRestrictionDataAccessObject();
 
 
     private SignupView signupView;
@@ -109,6 +114,8 @@ public class MainAppBuilder {
     private DisplayRecipeViewModel displayRecipeViewModel;
     private DisplayFavoriteView displayFavoriteView;
     private DisplayFavoriteViewModel displayFavoriteViewModel;
+    private DietaryRestrictionViewModel dietaryRestrictionViewModel;
+    private DietaryRestrictionView dietaryRestrictionView;
     private GroceryListView groceryListView;
     private WeeklyMealView weeklyMealView;
     private GroceryListViewModel groceryListViewModel;
@@ -178,6 +185,14 @@ public class MainAppBuilder {
         return this;
     }
 
+    public MainAppBuilder addDietaryRestrictionView() {
+        dietaryRestrictionViewModel = new DietaryRestrictionViewModel();
+        dietaryRestrictionView = new DietaryRestrictionView(dietaryRestrictionViewModel);
+        dietaryRestrictionView.setPreferredSize(new Dimension(1200, 800));
+        cardPanel.add(dietaryRestrictionView, dietaryRestrictionView.getViewName());
+        return this;
+    }
+
     public MainAppBuilder addWeeklyMealView() {
         weeklyMealViewModel = new WeeklyMealViewModel();
         updateMealsViewModel = new UpdateMealsViewModel();
@@ -232,12 +247,21 @@ public class MainAppBuilder {
      * @return this AppBuilder
      */
     public MainAppBuilder addSearchUseCase() {
+        // Instantiate the SearchPresenter with the SearchViewModel
         final SearchOutputBoundary searchOutputBoundary = new SearchPresenter(searchViewModel);
-        final SearchInputBoundary searchInteractor = new SearchInteractor(recipeDataAccessObject, searchOutputBoundary);
 
+        // Instantiate the SearchInteractor with all required dependencies
+        final SearchInputBoundary searchInteractor = new SearchInteractor(
+                recipeDataAccessObject,            // Implements SearchDataAccessInterface
+                dietaryDataAccessObject,          // Implements DietaryRestrictionDataAccessInterface
+                searchOutputBoundary              // Implements SearchOutputBoundary
+        );
+
+        // Instantiate the SearchController with the SearchInteractor
         final SearchController searchController = new SearchController(searchInteractor);
         //Search recipe
         searchView.setSearchController(searchController);
+
         return this;
     }
 
@@ -276,6 +300,48 @@ public class MainAppBuilder {
     }
 
     public MainAppBuilder addWeeklyMealUseCase() {
+        // create store meals use case
+        final StoreMealInputBoundary storeMealInteractor = new StoreMealInteractor(
+                storeMealDataAccessObject);
+        // create generatemeal use case
+        final WeeklyMealOutputBoundary weeklyMealOutputBoundary = new WeeklyMealPresenter(viewManagerModel, weeklyMealViewModel);
+        final WeeklyMealInputBoundary weeklyMealInteractor = new WeeklyMealInteractor(
+                weeklyMealOutputBoundary, weeklyMealDataAccessObject, storeMealInteractor
+        );
+        // create updatemeals use case
+        final UpdateMealsOutputBoundary updateMealsOutputBoundary = new UpdateMealsPresenter(updateMealsViewModel, viewManagerModel);
+        final UpdateMealsInputBoundary updateMealsInteractor = new UpdateMealsInteractor(updateMealsOutputBoundary,
+                updateMealDataAccessObject);
+
+        final UpdateMealsController updateMealsController = new UpdateMealsController(updateMealsInteractor);
+        searchView.getProfile().setUpdateMealsController(updateMealsController);
+
+        GroceryListController groceryListController = new GroceryListController(new GroceryListInteractor(groceryListDataAccessObject, new GroceryListPresenter(viewManagerModel, searchViewModel, groceryListViewModel)));
+        weeklyMealView.setGroceryListController(groceryListController);
+
+        WeeklyMealController weeklyMealController = new WeeklyMealController(weeklyMealInteractor);
+        weeklyMealView.setWeeklyMealController(weeklyMealController);
+        return this;
+    }
+
+    public MainAppBuilder addDietaryRestrictionUseCase() {
+        ViewManagerModel viewManagerModel = new ViewManagerModel();
+        final DietaryRestrictionPresenter dietaryRestrictionPresenter = new DietaryRestrictionPresenter(viewManagerModel, searchView);
+        final DietaryRestrictionDataAccessObject dietaryDataAccess = new DietaryRestrictionDataAccessObject();
+        final DietaryRestrictionInteractor dietaryInteractor = new DietaryRestrictionInteractor(
+                dietaryRestrictionPresenter,
+                dietaryDataAccess
+        );
+
+        final DietaryRestrictionController dietaryRestrictionController = new DietaryRestrictionController(dietaryInteractor);
+
+        searchView.getProfile().setDietaryRestrictionController(dietaryRestrictionController);
+        dietaryRestrictionView.setController(dietaryRestrictionController);
+        return this;
+    }
+
+
+    public MainAppBuilder addMealPlanUseCase() {
         // create store meals use case
         final StoreMealInputBoundary storeMealInteractor = new StoreMealInteractor(
                 storeMealDataAccessObject);

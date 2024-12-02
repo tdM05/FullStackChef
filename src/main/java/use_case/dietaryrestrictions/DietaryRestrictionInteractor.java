@@ -1,6 +1,6 @@
 package use_case.dietaryrestrictions;
 
-import data_access.DietaryRestrictionDataAccessInterface;
+import interface_adapter.dietaryrestrictions.DietaryRestrictionDataAccessInterface;
 import entity.CommonDietaryRestriction;
 
 import java.io.IOException;
