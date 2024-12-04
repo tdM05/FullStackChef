@@ -69,7 +69,7 @@ in src\main\java\data_access\Constants.java called API_KEY is not used up.
    - Click the heart button to add it to your favorites
    - Go back to the search view and click the "Favorte" button that is in the profile dropdown.
    
-   ![Favorite GIF](src/images/Favorite.gif)
+      ![Favorite GIF](src/images/Favorite.gif)
    
 3. **Generate Meal Plan**
     - Click on the "Meal Plan" button.
