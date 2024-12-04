@@ -67,13 +67,13 @@ public class Profile extends JPanel {
         customizeButton(historyButton);
         customizeButton(logoutButton);
 
-        profileDropDown.add(profileButton);
+        //profileDropDown.add(profileButton);
         profileDropDown.add(favoriteButton);
         profileDropDown.add(mealPlanButton);
         profileDropDown.add(groceryListButton);
         profileDropDown.add(historyButton);
         profileDropDown.addSeparator();
-        profileDropDown.add(logoutButton);
+        //profileDropDown.add(logoutButton);
 
         favoriteButton.addActionListener(e -> {
             displayFavoriteController.execute();
