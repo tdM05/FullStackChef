@@ -59,6 +59,7 @@ in src\main\java\data_access\Constants.java called API_KEY is not used up.
      
    
      ![Search GIF](src/images/Search.gif)
+     
 **For the following use cases**, you can navigate to their buttons by hovering over the profile
    button in the top right corner.
 2. **Favorites**
