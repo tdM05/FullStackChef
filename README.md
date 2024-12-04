@@ -20,8 +20,7 @@ for people who are busy. It allows users to search recipes by ingredients and of
 
 ## Features
 ### Team User Story
-- **Search Recipes by Ingredients**: Find recipes based on available ingredients.
-Example of search recipes, and where the profile dropdown is located: https://youtu.be/TlDWs4XOFUk
+- **Search Recipes by Ingredients**: Find recipes based on available ingredients
 
 ### Individual User Stories
 - **Generate Meal Plan** (by Jasmine Jasmine): Generates a weekly meal plan.
@@ -57,7 +56,7 @@ in src\main\java\data_access\Constants.java called API_KEY is not used up.
    - Here you can search recipes by ingredients in the format: "ingredient1, ingredient2, ingredient3, ...".
    - Click the "Search" button to find recipes that match your ingredients.
    - Click on the recipe panel to view detailed instructions and ingredients needed.
-   
+     ![Search GIF](src/images/Search.gif)
 **For the following use cases**, you can navigate to their buttons by hovering over the profile
    button in the top right corner.
 2. **Favorites**
@@ -65,19 +64,24 @@ in src\main\java\data_access\Constants.java called API_KEY is not used up.
       - Click the heart button to add it to your favorites
       - Go back to the search view and click the "Favorte" button that
    is in the profile dropdown.
+        ![Favorite GIF](src/images/Favorite.gif)
 
 
 3. **Generate Meal Plan**
     - Click on the "Meal Plan" button.
     - Click the "Generate Meal Plan" button to create a meal plan.
+      ![Meal Plan GIF](src/images/MealPlan.gif)
+
 4. **Grocery List**
     - Click on the "Grocery List" button, found in the generate meal plan view
    or the profile dropdown. This will generate a list of ingredients that are 
    present in your meal plan. So if nothing is in your meal plan, nothing will
    be generated in your grocery list.
+      ![Grocery List GIF](src/images/GroceryList.gif)
 5. **History**
     - Click on the "History" button, found in the profile dropdown.
     - Here you can see all the recipes you clicked on in the search view.
+      ![History GIF](src/images/History.gif)
 
 ## License
 This project is dedicated to the public domain [CC0 1.0](LICENSE).
