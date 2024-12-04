@@ -28,6 +28,8 @@ import interface_adapter.history.HistoryPresenter;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.logout.LogoutController;
+import interface_adapter.logout.LogoutPresenter;
 import interface_adapter.mealplan.generate_mealplan.WeeklyMealController;
 import interface_adapter.mealplan.generate_mealplan.WeeklyMealPresenter;
 import interface_adapter.mealplan.generate_mealplan.WeeklyMealViewModel;
@@ -63,6 +65,9 @@ import use_case.history.HistoryOutputBoundary;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
+import use_case.logout.LogoutInputBoundary;
+import use_case.logout.LogoutInteractor;
+import use_case.logout.LogoutOutputBoundary;
 import use_case.mealplan.generate_mealplan.WeeklyMealDataAccessInterface;
 import use_case.mealplan.generate_mealplan.WeeklyMealInputBoundary;
 import use_case.mealplan.generate_mealplan.WeeklyMealInteractor;
@@ -411,6 +416,7 @@ public class MainAppBuilder {
         displayHistoryView.setDisplayHistoryController(displayHistoryController);
         return this;
     }
+
     /**
      * Builds the application.
      * @return the built application

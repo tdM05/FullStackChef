@@ -4,6 +4,7 @@ import app.SessionUser;
 import interface_adapter.display_favorites.DisplayFavoriteController;
 import interface_adapter.display_history.DisplayHistoryController;
 import interface_adapter.grocery_list.GroceryListController;
+import interface_adapter.logout.LogoutController;
 import interface_adapter.mealplan.update_meals.UpdateMealsController;
 
 import javax.swing.*;
@@ -20,6 +21,7 @@ public class Profile extends JPanel {
     private JMenuItem favoriteButton;
     private JMenuItem groceryListButton;
     private JMenuItem historyButton;
+    private JMenuItem logoutButton;
 
 
     private DisplayFavoriteController displayFavoriteController;
@@ -30,6 +32,7 @@ public class Profile extends JPanel {
     // controllers
     GroceryListController groceryListController;
     private UpdateMealsController updateMealsController;
+    private LogoutController logoutController;
 
     public Profile() {
         setPreferredSize(new Dimension(55, 55));
@@ -58,7 +61,7 @@ public class Profile extends JPanel {
 
         this.historyButton = new JMenuItem("History");
 
-        JMenuItem logoutButton = new JMenuItem("Logout");
+        this.logoutButton = new JMenuItem("Logout");
 
         customizeButton(profileButton);
         customizeButton(favoriteButton);
