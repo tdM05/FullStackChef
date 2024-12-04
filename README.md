@@ -89,7 +89,7 @@ in src\main\java\data_access\Constants.java called API_KEY is not used up.
       ![History GIF](src/images/History.gif)
 
 ## License
-This project is dedicated to the public domain [CC0 1.0](LICENSE).
+This project is dedicated to the public domain under the [Creative Commons Zero v1.0 Universal License (CC0-1.0)](LICENSE).
 ## Feedback and contributions
 We welcome contributions to FullStackChef! Please follow the guidelines below:
 
