@@ -72,8 +72,8 @@ in src\main\java\data_access\Constants.java called API_KEY is not used up.
       ![Favorite GIF](src/images/Favorite.gif)
    
 3. **Generate Meal Plan**
-    - Click on the "Meal Plan" button.
-    - Click the "Generate Meal Plan" button to create a meal plan.
+    - Click on the "Generate Meal Plan" button.
+    - Click the "Generate Meal Plan" button to create a new meal plan.
       
       ![Meal Plan GIF](src/images/MealPlan.gif)
 
