@@ -92,7 +92,7 @@ in src\main\java\data_access\Constants.java called API_KEY is not used up.
 
 ## License
 This project is dedicated to the public domain under the [Creative Commons Zero v1.0 Universal License (CC0-1.0)](LICENSE).
-## Feedback and contributions
+## Feedback and Contributions
 We welcome contributions to FullStackChef! Please follow the guidelines below:
 
 ### Feedback
