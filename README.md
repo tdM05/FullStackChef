@@ -56,6 +56,7 @@ in src\main\java\data_access\Constants.java called API_KEY is not used up.
    - Here you can search recipes by ingredients in the format: "ingredient1, ingredient2, ingredient3, ...".
    - Click the "Search" button to find recipes that match your ingredients.
    - Click on the recipe panel to view detailed instructions and ingredients needed.
+     
    
      ![Search GIF](src/images/Search.gif)
 **For the following use cases**, you can navigate to their buttons by hovering over the profile
