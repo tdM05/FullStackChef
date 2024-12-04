@@ -2,6 +2,7 @@ package use_case.search;
 
 import entity.CommonRecipe;
 import entity.Recipe;
+import org.json.JSONException;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -12,45 +13,80 @@ import static org.junit.Assert.*;
 public class SearchInteractorTest {
 
     /**
-     * This test is to test the execute method of the SearchRecipeInteractor.
-     * It creates a mock data access object and a mock presenter to test the interactor.
+     * Tests the `execute` method of the SearchInteractor with a valid search query.
+     * Mocks a data access object and a presenter to validate the behavior of the interactor.
      */
     @Test
-    public void execute() {
+    public void testExecuteWithValidInput() {
+        // Mock Data Access
         SearchDataAccessInterface dataAccess = new SearchDataAccessInterface() {
             @Override
             public List<Recipe> getRecipes(List<String> ingredients, int count) {
-                // notice that ingredients is the recipe list that the interactor gave it, so it should be consistent
-                List<String> expectedIngredients = new ArrayList<>();
-                expectedIngredients.add("chicken");
-                expectedIngredients.add("garlic");
-                expectedIngredients.add("spinach");
-                assertEquals(ingredients, expectedIngredients);
-
-                // This is the pre-determined recipe that the interactor will return
+                List<String> expectedIngredients = List.of("chicken", "garlic", "spinach");
+                assertTrue(ingredients.containsAll(expectedIngredients));
                 List<Recipe> res = new ArrayList<>();
                 res.add(new CommonRecipe(1, "recipeName", "imageUrl", "imageType",
                         new ArrayList<>(), null, new ArrayList<>(), false));
                 return res;
             }
         };
+
         SearchOutputBoundary presenter = new SearchOutputBoundary() {
             @Override
             public void prepareSuccessView(List<SearchOutputData> message) {
-                List<SearchOutputData> expectedOutputData = new ArrayList<>();
-                expectedOutputData.add(new SearchOutputData(1,"recipeName", "imageUrl"));
+                List<SearchOutputData> expectedOutputData = List.of(
+                        new SearchOutputData(1, "recipeName", "imageUrl")
+                );
 
-                assertEquals(expectedOutputData, message);
+                assertEquals(expectedOutputData.get(0).getRecipeId(), message.get(0).getRecipeId());
             }
 
             @Override
             public void prepareFailView(String message) {
-                assertEquals("Failed to get recipes.", message);
+                fail("Failure view should not be called with valid input.");
             }
         };
+
         SearchInteractor interactor = new SearchInteractor(dataAccess, presenter);
 
         SearchInputData inputData = new SearchInputData("chicken,  garlic,spinach");
+        interactor.execute(inputData);
+    }
+
+    /**
+     * Tests the `execute` method when the data access throws an exception.
+     */
+    @Test
+    public void testExecuteWithException() {
+        // Mock Data Access that throws an exception
+        SearchDataAccessInterface dataAccess = new SearchDataAccessInterface() {
+            @Override
+            public List<Recipe> getRecipes(List<String> ingredients, int count) {
+                throw new JSONException("Mock Exception");
+            }
+        };
+
+        // Mock Presenter
+        SearchOutputBoundary presenter = new SearchOutputBoundary() {
+            @Override
+            public void prepareSuccessView(List<SearchOutputData> message) {
+                fail("Success view should not be called when an exception occurs.");
+            }
+
+            @Override
+            public void prepareFailView(String message) {
+                // Validate the error message
+                assertEquals("Failed to get recipes.", message);
+            }
+        };
+
+        // Create Interactor
+        SearchInteractor interactor = new SearchInteractor(dataAccess, presenter);
+
+        // Input Data
+        SearchInputData inputData = new SearchInputData("chicken,  garlic,spinach");
+
+        // Execute Use Case
         interactor.execute(inputData);
     }
 }

@@ -4,17 +4,17 @@ package use_case.mealplan.generate_mealplan;
  * A Data Transfer Object (DTO) for Recipe information.
  */
 public class WeeklyMealRecipeDto {
-    private final int id;
+    private final int recipeId;
     private final String title;
 
     /**
      * Constructs a WeeklyMealRecipeDto object.
      *
-     * @param id    The unique ID of the recipe.
+     * @param recipeId    The unique ID of the recipe.
      * @param title The title of the recipe.
      */
-    public WeeklyMealRecipeDto(int id, String title) {
-        this.id = id;
+    public WeeklyMealRecipeDto(int recipeId, String title) {
+        this.recipeId = recipeId;
         this.title = title;
     }
 
@@ -23,8 +23,8 @@ public class WeeklyMealRecipeDto {
      *
      * @return The recipe ID.
      */
-    public int getId() {
-        return id;
+    public int getRecipeId() {
+        return recipeId;
     }
 
     /**
