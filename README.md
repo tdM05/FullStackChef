@@ -63,16 +63,16 @@ in src\main\java\data_access\Constants.java called API_KEY is not used up.
 **For the following use cases**, you can navigate to their buttons by hovering over the profile
    button in the top right corner.
 2. **Favorites**
-      - Search for a recipe and go into its detailed view.
-      - Click the heart button to add it to your favorites
-      - Go back to the search view and click the "Favorte" button that is in the profile dropdown.
+   - Search for a recipe and go into its detailed view.
+   - Click the heart button to add it to your favorites
+   - Go back to the search view and click the "Favorte" button that is in the profile dropdown.
    
    ![Favorite GIF](src/images/Favorite.gif)
    
 3. **Generate Meal Plan**
     - Click on the "Meal Plan" button.
     - Click the "Generate Meal Plan" button to create a meal plan.
-    - 
+      
       ![Meal Plan GIF](src/images/MealPlan.gif)
 
 4. **Grocery List**
