@@ -54,7 +54,6 @@ public class DietaryRestrictionInteractor implements DietaryRestrictionInputBoun
      * @throws IOException if loading fails
      */
     public CommonDietaryRestriction getDietaryRestrictions() throws IOException {
-        CommonDietaryRestriction restrictions = dataAccess.loadDietaryRestrictions();
-        return restrictions;
+        return dataAccess.loadDietaryRestrictions();
     }
 }
