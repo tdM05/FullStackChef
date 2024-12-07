@@ -6,7 +6,7 @@ import java.util.List;
  * The Request Data for the Dietary Restrictions Use Case.
  * Contains the dietary restrictions selected by the user.
  */
-public class DietaryRestrictionRequestData {
+public class DietaryRestrictionRequestData implements DietaryRestrictionInputData {
     private final List<String> selectedDiets;
 
     /**

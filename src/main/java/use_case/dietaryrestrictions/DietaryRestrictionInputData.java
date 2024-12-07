@@ -2,18 +2,17 @@
 
 package use_case.dietaryrestrictions;
 
-import entity.CommonDietaryRestriction;
-
 import java.util.List;
 
 /**
  * The input data interface for the Dietary Restrictions Use Case.
+ * This interface should match how the request data is actually used by the interactor.
  */
 public interface DietaryRestrictionInputData {
     /**
-     * Retrieves the list of dietary restrictions to be saved.
+     * Retrieves the list of dietary restrictions (diets) selected by the user.
      *
-     * @return the list of dietary restrictions
+     * @return the list of dietary restrictions as strings
      */
-    List<CommonDietaryRestriction> getDietaryRestrictions();
+    List<String> getSelectedDiets();
 }
