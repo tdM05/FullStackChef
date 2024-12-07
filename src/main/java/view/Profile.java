@@ -215,6 +215,9 @@ public class Profile extends JPanel {
             return;
         }
 
+        // Ensure we have the latest existing dietary restrictions loaded
+        loadExistingDietaryRestrictions();
+
         String[] availableDiets = {
                 "Gluten Free", "Ketogenic", "Vegetarian", "Lacto-Vegetarian",
                 "Ovo-Vegetarian", "Vegan", "Pescetarian", "Paleo", "Primal", "Whole30"
@@ -225,7 +228,7 @@ public class Profile extends JPanel {
         JPanel panel = new JPanel(new GridLayout(0, 1));
         for (int i = 0; i < availableDiets.length; i++) {
             checkBoxes[i] = new JCheckBox(availableDiets[i]);
-            // Pre-select if exists (convert to lowercase for comparison)
+            // If the user's existing restrictions contain this diet (in lowercase), select the checkbox
             if (existingDietaryRestrictions.contains(availableDiets[i].toLowerCase())) {
                 checkBoxes[i].setSelected(true);
             }
@@ -241,7 +244,8 @@ public class Profile extends JPanel {
             List<String> selectedDiets = new ArrayList<>();
             for (JCheckBox checkBox : checkBoxes) {
                 if (checkBox.isSelected()) {
-                    selectedDiets.add(checkBox.getText().toLowerCase()); // Ensure lowercase for API consistency
+                    // Store them in lowercase for consistency
+                    selectedDiets.add(checkBox.getText().toLowerCase());
                 }
             }
             // Invoke the use case to set dietary restrictions
@@ -251,6 +255,7 @@ public class Profile extends JPanel {
             System.out.println("Dietary restrictions updated: " + selectedDiets);
         }
     }
+
 
     /**
      * Updates the existing dietary restrictions list.

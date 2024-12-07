@@ -39,21 +39,59 @@ public class DietaryRestrictionDataAccessObject implements DietaryRestrictionDat
     public void saveDietaryRestrictions(CommonDietaryRestriction commonDietaryRestriction) throws IOException {
         User user = getCurrentUser();
 
-        // Prepare the JSON request body
+        // First, load the current user info from the backend
+        HttpUrl url = HttpUrl.parse(BASE_URL + "/user")
+                .newBuilder()
+                .addQueryParameter("username", user.getName())
+                .addQueryParameter("password", user.getPassword())
+                .build();
+
+        Request getRequest = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("Content-Type", CONTENT_TYPE_JSON)
+                .build();
+
+        JSONObject info;
+        try (Response getResponse = client.newCall(getRequest).execute()) {
+            if (getResponse.code() == SUCCESS_CODE && getResponse.body() != null) {
+                String responseBody = getResponse.body().string();
+                JSONObject jsonResponse = new JSONObject(responseBody);
+                JSONObject userJson = jsonResponse.optJSONObject("user");
+
+                if (userJson == null) {
+                    System.err.println("Backend response does not contain 'user' object.");
+                    throw new IOException("Backend response does not contain 'user' object.");
+                }
+
+                // Extract current info object, or create a new one if not present
+                info = userJson.optJSONObject("info");
+                if (info == null) {
+                    info = new JSONObject();
+                }
+            } else {
+                System.err.println("Failed to load existing user info: " + getResponse.message());
+                throw new IOException("Failed to load existing user info: " + getResponse.message());
+            }
+        } catch (JSONException e) {
+            System.err.println("Error parsing existing user info: " + e.getMessage());
+            throw new IOException("Error parsing existing user info: " + e.getMessage(), e);
+        }
+
+        // Now update the dietaryRestrictions field in the existing info
+        info.put("dietaryRestrictions", new JSONArray(commonDietaryRestriction.getDiets()));
+
+        // Prepare the request body for saving the updated info
         JSONObject requestBody = new JSONObject();
         requestBody.put("username", user.getName());
         requestBody.put("password", user.getPassword());
-
-        // Nest dietaryRestrictions inside 'info'
-        JSONObject info = new JSONObject();
-        info.put("dietaryRestrictions", new JSONArray(commonDietaryRestriction.getDiets()));
         requestBody.put("info", info);
 
         // Print the request body for debugging
         System.out.println("Saving Dietary Restrictions Request Body: " + requestBody.toString());
 
         RequestBody body = RequestBody.create(requestBody.toString(), MediaType.parse(CONTENT_TYPE_JSON));
-        Request request = new Request.Builder()
+        Request putRequest = new Request.Builder()
                 .url(BASE_URL + "/modifyUserInfo")
                 .put(body)
                 .addHeader("Content-Type", CONTENT_TYPE_JSON)
@@ -61,8 +99,7 @@ public class DietaryRestrictionDataAccessObject implements DietaryRestrictionDat
 
         System.out.println("Sending PUT request to save dietary restrictions...");
 
-        try (Response response = client.newCall(request).execute()) {
-            // Print the response code and message for debugging
+        try (Response response = client.newCall(putRequest).execute()) {
             System.out.println("Save Dietary Restrictions Response Code: " + response.code());
             System.out.println("Save Dietary Restrictions Response Message: " + response.message());
 
@@ -71,7 +108,6 @@ public class DietaryRestrictionDataAccessObject implements DietaryRestrictionDat
                 throw new IOException("Failed to save dietary restrictions: " + response.message());
             }
 
-            // Parse response body to confirm 'message'
             String responseBody = response.body().string();
             System.out.println("Save Dietary Restrictions Response Body: " + responseBody);
 
@@ -79,8 +115,6 @@ public class DietaryRestrictionDataAccessObject implements DietaryRestrictionDat
                 JSONObject jsonResponse = new JSONObject(responseBody);
                 String message = jsonResponse.optString("message", "Dietary restrictions updated.");
                 System.out.println("Message from backend: " + message);
-
-                // Since the response does not contain 'user', rely on the interactor's data
                 System.out.println("Dietary restrictions saved successfully for user: " + user.getName());
             } catch (JSONException e) {
                 System.err.println("Error parsing backend response: " + e.getMessage());
@@ -88,6 +122,7 @@ public class DietaryRestrictionDataAccessObject implements DietaryRestrictionDat
             }
         }
     }
+
 
     /**
      * Loads the dietary restrictions for the current user by sending a GET request.
