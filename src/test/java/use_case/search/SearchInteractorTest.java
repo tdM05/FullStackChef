@@ -1,9 +1,13 @@
 package use_case.search;
 
 import entity.CommonRecipe;
+import entity.CommonDietaryRestriction;
 import entity.Recipe;
+import interface_adapter.dietaryrestrictions.DietaryRestrictionDataAccessInterface;
+import org.json.JSONException;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,21 +23,41 @@ public class SearchInteractorTest {
     public void execute() {
         SearchDataAccessInterface dataAccess = new SearchDataAccessInterface() {
             @Override
-            public List<Recipe> getRecipes(List<String> ingredients, int count) {
-                // notice that ingredients is the recipe list that the interactor gave it, so it should be consistent
+            public List<Recipe> getRecipes(List<String> ingredients, int count) throws IOException, JSONException {
+                // Check that ingredients match expectation
                 List<String> expectedIngredients = new ArrayList<>();
                 expectedIngredients.add("chicken");
                 expectedIngredients.add("garlic");
                 expectedIngredients.add("spinach");
-                assertEquals(ingredients, expectedIngredients);
+                assertEquals(expectedIngredients, ingredients);
 
-                // This is the pre-determined recipe that the interactor will return
+                // Return a predetermined recipe list
                 List<Recipe> res = new ArrayList<>();
                 res.add(new CommonRecipe(1, "recipeName", "imageUrl", "imageType",
                         new ArrayList<>(), null, new ArrayList<>(), false));
                 return res;
             }
+
+            @Override
+            public List<Recipe> getRecipes(List<String> ingredientsList, List<String> dietaryFilters, int number) throws IOException, JSONException {
+                // Since we are not testing dietary filters here, just return an empty list or similar.
+                return new ArrayList<>();
+            }
         };
+
+        DietaryRestrictionDataAccessInterface dietaryDataAccess = new DietaryRestrictionDataAccessInterface() {
+            @Override
+            public void saveDietaryRestrictions(CommonDietaryRestriction commonDietaryRestriction) throws IOException {
+                // Not needed for this test; do nothing
+            }
+
+            @Override
+            public CommonDietaryRestriction loadDietaryRestrictions() throws IOException {
+                // For this test, just return empty dietary restrictions
+                return new CommonDietaryRestriction(new ArrayList<>());
+            }
+        };
+
         SearchOutputBoundary presenter = new SearchOutputBoundary() {
             @Override
             public void prepareSuccessView(List<SearchOutputData> message) {
@@ -48,7 +72,9 @@ public class SearchInteractorTest {
                 assertEquals("Failed to get recipes.", message);
             }
         };
-        SearchInteractor interactor = new SearchInteractor(dataAccess, presenter);
+
+        // Note: Now we provide all three parameters to the SearchInteractor constructor
+        SearchInteractor interactor = new SearchInteractor(dataAccess, dietaryDataAccess, presenter);
 
         SearchInputData inputData = new SearchInputData("chicken,  garlic,spinach");
         interactor.execute(inputData);

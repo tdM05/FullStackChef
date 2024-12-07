@@ -11,6 +11,28 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+class DietaryRestrictionRequestDataTest {
+
+    @Test
+    void testGetSelectedDiets() {
+        List<String> diets = List.of("vegan", "paleo");
+        DietaryRestrictionRequestData requestData = new DietaryRestrictionRequestData(diets);
+        assertEquals(diets, requestData.getSelectedDiets(), "Should return the diets passed to the constructor");
+    }
+}
+
+class DietaryRestrictionResponseDataTest {
+
+    @Test
+    void testResponseData() {
+        DietaryRestrictionResponseData responseData = new DietaryRestrictionResponseData("Message", List.of("vegan"));
+        assertEquals("Message", responseData.getMessage());
+        assertEquals(List.of("vegan"), responseData.getDietaryRestrictions());
+    }
+}
+
+
+
 class DietaryRestrictionInteractorTest {
 
     @Test
@@ -33,7 +55,6 @@ class DietaryRestrictionInteractorTest {
         DietaryRestrictionDataAccessInterface dataAccess = new DietaryRestrictionDataAccessInterface() {
             @Override
             public void saveDietaryRestrictions(CommonDietaryRestriction commonDietaryRestriction) throws IOException {
-                // Should not be called
                 fail("No user logged in, should not save");
             }
 
@@ -119,5 +140,68 @@ class DietaryRestrictionInteractorTest {
         DietaryRestrictionInteractor interactor = new DietaryRestrictionInteractor(presenter, dataAccess);
         DietaryRestrictionRequestData requestData = new DietaryRestrictionRequestData(List.of("vegan"));
         interactor.execute(requestData);
+    }
+
+    // Test getDietaryRestrictions - success
+    @Test
+    void getDietaryRestrictionsSuccess() throws IOException {
+        SessionUser.getInstance().setUser(new CommonUser("testUser", "testPass"));
+        DietaryRestrictionDataAccessInterface dataAccess = new DietaryRestrictionDataAccessInterface() {
+            @Override
+            public void saveDietaryRestrictions(CommonDietaryRestriction commonDietaryRestriction) {
+                // not needed
+            }
+
+            @Override
+            public CommonDietaryRestriction loadDietaryRestrictions() throws IOException {
+                return new CommonDietaryRestriction(List.of("vegan", "paleo"));
+            }
+        };
+        DietaryRestrictionOutputBoundary presenter = new DietaryRestrictionOutputBoundary() {
+            @Override
+            public void prepareSuccessView(DietaryRestrictionResponseData responseData) {
+                // not needed here
+            }
+
+            @Override
+            public void prepareFailView(String errorMessage) {
+                fail("Should not fail here");
+            }
+        };
+
+        DietaryRestrictionInteractor interactor = new DietaryRestrictionInteractor(presenter, dataAccess);
+        CommonDietaryRestriction restrictions = interactor.getDietaryRestrictions();
+        assertEquals(List.of("vegan", "paleo"), restrictions.getDiets());
+    }
+
+    // Test getDietaryRestrictions - IOException
+    @Test
+    void getDietaryRestrictionsIOException() {
+        SessionUser.getInstance().setUser(new CommonUser("testUser", "testPass"));
+        DietaryRestrictionDataAccessInterface dataAccess = new DietaryRestrictionDataAccessInterface() {
+            @Override
+            public void saveDietaryRestrictions(CommonDietaryRestriction commonDietaryRestriction) {
+                // not needed
+            }
+
+            @Override
+            public CommonDietaryRestriction loadDietaryRestrictions() throws IOException {
+                throw new IOException("Failed to load");
+            }
+        };
+        DietaryRestrictionOutputBoundary presenter = new DietaryRestrictionOutputBoundary() {
+            @Override
+            public void prepareSuccessView(DietaryRestrictionResponseData responseData) {
+                fail("Should not succeed");
+            }
+
+            @Override
+            public void prepareFailView(String errorMessage) {
+                // not expected here
+            }
+        };
+
+        DietaryRestrictionInteractor interactor = new DietaryRestrictionInteractor(presenter, dataAccess);
+        assertThrows(IOException.class, interactor::getDietaryRestrictions);
     }
 }

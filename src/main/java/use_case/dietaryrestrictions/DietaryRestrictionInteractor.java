@@ -1,7 +1,9 @@
 package use_case.dietaryrestrictions;
 
-import interface_adapter.dietaryrestrictions.DietaryRestrictionDataAccessInterface;
+import app.SessionUser;
 import entity.CommonDietaryRestriction;
+import entity.User;
+import interface_adapter.dietaryrestrictions.DietaryRestrictionDataAccessInterface;
 
 import java.io.IOException;
 
@@ -32,6 +34,14 @@ public class DietaryRestrictionInteractor implements DietaryRestrictionInputBoun
      */
     @Override
     public void execute(DietaryRestrictionRequestData requestData) {
+        // Check if user is logged in before attempting to save
+        User currentUser = SessionUser.getInstance().getUser();
+        if (currentUser == null) {
+            // No user logged in, so present a failure view and return
+            presenter.prepareFailView("Failed to update dietary restrictions: No user is logged in. Please log in to continue.");
+            return;
+        }
+
         try {
             // Create CommonDietaryRestriction entity with the selected diets
             CommonDietaryRestriction commonDietaryRestriction = new CommonDietaryRestriction(
