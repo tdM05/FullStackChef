@@ -3,7 +3,6 @@ package use_case.dietaryrestrictions;
 import app.SessionUser;
 import entity.CommonDietaryRestriction;
 import entity.CommonUser;
-import entity.User;
 import interface_adapter.dietaryrestrictions.DietaryRestrictionDataAccessInterface;
 import org.junit.jupiter.api.Test;
 
